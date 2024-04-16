@@ -1,0 +1,16 @@
+---
+title: "-"
+about:
+  template: trestles
+  image: dataeverywhere.gif
+  image-shape: rounded
+  image-width: 15em
+---
+
+**ISSS608-Visual Analytics and Application**
+
+*“We’re entering a new world in which data may be more important than software.”*
+
+*- Tim O’Reilly*
+
+[About](https://isss608gj.netlify.app/about)

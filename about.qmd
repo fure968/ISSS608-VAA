@@ -1,0 +1,14 @@
+---
+title: "About"
+about:
+  template: jolla
+  image: giphy.gif
+  image-shape: rounded
+  image-width: 10em
+---
+
+**Lin Guan Jhen, Elise**
+
+ISSS608 Visual Analytics and Applications under Prof. Kam Tin Seong as part of Singapore Management University Master of IT in business.
+
+[LinkedIn](www.linkedin.com) \| [Email](guanjhenlin.2022@mitb.smu.edu.sg)

@@ -1,0 +1,29 @@
+---
+title: "In-class Exercise 1"
+author: "Guan Jhen Lin"
+date: "Apr 13, 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
+
+# Getting Started
+
+In the code chunk below, [p_load()](https://www.rdocumentation.org/packages/pacman/versions/0.5.1) of [pacman](https://cran.r-project.org/web/packages/pacman/readme/README.html) package is used to load tidyverse family of packages.
+
+```{r}
+pacman::p_load(tidyverse)
+```
+
+```{r}
+realis <-read_csv("data/realis2019.csv")
+```
+
+```{r}
+ggplot(data = realis,
+       aes(x = `Unit Price ($ psm)`)) +
+  geom_histogram()
+```

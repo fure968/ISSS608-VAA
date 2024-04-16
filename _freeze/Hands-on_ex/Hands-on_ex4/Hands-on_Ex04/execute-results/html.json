@@ -1,0 +1,14 @@
+{
+  "hash": "9efe3f19807a10f83a51846c94710fba",
+  "result": {
+    "markdown": "---\ntitle: \"Hands on Exercise 4\"\nauthor: \"Guan Jhen Lin\"\ndate: \"Apr 13, 2024\"\ndate-modified: \"last-modified\"\nexecute: \n  eval: true\n  echo: true\n  warning: false\n  freeze: true\n---\n\n\n# Getting Started\n\nLoad and Install R packages\n\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(tidyverse, forcats)\n```\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
