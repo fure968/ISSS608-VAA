@@ -55,8 +55,7 @@ The process had been repeated for all five data sets.
 ```{r}
 colSums(is.na(ds1))
 ds1 <- na.omit(ds1)
-ds1$`Sale Date` <- as.Date(ds1$`Sale Date`, format = "%d-%b-%y")
-ds1$`Completion Date` <- as.Date(ds1$`Completion Date`, format = "%d-%b-%y")
+
 ds1$`Type of Sale` <- as.factor(ds1$`Type of Sale`)
 ds1$`Property Type` <- as.factor(ds1$`Property Type`)
 ds1$`Transacted Price ($)` <- as.numeric(gsub("[^0-9.]", "", ds1$`Transacted Price ($)`, perl = TRUE))
@@ -70,8 +69,7 @@ ds1$`Type of Sale` <- ifelse(ds1$`Type of Sale` %in% c("new sale", "resale"), ds
 ```{r}
 colSums(is.na(ds2))
 ds2 <- na.omit(ds2)
-ds2$`Sale Date` <- as.Date(ds2$`Sale Date`, format = "%d-%b-%y")
-ds2$`Completion Date` <- as.Date(ds2$`Completion Date`, format = "%d-%b-%y")
+
 ds2$`Type of Sale` <- as.factor(ds2$`Type of Sale`)
 ds2$`Property Type` <- as.factor(ds2$`Property Type`)
 ds2$`Transacted Price ($)` <- as.numeric(gsub("[^0-9.]", "", ds2$`Transacted Price ($)`, perl = TRUE))
@@ -85,8 +83,7 @@ ds2$`Type of Sale` <- ifelse(ds2$`Type of Sale` %in% c("new sale", "resale"), ds
 ```{r}
 colSums(is.na(ds3))
 ds3 <- na.omit(ds3)
-ds3$`Sale Date` <- as.Date(ds3$`Sale Date`, format = "%d-%b-%y")
-ds3$`Completion Date` <- as.Date(ds3$`Completion Date`, format = "%d-%b-%y")
+
 ds3$`Type of Sale` <- as.factor(ds3$`Type of Sale`)
 ds3$`Property Type` <- as.factor(ds3$`Property Type`)
 ds3$`Transacted Price ($)` <- as.numeric(gsub("[^0-9.]", "", ds3$`Transacted Price ($)`, perl = TRUE))
@@ -100,8 +97,7 @@ ds3$`Type of Sale` <- ifelse(ds3$`Type of Sale` %in% c("new sale", "resale"), ds
 ```{r}
 colSums(is.na(ds4))
 ds4 <- na.omit(ds4)
-ds4$`Sale Date` <- as.Date(ds4$`Sale Date`, format = "%d-%b-%y")
-ds4$`Completion Date` <- as.Date(ds4$`Completion Date`, format = "%d-%b-%y")
+
 ds4$`Type of Sale` <- as.factor(ds4$`Type of Sale`)
 ds4$`Property Type` <- as.factor(ds4$`Property Type`)
 ds4$`Transacted Price ($)` <- as.numeric(gsub("[^0-9.]", "", ds4$`Transacted Price ($)`, perl = TRUE))
@@ -115,8 +111,7 @@ ds4$`Type of Sale` <- ifelse(ds4$`Type of Sale` %in% c("new sale", "resale"), ds
 ```{r}
 colSums(is.na(ds5))
 ds5 <- na.omit(ds5)
-ds5$`Sale Date` <- as.Date(ds5$`Sale Date`, format = "%d-%b-%y")
-ds5$`Completion Date` <- as.Date(ds5$`Completion Date`, format = "%d-%b-%y")
+
 ds5$`Type of Sale` <- as.factor(ds5$`Type of Sale`)
 ds5$`Property Type` <- as.factor(ds5$`Property Type`)
 ds5$`Transacted Price ($)` <- as.numeric(gsub("[^0-9.]", "", ds5$`Transacted Price ($)`, perl = TRUE))
@@ -126,13 +121,14 @@ ds5$`Type of Sale` <- ifelse(ds5$`Type of Sale` %in% c("new sale", "resale"), ds
 ```
 :::
 
-# EDA 1 Exploring relationship between planning area and unit price ($psf)
+# EDA 1 Exploring relationship between planning area and unit price (\$psf)
 
-We have four charts depicting unit price ($ psf) to planning regions in Singapore through 2023 according to the 4 different quarters. By comparing the graphs, we can see the regional price variations in different quarters of the year.
+We have four charts depicting unit price (\$ psf) to planning regions in Singapore through 2023 according to the 4 different quarters. By comparing the graphs, we can see the regional price variations in different quarters of the year.
 
 Central Region show the highest median PSF throughout the year, indicating its status as a premium location. North East Region and East Region have stable PSF values, offering a balance between affordability and location.
 
 <details>
+
 <summary>Click to show code</summary>
 
 ```{r}
@@ -173,6 +169,7 @@ q1 <- ggplot(ds5, aes(x = `Planning Region`, y = `Unit Price ($ PSF)`)) +
 ```
 
 </summary>
+
 </details>
 
 Combined the plots
@@ -236,22 +233,42 @@ p_plotly <- ggplotly(p, tooltip = c("Planning Region", "y", "Data_Source", "medi
 p_plotly <- plotly::ggplotly(p, tooltip = c("Planning Region", "y", "Data_Source", "median_PSF", "lower_quartile", "upper_quartile"))
 ```
 
-
 ```{r}
 # Display the interactive plot
 p_plotly
 
 ```
 
-
 ::: {.focusbox .focus data-latex="focus"}
-#*Insights from Visualisations**
--xx
--  xx
--   xx
+#\*Insights from Visualisations\*\* -xx - xx - xx
 :::
 
+# EDA 2
+```{r}
+# Load required libraries
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+
+# Check unique values in Sale Date
+unique(ds1$`Sale Date`)
+
+# Convert Sale Date to Date format
+ds1$`Sale Date` <- dmy(ds1$`Sale Date`)
+
+# Extract month from Sale Date
+ds1$Month <- month(ds1$`Sale Date`, label = TRUE)
+
+# Create a histogram for Sale Date by month
+ggplot(ds1, aes(x = Month)) +
+  geom_bar(fill = "skyblue", color = "black", alpha = 0.7) +
+  labs(
+    title = "Distribution of Transactions by Month",
+    x = "Month",
+    y = "Count"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
-# EDA 2 
-
+```
