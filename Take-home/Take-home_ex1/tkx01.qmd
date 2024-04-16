@@ -13,13 +13,13 @@ execute:
 
 # Introduction
 
-In Singapore, the residential property market is divided into public and private sectors. Public housing caters to households with a monthly income of less than or equal to S\$14,000, aiming to provide affordable housing for the general populace. Conversely, the private housing market serves households with incomes exceeding S\$14,000.
+In Singapore, the residential property market is bifurcated into public and private sectors. The public housing sector serves households with a monthly income of up to S$14,000, aiming to offer affordable housing solutions to the broader community. In contrast, the private housing sector caters to households with incomes surpassing S$14,000.
 
-For this exercise, we'll be utilizing REALIS transaction data spanning from 1st January 2023 to 31st March 2024 and explore the data sets using ggplot2 and its extensions.
+For this analysis, we will leverage REALIS transaction data covering the period from 1st January 2023 to 31st March 2024. Our exploration will be conducted using ggplot2 and its associated extensions.
 
-# Setting the Scenes
+# Setting the Stage
 
-We will be assuming the role of a graphical editor of a media company and had been requested to prepare two to three data visualization to reveal the private residential market and sub-markets of Singapore for the 1st quarter of 2024.
+In this scenario, we assume the role of a graphical editor for a media company. We have been tasked with creating two to three data visualizations to illuminate the private residential market and its sub-markets in Singapore for the first quarter of 2024.
 
 # Data Preparation
 
@@ -121,16 +121,148 @@ ds5$`Type of Sale` <- ifelse(ds5$`Type of Sale` %in% c("new sale", "resale"), ds
 ```
 :::
 
-# EDA 1 Exploring relationship between planning area and unit price (\$psf)
+# EDA Relationship between Transactions & 2023/2024 Quarters
+
+Put your thoughts here. 
+
+<details>
+<summary>Click to show code</summary>
+```{r}
+# Load required libraries
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+
+# Check unique values in Sale Date
+unique(ds1$`Sale Date`)
+
+# Convert Sale Date to Date format
+ds1$`Sale Date` <- dmy(ds1$`Sale Date`)
+ds2$`Sale Date` <- dmy(ds2$`Sale Date`)
+ds3$`Sale Date` <- dmy(ds3$`Sale Date`)
+ds4$`Sale Date` <- dmy(ds4$`Sale Date`)
+ds5$`Sale Date` <- dmy(ds5$`Sale Date`)
+
+# Extract month from Sale Date
+ds1$Month <- month(ds1$`Sale Date`, label = TRUE)
+ds2$Month <- month(ds2$`Sale Date`, label = TRUE)
+ds3$Month <- month(ds3$`Sale Date`, label = TRUE)
+ds4$Month <- month(ds4$`Sale Date`, label = TRUE)
+ds5$Month <- month(ds5$`Sale Date`, label = TRUE)
+
+# Create individual bar plots for each quarter
+Q124 <- ggplot(ds1, aes(x = Month)) +
+  geom_bar(fill = "lightgreen", color = "black", alpha = 0.7) +
+  labs(
+    title = "Distribution of Transactions 2024 Q1",
+    x = "Month",
+    y = "Count"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
+    axis.text.y = element_text(size =8),
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),
+    axis.title = element_text(size = 8),
+    legend.text = element_text(size = 8)
+  )
+
+Q423 <- ggplot(ds2, aes(x = Month)) +
+  geom_bar(fill = "skyblue", color = "black", alpha = 0.7) +
+  labs(
+    title = "Distribution of Transactions 2023 Q4",
+    x = "Month",
+    y = "Count"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
+    axis.text.y = element_text(size =8),
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),
+    axis.title = element_text(size = 8),
+    legend.text = element_text(size = 8)
+  )
+
+Q323 <- ggplot(ds3, aes(x = Month)) +
+  geom_bar(fill = "skyblue", color = "black", alpha = 0.7) +
+  labs(
+    title = "Distribution of Transactions 2023 Q3",
+    x = "Month",
+    y = "Count"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
+    axis.text.y = element_text(size =8),
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),
+    axis.title = element_text(size = 8),
+    legend.text = element_text(size = 8)
+  )
+
+Q223 <- ggplot(ds4, aes(x = Month)) +
+  geom_bar(fill = "skyblue", color = "black", alpha = 0.7) +
+  labs(
+    title = "Distribution of Transactions 2023 Q2",
+    x = "Month",
+    y = "Count"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
+    axis.text.y = element_text(size =8),
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),
+    axis.title = element_text(size = 8),
+    legend.text = element_text(size = 8)
+  )
+
+Q123 <- ggplot(ds5, aes(x = Month)) +
+  geom_bar(fill = "skyblue", color = "black", alpha = 0.7) +
+  labs(
+    title = "Distribution of Transactions 2023 Q1",
+    x = "Month",
+    y = "Count"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
+    axis.text.y = element_text(size =8),
+    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),
+    axis.title = element_text(size = 8),
+    legend.text = element_text(size = 8)
+  )
+
+```
+</details>
+
+```{r}
+
+combined_plot <- gridExtra::grid.arrange(Q123, Q223, Q323, Q423, ncol = 2)
+print(combined_plot)
+
+```
+
+We're comparing the first quarters of 2023 and 2024 to understand any changes in transaction volumes. Notably, January 2023 shows fewer transactions than January 2024.
+
+This difference might be due to the easing of COVID-19 restrictions in early 2023. As people adjust to the changing circumstances, there's a cautious approach towards property investments.
+
+The increase in February 2023 suggests a possible recovery or resurgence in market activity following the easing of COVID-19 restrictions. However, by March 2023, we see a slight decrease of transactions. This could indicate a temporary dip or stabilization in market demand after the initial uptick in February.
+
+
+```{r}
+combined_plot_2 <- gridExtra::grid.arrange(Q123, Q124, ncol = 2)
+print(combined_plot_2)
+```
+
+
+# EDA Exploring relationship between planning area and unit price ($PSF)
 
 We have four charts depicting unit price (\$ psf) to planning regions in Singapore through 2023 according to the 4 different quarters. By comparing the graphs, we can see the regional price variations in different quarters of the year.
 
 Central Region show the highest median PSF throughout the year, indicating its status as a premium location. North East Region and East Region have stable PSF values, offering a balance between affordability and location.
 
+
 <details>
-
 <summary>Click to show code</summary>
-
 ```{r}
 library(ggplot2)
 library(cowplot)
@@ -166,14 +298,13 @@ q1 <- ggplot(ds5, aes(x = `Planning Region`, y = `Unit Price ($ PSF)`)) +
        x = "Planning Region",
        y = "Unit Price ($ PSF)") +
   theme(text = element_text(size = 6)) 
+
 ```
-
-</summary>
-
 </details>
 
-Combined the plots
 
+
+Combine the plots
 ```{r}
 # Combine the plots using wrap_plots
 combined_plot <- wrap_plots(q1, q2, q3, q4, ncol = 2)
@@ -183,6 +314,9 @@ combined_plot
 
 Next, we combined the data sets and see the graph from 2023 Q1 - Q4 boxplot.
 
+
+<details>
+<summary>Click to show code</summary>
 ```{r}
 # Load required libraries
 library(dplyr)
@@ -231,7 +365,9 @@ p_plotly <- ggplotly(p, tooltip = c("Planning Region", "y", "Data_Source", "medi
 
 # Convert ggplot to plotly object for interactivity
 p_plotly <- plotly::ggplotly(p, tooltip = c("Planning Region", "y", "Data_Source", "median_PSF", "lower_quartile", "upper_quartile"))
+  
 ```
+</details>
 
 ```{r}
 # Display the interactive plot
@@ -240,35 +376,54 @@ p_plotly
 ```
 
 ::: {.focusbox .focus data-latex="focus"}
-#\*Insights from Visualisations\*\* -xx - xx - xx
+Put your take aways here.
+
+
 :::
 
-# EDA 2
+
+# EDA Relationship between Property Type & Purchaser Address Indicator
+
+The 'Purchaser Address Indicator' refers to the type of residence (either HDB flat or private property) associated with the purchaser's address as indicated in the caveat. It doesn't necessarily imply ownership but rather reflects the type of housing the purchaser resides in. If this information is unavailable, it's marked as 'N.A'.
+
+It's notable that a significant majority of private property buyers (presumably those residing in these properties) live in private residences, as expected.
+
+Interestingly, executive condominiums have the highest proportion of purchasers with HDB addresses, accounting for 53.6%. This could be attributed to the attractive rental yields in Singapore. Consequently, more residents might be purchasing executive condominiums primarily as investment properties.
+
 ```{r}
-# Load required libraries
-library(dplyr)
-library(lubridate)
+
 library(ggplot2)
+library(dplyr)
+library(tidyr)
 
-# Check unique values in Sale Date
-unique(ds1$`Sale Date`)
+# Calculate the percentage of each Purchaser Address Indicator within each Property Type
+percentage_data <- combined_ds %>%
+  group_by(`Property Type`, `Purchaser Address Indicator`) %>%
+  summarise(Count = n()) %>%
+  group_by(`Property Type`) %>%
+  mutate(Percentage = (Count / sum(Count)) * 100) %>%
+  ungroup()
 
-# Convert Sale Date to Date format
-ds1$`Sale Date` <- dmy(ds1$`Sale Date`)
-
-# Extract month from Sale Date
-ds1$Month <- month(ds1$`Sale Date`, label = TRUE)
-
-# Create a histogram for Sale Date by month
-ggplot(ds1, aes(x = Month)) +
-  geom_bar(fill = "skyblue", color = "black", alpha = 0.7) +
+# Plot the stacked bar chart
+plot <- ggplot(percentage_data, aes(x = `Property Type`, y = Percentage, fill = `Purchaser Address Indicator`)) +
+  geom_bar(stat = "identity", position = "stack") +
+  geom_text(aes(label = sprintf("%.1f%%", Percentage)), 
+            position = position_stack(vjust = 0.5), 
+            size = 3, 
+            color = "black") +
   labs(
-    title = "Distribution of Transactions by Month",
-    x = "Month",
-    y = "Count"
+    title = "Percentage of Purchaser Address Indicator by Property Type",
+    x = "Property Type",
+    y = "Percentage (%)",
+    fill = "Purchaser Address Indicator"
   ) +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "top"
+  )
 
-
+print(plot)
 ```
+
+
