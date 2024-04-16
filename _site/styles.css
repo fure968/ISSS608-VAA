@@ -1,1 +1,6 @@
 /* css styles */
+
+body {
+  font-size: 14px; /* Adjust the font size as needed */
+  font-family: 'Courier New', monospace; /* Specify Courier New as the font family */
+}

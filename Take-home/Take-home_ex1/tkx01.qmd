@@ -121,9 +121,10 @@ ds5$`Type of Sale` <- ifelse(ds5$`Type of Sale` %in% c("new sale", "resale"), ds
 ```
 :::
 
-# EDA Relationship between Transactions & 2023/2024 Quarters
+# EDA 
 
-Put your thoughts here. 
+Relationship between Transactions & 2023/2024 Quarters
+
 
 <details>
 <summary>Click to show code</summary>
@@ -254,7 +255,9 @@ print(combined_plot_2)
 ```
 
 
-# EDA Exploring relationship between planning area and unit price ($PSF)
+# EDA 
+
+Exploring relationship between planning area and unit price ($PSF)
 
 We have four charts depicting unit price (\$ psf) to planning regions in Singapore through 2023 according to the 4 different quarters. By comparing the graphs, we can see the regional price variations in different quarters of the year.
 
@@ -382,7 +385,9 @@ Put your take aways here.
 :::
 
 
-# EDA Relationship between Property Type & Purchaser Address Indicator
+# EDA 
+
+Relationship between Property Type & Purchaser Address Indicator
 
 The 'Purchaser Address Indicator' refers to the type of residence (either HDB flat or private property) associated with the purchaser's address as indicated in the caveat. It doesn't necessarily imply ownership but rather reflects the type of housing the purchaser resides in. If this information is unavailable, it's marked as 'N.A'.
 
@@ -425,5 +430,3 @@ plot <- ggplot(percentage_data, aes(x = `Property Type`, y = Percentage, fill = 
 
 print(plot)
 ```
-
-
