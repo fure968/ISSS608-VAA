@@ -308,38 +308,6 @@ combined_plot <- wrap_plots(q1, q2, q3, q4)
 combined_plot
 ```
 
-Next, we combined the data sets and see the graph from 2023 Q1 - Q4 box plot. We will analyse the Interquartile Range (IQR) and drawing some insights from the graph.
-
-Central Region
-
--   The Central Region has a significant concentration of high-end properties, with prices extending to much higher values compared to other regions.
-
--   This region is likely a hotspot for luxury properties catering to affluent investors and high-income earners.
-
-East Region
-
--   The East Region has a strong presence of high-end properties, although slightly more affordable compared to the Central Region.
-
--   Potential investors and buyers in this region might find relatively better value for premium properties compared to the Central Region.
-
-North East Region
-
--   The North East Region shows a moderate presence of high-priced properties, with fewer outliers compared to other regions.
-
--   This region might offer a balanced mix of affordable and mid-range properties, appealing to a broader range of buyers.
-
-North Region
-
--   The North Region predominantly consists of properties within a more affordable price range.
-
--   This region may attract first-time homebuyers, young families, or individuals looking for budget-friendly housing options.
-
-West Region
-
--   The West Region offers a diverse range of properties without extreme price outliers.
-
--   This region could be suitable for buyers seeking a mix of affordability and variety in property choices.
-
 <details>
 
 <summary>Click to show code</summary>
@@ -402,7 +370,7 @@ p_plotly <- plotly::ggplotly(p, tooltip = c("Planning Region", "y", "Data_Source
 p_plotly
 
 ```
-
+In summary, each region in Singapore offers a unique property market landscape catering to different buyer preferences and budgets. The Central Region stands out as a high-end market, while the East offers premium properties at better values. The North East and North Regions provide a mix of affordability and mid-range options, whereas the West Region offers diversity without extreme price outliers.
 
 # EDA 3
 
@@ -412,6 +380,9 @@ According to REALIS data dictionary, 'Purchaser Address Indicator' refers to the
 
 It's notable that a significant majority of private property buyers (presumably those residing in these properties) live in private residences. Interestingly, executive condominiums have the highest proportion of purchasers with HDB addresses, accounting for 53.6%. This could be attributed to the attractive rental yields in Singapore. Consequently, more residents might be purchasing executive condominiums primarily as investment properties.
 
+<details>
+
+<summary>Click to show code</summary>
 ```{r}
 
 library(ggplot2)
@@ -444,7 +415,40 @@ plot <- ggplot(percentage_data, aes(x = `Property Type`, y = Percentage, fill = 
     axis.text.x = element_text(angle = 45, hjust = 1),
     legend.position = "top"
   )
-
-print(plot)
 ```
 
+```{r}
+print(plot)
+```
+</details>
+
+<details>
+
+<summary>Click to show code</summary>
+
+```{r}
+
+counts <- table(combined_ds$`Type of Sale`, combined_ds$`Property Type`)
+percentages <- prop.table(counts, margin = 1) * 100 
+
+# Convert percentages to a data frame
+df_percentages <- as.data.frame(as.table(percentages))
+
+barchart <- ggplot(df_percentages, aes(x = Var1, y = Freq, fill = Var2)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(label = sprintf("%.1f%%", Freq)), position = position_dodge(width = 0.9), vjust = -0.5, size = 2) +  
+  labs(title = "Comparing Property Types Across Sale Categories",
+       x = "Sale Categories",
+       y = "Percentage (%)", 
+       fill = "Property Type") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(legend.position = "top")
+
+
+```
+</details> 
+
+```{r}
+print(barchart)
+```
