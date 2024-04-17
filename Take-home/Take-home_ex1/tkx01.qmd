@@ -13,7 +13,7 @@ execute:
 
 # Introduction
 
-In Singapore, the residential property market is bifurcated into public and private sectors. The public housing sector serves households with a monthly income of up to S$14,000, aiming to offer affordable housing solutions to the broader community. In contrast, the private housing sector caters to households with incomes surpassing S$14,000.
+In Singapore, the residential property market is bifurcated into public and private sectors. The public housing sector serves households with a monthly income of up to S\$14,000, aiming to offer affordable housing solutions to the broader community. In contrast, the private housing sector caters to households with incomes surpassing S\$14,000.
 
 For this analysis, we will leverage REALIS transaction data covering the period from 1st January 2023 to 31st March 2024. Our exploration will be conducted using ggplot2 and its associated extensions.
 
@@ -43,11 +43,19 @@ ds4 <- read_csv("data/ds4.csv")
 ds5 <- read_csv("data/ds5.csv")
 ```
 
-Missing values had been removed to prevent parsing issues, to ensure that the data types matches the actual data some columns had been converted. Sale Date and Completion Date columns had been changed to as.Date format and Type of Sale, Property Type had been changed from char to factor data type.
-
-For numeric columns, remove any non-numeric characters or replace them with appropriate values. For categorical columns, ensure consistent naming and handle any inconsistent or misspelled categories. After cleaning, validate the data to ensure that all inconsistencies and anomalies have been addressed.
+Identify the missing values in the data set and removed any missing elements. 'Type of Sale' and 'Property type' has been converted to factor format. 'Transacted Price (\$)' and 'Area (SQFT)' are converted to numeric data types. 'Type of Sale' has been group into three categories. 
+'Sale Date' has been converted to Date format. 
 
 The process had been repeated for all five data sets.
+
+```{r}
+# Convert Sale Date to Date format
+ds1$`Sale Date` <- dmy(ds1$`Sale Date`)
+ds2$`Sale Date` <- dmy(ds2$`Sale Date`)
+ds3$`Sale Date` <- dmy(ds3$`Sale Date`)
+ds4$`Sale Date` <- dmy(ds4$`Sale Date`)
+ds5$`Sale Date` <- dmy(ds5$`Sale Date`)
+```
 
 ::: panel-tabset
 ## ds1
@@ -119,30 +127,22 @@ ds5$`Area (SQFT)` <- as.numeric(gsub("[^0-9.]", "", ds5$`Area (SQFT)`, perl = TR
 ds5$`Type of Sale` <- tolower(ds5$`Type of Sale`)
 ds5$`Type of Sale` <- ifelse(ds5$`Type of Sale` %in% c("new sale", "resale"), ds5$`Type of Sale`, "other")
 ```
+
 :::
 
-# EDA 
+# EDA 1
 
-Relationship between Transactions & 2023/2024 Quarters
-
+Relationship between Transactions in Jan 2023 to Jan 2024. The month has been extracted from the 'Sale Date' for better visualisation. 
 
 <details>
+
 <summary>Click to show code</summary>
+
 ```{r}
 # Load required libraries
 library(dplyr)
 library(lubridate)
 library(ggplot2)
-
-# Check unique values in Sale Date
-unique(ds1$`Sale Date`)
-
-# Convert Sale Date to Date format
-ds1$`Sale Date` <- dmy(ds1$`Sale Date`)
-ds2$`Sale Date` <- dmy(ds2$`Sale Date`)
-ds3$`Sale Date` <- dmy(ds3$`Sale Date`)
-ds4$`Sale Date` <- dmy(ds4$`Sale Date`)
-ds5$`Sale Date` <- dmy(ds5$`Sale Date`)
 
 # Extract month from Sale Date
 ds1$Month <- month(ds1$`Sale Date`, label = TRUE)
@@ -233,13 +233,16 @@ Q123 <- ggplot(ds5, aes(x = Month)) +
   )
 
 ```
+
 </details>
 
 ```{r}
+Q123 + Q223 + Q323 +Q423
 
-combined_plot <- gridExtra::grid.arrange(Q123, Q223, Q323, Q423, ncol = 2)
-print(combined_plot)
+```
 
+```{r}
+Q123 + Q124
 ```
 
 We're comparing the first quarters of 2023 and 2024 to understand any changes in transaction volumes. Notably, January 2023 shows fewer transactions than January 2024.
@@ -249,23 +252,15 @@ This difference might be due to the easing of COVID-19 restrictions in early 202
 The increase in February 2023 suggests a possible recovery or resurgence in market activity following the easing of COVID-19 restrictions. However, by March 2023, we see a slight decrease of transactions. This could indicate a temporary dip or stabilization in market demand after the initial uptick in February.
 
 
-```{r}
-combined_plot_2 <- gridExtra::grid.arrange(Q123, Q124, ncol = 2)
-print(combined_plot_2)
-```
 
+# EDA 2
 
-# EDA 
-
-Exploring relationship between planning area and unit price ($PSF)
-
-We have four charts depicting unit price (\$ psf) to planning regions in Singapore through 2023 according to the 4 different quarters. By comparing the graphs, we can see the regional price variations in different quarters of the year.
-
-Central Region show the highest median PSF throughout the year, indicating its status as a premium location. North East Region and East Region have stable PSF values, offering a balance between affordability and location.
-
+We analyzed unit price ($PSF) across Singapore's planning regions for 2023, using four quarterly charts to visualize regional price variations. The Central Region consistently showed the highest median PSF, indicating its premium status. In contrast, the North East and East Regions maintained stable PSF values, balancing affordability with location.
 
 <details>
+
 <summary>Click to show code</summary>
+
 ```{r}
 library(ggplot2)
 library(cowplot)
@@ -303,23 +298,52 @@ q1 <- ggplot(ds5, aes(x = `Planning Region`, y = `Unit Price ($ PSF)`)) +
   theme(text = element_text(size = 6)) 
 
 ```
+
 </details>
 
-
-
-Combine the plots
 ```{r}
 # Combine the plots using wrap_plots
-combined_plot <- wrap_plots(q1, q2, q3, q4, ncol = 2)
+combined_plot <- wrap_plots(q1, q2, q3, q4)
 # Display the combined plot
 combined_plot
 ```
 
-Next, we combined the data sets and see the graph from 2023 Q1 - Q4 boxplot.
+Next, we combined the data sets and see the graph from 2023 Q1 - Q4 box plot. We will analyse the Interquartile Range (IQR) and drawing some insights from the graph.
 
+Central Region
+
+-   The Central Region has a significant concentration of high-end properties, with prices extending to much higher values compared to other regions.
+
+-   This region is likely a hotspot for luxury properties catering to affluent investors and high-income earners.
+
+East Region
+
+-   The East Region has a strong presence of high-end properties, although slightly more affordable compared to the Central Region.
+
+-   Potential investors and buyers in this region might find relatively better value for premium properties compared to the Central Region.
+
+North East Region
+
+-   The North East Region shows a moderate presence of high-priced properties, with fewer outliers compared to other regions.
+
+-   This region might offer a balanced mix of affordable and mid-range properties, appealing to a broader range of buyers.
+
+North Region
+
+-   The North Region predominantly consists of properties within a more affordable price range.
+
+-   This region may attract first-time homebuyers, young families, or individuals looking for budget-friendly housing options.
+
+West Region
+
+-   The West Region offers a diverse range of properties without extreme price outliers.
+
+-   This region could be suitable for buyers seeking a mix of affordability and variety in property choices.
 
 <details>
+
 <summary>Click to show code</summary>
+
 ```{r}
 # Load required libraries
 library(dplyr)
@@ -370,6 +394,7 @@ p_plotly <- ggplotly(p, tooltip = c("Planning Region", "y", "Data_Source", "medi
 p_plotly <- plotly::ggplotly(p, tooltip = c("Planning Region", "y", "Data_Source", "median_PSF", "lower_quartile", "upper_quartile"))
   
 ```
+
 </details>
 
 ```{r}
@@ -378,22 +403,14 @@ p_plotly
 
 ```
 
-::: {.focusbox .focus data-latex="focus"}
-Put your take aways here.
 
-
-:::
-
-
-# EDA 
+# EDA 3
 
 Relationship between Property Type & Purchaser Address Indicator
 
-The 'Purchaser Address Indicator' refers to the type of residence (either HDB flat or private property) associated with the purchaser's address as indicated in the caveat. It doesn't necessarily imply ownership but rather reflects the type of housing the purchaser resides in. If this information is unavailable, it's marked as 'N.A'.
+According to REALIS data dictionary, 'Purchaser Address Indicator' refers to the type of residence (either HDB flat or private property) associated with the purchaser's address as indicated in the caveat. It doesn't necessarily imply ownership but rather reflects the type of housing the purchaser resides in. If this information is unavailable, it's marked as 'N.A'.
 
-It's notable that a significant majority of private property buyers (presumably those residing in these properties) live in private residences, as expected.
-
-Interestingly, executive condominiums have the highest proportion of purchasers with HDB addresses, accounting for 53.6%. This could be attributed to the attractive rental yields in Singapore. Consequently, more residents might be purchasing executive condominiums primarily as investment properties.
+It's notable that a significant majority of private property buyers (presumably those residing in these properties) live in private residences. Interestingly, executive condominiums have the highest proportion of purchasers with HDB addresses, accounting for 53.6%. This could be attributed to the attractive rental yields in Singapore. Consequently, more residents might be purchasing executive condominiums primarily as investment properties.
 
 ```{r}
 
@@ -430,3 +447,4 @@ plot <- ggplot(percentage_data, aes(x = `Property Type`, y = Percentage, fill = 
 
 print(plot)
 ```
+
