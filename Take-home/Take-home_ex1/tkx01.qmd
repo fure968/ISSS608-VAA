@@ -29,7 +29,7 @@ Load R Packages
 pacman::p_load(tidyverse, haven,
                ggrepel, ggthemes,
                ggridges, ggdist,
-               patchwork, scales)
+               patchwork, scales,viridis)
 pacman::p_load(HH, tidyverse)
 ```
 
@@ -231,7 +231,7 @@ Q123 <- ggplot(ds5, aes(x = Month)) +
     axis.title = element_text(size = 8),
     legend.text = element_text(size = 8)
   )
-
+ 
 ```
 
 </details>
@@ -245,13 +245,7 @@ Q123 + Q223 + Q323 +Q423
 Q123 + Q124
 ```
 
-We're comparing the first quarters of 2023 and 2024 to understand any changes in transaction volumes. Notably, January 2023 shows fewer transactions than January 2024.
-
-This difference might be due to the easing of COVID-19 restrictions in early 2023. As people adjust to the changing circumstances, there's a cautious approach towards property investments.
-
-The increase in February 2023 suggests a possible recovery or resurgence in market activity following the easing of COVID-19 restrictions. However, by March 2023, we see a slight decrease of transactions. This could indicate a temporary dip or stabilization in market demand after the initial uptick in February.
-
-
+We're comparing the first quarters of 2023 and 2024 to understand any changes in transaction volumes. Notably, January 2023 shows fewer transactions than January 2024. This difference might be due to the easing of COVID-19 restrictions in early 2023. As people adjust to the changing circumstances, there's a cautious approach towards property investments.
 
 # EDA 2
 
@@ -416,11 +410,11 @@ plot <- ggplot(percentage_data, aes(x = `Property Type`, y = Percentage, fill = 
     legend.position = "top"
   )
 ```
-
+</details>
 ```{r}
 print(plot)
 ```
-</details>
+
 
 <details>
 
@@ -443,12 +437,17 @@ barchart <- ggplot(df_percentages, aes(x = Var1, y = Freq, fill = Var2)) +
        fill = "Property Type") +
   scale_fill_brewer(palette = "Set3") +
   theme_minimal() +
-  theme(legend.position = "top")
+  theme(legend.position = "top") 
 
 
 ```
 </details> 
+In the new sale market, apartments represent 61% of sales, while condominiums make up 24.5%.
+
+In contrast, the resale market sees condominiums accounting for 48% and apartments at 27.2%.
+Detached, semi-detached, and terrace houses are less prevalent in both markets. This is attributed to land scarcity and high construction costs imposed by the Singapore government. Furthermore, many property owners retain these types of properties due to their freehold tenure.
 
 ```{r}
 print(barchart)
 ```
+
