@@ -15,9 +15,8 @@ execute:
 Load and Install the required R packages
 
 ```{r}
-pacman::p_load(ggrepel, patchwork, 
-               ggthemes, hrbrthemes,
-               tidyverse) 
+pacman::p_load (tidyverse, forcats, ggrepel, patchwork, 
+         ggthemes, tidyverse)
 ```
 
 # Import Data
