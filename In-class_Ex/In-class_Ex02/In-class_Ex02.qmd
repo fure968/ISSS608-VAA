@@ -1,1 +1,16 @@
-Please update...
+---
+title: "In-class Exercise 2"
+subtitle: ""
+author: "Guan Jhen Lin"
+date: "Apr 20, 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
+
+
+
+

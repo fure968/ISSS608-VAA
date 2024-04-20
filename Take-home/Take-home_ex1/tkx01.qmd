@@ -29,7 +29,12 @@ Load R Packages
 pacman::p_load(tidyverse, haven,
                ggrepel, ggthemes,
                ggridges, ggdist,
-               patchwork, scales,viridis)
+               patchwork, scales,
+               viridis, cowplot, 
+               dplyr, plotly,
+               tidyr, lubridate, 
+               ggplot2)
+               
 pacman::p_load(HH, tidyverse)
 ```
 
@@ -132,17 +137,13 @@ ds5$`Type of Sale` <- ifelse(ds5$`Type of Sale` %in% c("new sale", "resale"), ds
 
 # EDA 1
 
-Relationship between Transactions in Jan 2023 to Jan 2024. The month has been extracted from the 'Sale Date' for better visualisation. 
+Relationship between Transactions in Jan 2023 to Jan 2024. The month has been extracted from the 'Sale Date' for better visualization. 
 
 <details>
 
 <summary>Click to show code</summary>
 
 ```{r}
-# Load required libraries
-library(dplyr)
-library(lubridate)
-library(ggplot2)
 
 # Extract month from Sale Date
 ds1$Month <- month(ds1$`Sale Date`, label = TRUE)
@@ -151,7 +152,7 @@ ds3$Month <- month(ds3$`Sale Date`, label = TRUE)
 ds4$Month <- month(ds4$`Sale Date`, label = TRUE)
 ds5$Month <- month(ds5$`Sale Date`, label = TRUE)
 
-# Create individual bar plots for each quarter
+
 Q124 <- ggplot(ds1, aes(x = Month)) +
   geom_bar(fill = "lightgreen", color = "black", alpha = 0.7) +
   labs(
@@ -256,10 +257,7 @@ We analyzed unit price ($PSF) across Singapore's planning regions for 2023, usin
 <summary>Click to show code</summary>
 
 ```{r}
-library(ggplot2)
-library(cowplot)
 
-# Price per Square Foot by Planning Region in DS2
 q4 <- ggplot(ds2, aes(x = `Planning Region`, y = `Unit Price ($ PSF)`)) +
   geom_boxplot() +
   labs(title = "Price per Square Foot by Planning Region - Oct 23 - Dec 23",
@@ -296,9 +294,7 @@ q1 <- ggplot(ds5, aes(x = `Planning Region`, y = `Unit Price ($ PSF)`)) +
 </details>
 
 ```{r}
-# Combine the plots using wrap_plots
 combined_plot <- wrap_plots(q1, q2, q3, q4)
-# Display the combined plot
 combined_plot
 ```
 
@@ -307,12 +303,7 @@ combined_plot
 <summary>Click to show code</summary>
 
 ```{r}
-# Load required libraries
-library(dplyr)
-library(ggplot2)
-library(plotly)
 
-# Combine the datasets into a single dataset
 combined_ds <- bind_rows(
   ds1 %>% mutate(Data_Source = "data/ds1.csv"),
   ds2 %>% mutate(Data_Source = "data/ds2.csv"),
@@ -321,7 +312,6 @@ combined_ds <- bind_rows(
   ds5 %>% mutate(Data_Source = "data/ds5.csv"),
 )
 
-# Calculate median and IQR by Planning Region
 summary_stats <- combined_ds %>%
   group_by(`Planning Region`) %>%
   summarise(
@@ -330,7 +320,6 @@ summary_stats <- combined_ds %>%
     upper_quartile = quantile(`Unit Price ($ PSF)`, 0.75, na.rm = TRUE)
   )
 
-# Create a boxplot for Price per Square Foot by Planning Region
 p <- ggplot(combined_ds, aes(x = `Planning Region`, y = `Unit Price ($ PSF)`)) +
   geom_boxplot() +
   stat_summary(
@@ -349,10 +338,8 @@ p <- ggplot(combined_ds, aes(x = `Planning Region`, y = `Unit Price ($ PSF)`)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-# Convert ggplot to plotly object for interactivity
 p_plotly <- ggplotly(p, tooltip = c("Planning Region", "y", "Data_Source", "median_PSF", "lower_quartile", "upper_quartile"))
 
-# Convert ggplot to plotly object for interactivity
 p_plotly <- plotly::ggplotly(p, tooltip = c("Planning Region", "y", "Data_Source", "median_PSF", "lower_quartile", "upper_quartile"))
   
 ```
@@ -360,7 +347,6 @@ p_plotly <- plotly::ggplotly(p, tooltip = c("Planning Region", "y", "Data_Source
 </details>
 
 ```{r}
-# Display the interactive plot
 p_plotly
 
 ```
@@ -379,19 +365,12 @@ It's notable that a significant majority of private property buyers (presumably 
 <summary>Click to show code</summary>
 ```{r}
 
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-
-# Calculate the percentage of each Purchaser Address Indicator within each Property Type
 percentage_data <- combined_ds %>%
   group_by(`Property Type`, `Purchaser Address Indicator`) %>%
   summarise(Count = n()) %>%
   group_by(`Property Type`) %>%
   mutate(Percentage = (Count / sum(Count)) * 100) %>%
   ungroup()
-
-# Plot the stacked bar chart
 plot <- ggplot(percentage_data, aes(x = `Property Type`, y = Percentage, fill = `Purchaser Address Indicator`)) +
   geom_bar(stat = "identity", position = "stack") +
   geom_text(aes(label = sprintf("%.1f%%", Percentage)), 
@@ -416,6 +395,8 @@ print(plot)
 ```
 
 
+# EDA 4
+
 <details>
 
 <summary>Click to show code</summary>
@@ -425,7 +406,6 @@ print(plot)
 counts <- table(combined_ds$`Type of Sale`, combined_ds$`Property Type`)
 percentages <- prop.table(counts, margin = 1) * 100 
 
-# Convert percentages to a data frame
 df_percentages <- as.data.frame(as.table(percentages))
 
 barchart <- ggplot(df_percentages, aes(x = Var1, y = Freq, fill = Var2)) +
@@ -438,7 +418,6 @@ barchart <- ggplot(df_percentages, aes(x = Var1, y = Freq, fill = Var2)) +
   scale_fill_brewer(palette = "Set3") +
   theme_minimal() +
   theme(legend.position = "top") 
-
 
 ```
 </details> 
