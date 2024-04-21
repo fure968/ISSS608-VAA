@@ -14,11 +14,9 @@ output:
     latex_engine: xelatex
 ---
 
-<!-- Google tag (gtag.js) -->
+The first part of the lesson was to mingle with **Tableau**. We have published our first date with Tableau [**here**](https://public.tableau.com/app/profile/guan.jhen.lin/vizzes). Moving on to R studio, we will be referring to Visualising Distributions [read more here](https://r4va.netlify.app/chap09) for this exercise.
 
-\<script async src="https://www.googletagmanager.com/gtag/js?id=G-65B5RWMGTX"\>\</script\> \<script\> window.dataLayer = window.dataLayer \|\| \[\]; function gtag(){dataLayer.push(arguments);} gtag('js', new Date());
-
-gtag('config', 'G-65B5RWMGTX'); \</script\>
+#Load Package
 
 ```{r}
 pacman::p_load(ggrepel, patchwork, ggthemes, 
@@ -177,7 +175,8 @@ print(ridgeline4)
 
 ```
 
-# ☁ Rainploud Plot 
+# ☁ Rainploud Plot
+
 ```{r}
 ggplot(exam_data, 
        aes(x = RACE, 
@@ -215,7 +214,6 @@ ggplot(exam_data,
             binwidth = .5,
             dotsize = 2)
 ```
-
 
 ```{r}
 ggplot(exam_data, 
