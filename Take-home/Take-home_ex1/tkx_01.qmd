@@ -2,16 +2,21 @@
 title: "Take Home Exercise 1"
 subtitle: "Creating data visualisation beyond default"
 author: "Guan Jhen Lin"
-date: "Apr 21, 2024"
-date-modified: "Apr 13, 2024"
+date: "Apr 13, 2024"
+date-modified: "last-modified"
 execute: 
   eval: true
   echo: true
   warning: false
   freeze: true
 ---
+
 <!-- Google tag (gtag.js) -->
+
+```{=html}
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-65B5RWMGTX"></script>
+```
+```{=html}
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -19,9 +24,8 @@ execute:
 
   gtag('config', 'G-65B5RWMGTX');
 </script>
-
-# &#x1F4D6; Introduction
-
+```
+# 📖 Introduction
 
 In Singapore, the residential property market is bifurcated into public and private sectors. The public housing sector serves households with a monthly income of up to S\$14,000, aiming to offer affordable housing solutions to the broader community. In contrast, the private housing sector caters to households with incomes surpassing S\$14,000.
 
@@ -109,7 +113,8 @@ ds5$`Sale Date` <- dmy(ds5$`Sale Date`)
 :::
 
 # EDA
-In this section, we will visualize the relationships between Property Types vs. Planning Region and Sale trend from Jan 2023 - Mar 2024. 
+
+In this section, we will visualize the relationships between Property Types vs. Planning Region and Sale trend from Jan 2023 - Mar 2024.
 
 ::: panel-tabset
 ## Transactions by Regions and Property Type
@@ -177,6 +182,7 @@ barchart1 <- ggplot(monthly_sales_combined, aes(x = Month, y = Units_Sold, fill 
 </details>
 
 ## Purchaser Address Indicator
+
 <details>
 
 <summary>Click to show code</summary>
@@ -210,9 +216,10 @@ plot <- ggplot(percentage_data, aes(x = `Property Type`, y = Percentage, fill = 
 
 </details>
 
-
 ## Sale Categories vs. Property Types
+
 <details>
+
 <summary>Click to show code</summary>
 
 ```{r}
@@ -236,8 +243,6 @@ barchart <- ggplot(df_percentages, aes(x = Var1, y = Freq, fill = Var2)) +
 ```
 
 </details>
-
-
 :::
 
 <details>
@@ -309,23 +314,14 @@ print(combined_plot2)
 
 ```
 
+::: {style="background-color: #FFF8DC; padding: 10px; border-radius: 5px; border: 1px solid #EEE; margin-bottom: 10px;"}
+📈 <strong>Insight:</strong> </br>
 
-
-<div style="background-color: #FFF8DC; padding: 10px; border-radius: 5px; border: 1px solid #EEE; margin-bottom: 10px;">
-&#x1F4C8; <strong>Insight:</strong> </br>
-
-
-- Private property sales surge in Jul 2023 due to several big launches on the market and developers sold 1412 units in July compared to 278 in June. <a href="https://www.mingtiandi.com/real-estate/research-policy/singapore-home-sales-surge-five-fold-as-developers-launch-more-projects/" target="_blank">Read more.</a></br>
-- Central Region Apartments are the most sought after in the market according to the heatmap, followed by condominiums.</br>
--In the new sale market, apartments represent 61% of sales, while condominiums make up 24.5%.</br>
-- In contrast, the resale market sees condominiums accounting for 48% and apartments at 27.2%. Detached, semi-detached, and terrace houses are less prevalent in both markets. This is attributed to land scarcity and high construction costs imposed by the Singapore government. Furthermore, many property owners retain these types of properties due to their freehold tenure.</br>
-- It's notable that a significant majority of private property buyers (presumably those residing in these properties) live in private residences. Interestingly, executive condominiums have the highest proportion of purchasers with HDB addresses, accounting for 53.6%. This could be attributed to the attractive rental yields in Singapore. Consequently, more residents might be purchasing executive condominiums primarily as investment properties.</br>
-
-</div>
-
-
-
-
+-   Private property sales surge in Jul 2023 due to several big launches on the market and developers sold 1412 units in July compared to 278 in June. <a href="https://www.mingtiandi.com/real-estate/research-policy/singapore-home-sales-surge-five-fold-as-developers-launch-more-projects/" target="_blank">Read more.</a></br>
+-   Central Region Apartments are the most sought after in the market according to the heatmap, followed by condominiums.</br>
+-   In the new sale market, apartments represent 61% of sales, while condominiums make up 24.5%. In contrast, the resale market sees condominiums accounting for 48% and apartments at 27.2%. Detached, semi-detached, and terrace houses are less prevalent in both markets. This is attributed to land scarcity and high construction costs imposed by the Singapore government. Furthermore, many property owners retain these types of properties due to their freehold tenure.</br>
+-   It's notable that a significant majority of private property buyers (presumably those residing in these properties) live in private residences. Interestingly, executive condominiums have the highest proportion of purchasers with HDB addresses, accounting for 53.6%. This could be attributed to the attractive rental yields in Singapore. Consequently, more residents might be purchasing executive condominiums primarily as investment properties.</br>
+:::
 
 # EDA 2
 
@@ -377,7 +373,6 @@ combined_plot <- wrap_plots(q1, q2, q3, q4)
 combined_plot
 ```
 
-
 <details>
 
 <summary>Click to show code</summary>
@@ -426,15 +421,32 @@ p_plotly <- plotly::ggplotly(p, tooltip = c("Planning Region", "y", "Data_Source
 
 </details>
 
-
 ```{r}
 p_plotly
 
 ```
 
-<div style="background-color: #FFF8DC; padding: 10px; border-radius: 5px; border: 1px solid #EEE; margin-bottom: 10px;">
-&#x1F4C8; <strong>Insight:</strong> </br>
-Each region in Singapore offers a unique property market landscape catering to different buyer preferences and budgets. </br>
-The Central Region stands out as a high-end market, while the East offers premium properties at better values.</br>
-The North East and North Regions provide a mix of affordability and mid-range options, whereas the West Region offers diversity without extreme price outliers.</br>
-</div>
+::: {style="background-color: #FFF8DC; padding: 10px; border-radius: 5px; border: 1px solid #EEE; margin-bottom: 10px;"}
+📈 <strong>Insight:</strong> </br> Each region in Singapore offers a unique property market landscape catering to different buyer preferences and budgets. </br> The Central Region stands out as a high-end market, while the East offers premium properties at better values.</br> The North East and North Regions provide a mix of affordability and mid-range options, whereas the West Region offers diversity without extreme price outliers.</br>
+:::
+
+# EDA 3
+
+Ridgeline plots, also known as joy plots, are used for displaying the distribution of a numerical variable across several categories.
+
+```{r}
+library(viridis)
+
+ggplot(combined_ds, aes(x = `Unit Price ($ PSF)`, y = `Planning Region`, fill = `Planning Region`)) +
+  geom_density_ridges(scale = 3) +
+  scale_fill_viridis(discrete = TRUE) +
+  labs(title = "Unit Price ($ PSF) Distribution by Planning Region",
+       x = "Unit Price ($ PSF)",
+       y = "Planning Region") +
+  theme_ridges()
+
+```
+
+::: {style="background-color: #FFF8DC; padding: 10px; border-radius: 5px; border: 1px solid #EEE; margin-bottom: 10px;"}
+📈 <strong>Insight:</strong> </br> - The Central Region's peak is the most pronounced and shifted towards the high, indicating that there is a high concentration of properties with higher unit prices. </br> - The East Region's pea is lower and more towards the middle of the x-axis compared to the Central Region. This implies that while the East Region has properties with moderate unit prices, it does not reach as high of a price point as frequently as the Central Region. </br> - North East and North Regions peaks are less sharp and positioned towards the lower end of the price scale, suggesting a more affordable housing options and a wider distribution of unit prices. North Region appears to have a slightly broader distribution than North East. </br> - West Region has the lowest peak among all the regions and is positioned towards the far left of the plot. This indicates that the West Region is the most affordable in Singapore. </br>
+:::
