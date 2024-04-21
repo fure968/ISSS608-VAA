@@ -9,21 +9,21 @@ execute:
   echo: true
   warning: false
   freeze: true
+output:
+  pdf_document:
+    latex_engine: xelatex
 ---
 
 <!-- Google tag (gtag.js) -->
-\<script async src="https://www.googletagmanager.com/gtag/js?id=G-65B5RWMGTX"\>\</script\>
-\<script\>
-window.dataLayer = window.dataLayer \|\| \[\];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
 
-gtag('config', 'G-65B5RWMGTX');
-\</script\>
+\<script async src="https://www.googletagmanager.com/gtag/js?id=G-65B5RWMGTX"\>\</script\> \<script\> window.dataLayer = window.dataLayer \|\| \[\]; function gtag(){dataLayer.push(arguments);} gtag('js', new Date());
+
+gtag('config', 'G-65B5RWMGTX'); \</script\>
 
 ```{r}
 pacman::p_load(ggrepel, patchwork, ggthemes, 
-               tidyverse, ggridges) 
+               tidyverse, ggridges, ggdist,
+               colorspace) 
 ```
 
 ```{r, message=FALSE}
@@ -31,25 +31,22 @@ exam_data <- read_csv("Exam_data.csv")
 summary(exam_data)
 ```
 
-```{r, message=FALSE}
-exam_df <- read_csv("Exam_data.csv")
-summary(exam_df)
-```
+# Histogram
 
-Using the steps you have learned, build a histogram
+Using the steps you have learned, build a histogram.
 
 ```{r}
-ggplot(data=exam_df, 
+ggplot(data=exam_data, 
        aes(x = ENGLISH)) +
 geom_histogram(bins=30,            
                  color="black",      
                  fill="light blue") 
 ```
 
-Probability Density Plot
+# Probability Density Plot
 
 ```{r}
-ggplot(data=exam_df, 
+ggplot(data=exam_data, 
        aes(x = ENGLISH)) +
   geom_density(
      color = "#1696d2",
@@ -58,14 +55,14 @@ ggplot(data=exam_df,
   )
 ```
 
-The alternative design
+The alternative design. (Missing median_eng because the class abruptly ended.)
 
 ```{r}
-median_eng <- median(exam_df$ENGLISH)
-mean_eng <- mean(exam_df$ENGLISH)
-std_eng <- (exam_df$ENGLISH)
+median_eng <- median(exam_data$ENGLISH)
+mean_eng <- mean(exam_data$ENGLISH)
+std_eng <- (exam_data$ENGLISH)
 
-ggplot(exam_df,
+ggplot(exam_data,
        aes(x= ENGLISH)) +
   geom_density(
     color = "#1696d2",
@@ -77,6 +74,7 @@ ggplot(exam_df,
                 sd = std_eng),
     col = "grey10",
     size = .8) +
+  
   geom_vline(
     aes(xintercept = mean_eng), 
     color="#4d5887",
@@ -86,13 +84,153 @@ ggplot(exam_df,
            x = mean_eng - 8,
            y = 0.04, 
            label = paste0("Mean ENGLISH: ",round((mean_eng),2)),
-           color = "#4d5887")
-  
-    geom_vline()
-
-  
+           color = "#4d5887") 
 
 
+```
+
+# Visualising Distribution with Ridgeline Plot
+
+```{r}
+ggplot(exam_data, aes(x = ENGLISH, y = fct_relevel(CLASS, rev(unique(CLASS))))) +
+  geom_density_ridges() +
+  scale_y_discrete(labels = rev) + # This is to ensure the order of classes is from top to bottom
+  labs(title = "Distribution of English Scores by Class",
+       x = "English Score",
+       y = "Class") +
+  theme_ridges(grid = FALSE) 
+```
+
+```{r}
+ridgeline1 <- ggplot(exam_data, 
+       aes(x = ENGLISH, 
+           y = CLASS)) +
+  geom_density_ridges(
+    scale = 3,
+    rel_min_height = 0.01,
+    bandwidth = 3.4,
+    fill = lighten("#7097BB", .3),
+    color = "white"
+  ) +
+  scale_x_continuous(
+    name = "English grades",
+    expand = c(0, 0)
+    ) +
+  scale_y_discrete(name = NULL, expand = expansion(add = c(0.2, 2.6))) +
+  theme_ridges()
+```
+
+```{r}
+ridgeline2 <- ggplot(exam_data, 
+       aes(x = ENGLISH, 
+           y = CLASS,
+           fill = stat(x))) +
+  geom_density_ridges_gradient(
+    scale = 3,
+    rel_min_height = 0.01) +
+  scale_fill_viridis_c(name = "Temp. [F]",
+                       option = "C") +
+  scale_x_continuous(
+    name = "English grades",
+    expand = c(0, 0)
+  ) +
+  scale_y_discrete(name = NULL, expand = expansion(add = c(0.2, 2.6))) +
+  theme_ridges()
+```
+
+```{r}
+ridgeline3 <- ggplot(exam_data,
+       aes(x = ENGLISH, 
+           y = CLASS, 
+           fill = 0.5 - abs(0.5-stat(ecdf)))) +
+  stat_density_ridges(geom = "density_ridges_gradient", 
+                      calc_ecdf = TRUE) +
+  scale_fill_viridis_c(name = "Tail probability",
+                       direction = -1) +
+  theme_ridges()
+```
+
+```{r}
+ridgeline4 <- ggplot(exam_data,
+       aes(x = ENGLISH, 
+           y = CLASS, 
+           fill = factor(stat(quantile))
+           )) +
+  stat_density_ridges(
+    geom = "density_ridges_gradient",
+    calc_ecdf = TRUE, 
+    quantiles = c(0.025, 0.975)
+    ) +
+  scale_fill_manual(
+    name = "Probability",
+    values = c("#FF0000A0", "#A0A0A0A0", "#0000FFA0"),
+    labels = c("(0, 0.025]", "(0.025, 0.975]", "(0.975, 1]")
+  ) +
+  theme_ridges()
+```
+
+```{r}
+print(ridgeline1)
+print(ridgeline2) 
+print(ridgeline3) 
+print(ridgeline4)
+
+```
+
+# ☁ Rainploud Plot 
+```{r}
+ggplot(exam_data, 
+       aes(x = RACE, 
+           y = ENGLISH)) +
+  stat_halfeye(adjust = 0.5,
+               justification = -0.2,
+               .width = 0,
+               point_colour = NA)
+```
+
+```{r}
+ggplot(exam_data, 
+       aes(x = RACE, 
+           y = ENGLISH)) +
+  stat_halfeye(adjust = 0.5,
+               justification = -0.2,
+               .width = 0,
+               point_colour = NA) +
+  geom_boxplot(width = .20,
+               outlier.shape = NA)
+```
+
+```{r}
+ggplot(exam_data, 
+       aes(x = RACE, 
+           y = ENGLISH)) +
+  stat_halfeye(adjust = 0.5,
+               justification = -0.2,
+               .width = 0,
+               point_colour = NA) +
+  geom_boxplot(width = .20,
+               outlier.shape = NA) +
+  stat_dots(side = "left", 
+            justification = 1.2, 
+            binwidth = .5,
+            dotsize = 2)
+```
 
 
+```{r}
+ggplot(exam_data, 
+       aes(x = RACE, 
+           y = ENGLISH)) +
+  stat_halfeye(adjust = 0.5,
+               justification = -0.2,
+               .width = 0,
+               point_colour = NA) +
+  geom_boxplot(width = .20,
+               outlier.shape = NA) +
+  stat_dots(side = "left", 
+            justification = 1.2, 
+            binwidth = .5,
+            dotsize = 1.5) +
+  coord_flip() +
+  theme_economist()
 ```
