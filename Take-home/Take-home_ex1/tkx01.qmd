@@ -11,15 +11,16 @@ execute:
   freeze: true
 ---
 
-# Introduction
+# &#x1F4D6; Introduction
+
 
 In Singapore, the residential property market is bifurcated into public and private sectors. The public housing sector serves households with a monthly income of up to S\$14,000, aiming to offer affordable housing solutions to the broader community. In contrast, the private housing sector caters to households with incomes surpassing S\$14,000.
 
 For this analysis, we will leverage REALIS transaction data covering the period from 1st January 2023 to 31st March 2024. Our exploration will be conducted using ggplot2 and its associated extensions.
 
-# Setting the Stage
+# Setting the Scene
 
-In this scenario, we assume the role of a graphical editor for a media company. We have been tasked with creating two to three data visualizations to illuminate the private residential market and its sub-markets in Singapore for the first quarter of 2024.
+In this scenario, we assume the role of a graphical editor for a media company. We have been tasked with creating data visualizations to illuminate the private residential market and its sub-markets in Singapore for the first quarter of 2024.
 
 # Data Preparation
 
@@ -33,12 +34,16 @@ pacman::p_load(tidyverse, haven,
                viridis, cowplot, 
                dplyr, plotly,
                tidyr, lubridate, 
-               ggplot2)
+               ggplot2, ggExtra)
                
-pacman::p_load(HH, tidyverse)
 ```
 
-Import the 5 data sets
+Identify the missing values in the data set and removed any missing elements. 'Type of Sale' and 'Property type' has been converted to factor format. 'Transacted Price (\$)' and 'Area (SQFT)' are converted to numeric data types. 'Type of Sale' has been group into three categories. 'Sale Date' has been converted to Date format.
+
+The process had been repeated for all five data sets.
+
+::: panel-tabset
+## Import Data Sets
 
 ```{r}
 ds1 <- read_csv("data/ds1.csv")
@@ -48,10 +53,41 @@ ds4 <- read_csv("data/ds4.csv")
 ds5 <- read_csv("data/ds5.csv")
 ```
 
-Identify the missing values in the data set and removed any missing elements. 'Type of Sale' and 'Property type' has been converted to factor format. 'Transacted Price (\$)' and 'Area (SQFT)' are converted to numeric data types. 'Type of Sale' has been group into three categories. 
-'Sale Date' has been converted to Date format. 
+## Converting Data
 
-The process had been repeated for all five data sets.
+```{r}
+
+prepare_dataset <- function(ds) {
+  colSums(is.na(ds))
+  ds <- na.omit(ds)
+  
+  ds$`Type of Sale` <- tolower(as.character(ds$`Type of Sale`))
+  ds$`Type of Sale` <- ifelse(ds$`Type of Sale` %in% c("new sale", "resale"), ds$`Type of Sale`, "other")
+  ds$`Type of Sale` <- as.factor(ds$`Type of Sale`)
+  
+  ds$`Property Type` <- as.factor(ds$`Property Type`)
+  
+  ds$`Transacted Price ($)` <- as.numeric(gsub("[^0-9.]", "", ds$`Transacted Price ($)`, perl = TRUE))
+  ds$`Area (SQFT)` <- as.numeric(gsub("[^0-9.]", "", ds$`Area (SQFT)`, perl = TRUE))
+  ds$`Unit Price ($ PSF)` <- as.numeric(gsub("[^0-9.]", "", ds$`Unit Price ($ PSF)`, perl = TRUE))
+  
+  return(ds)
+}
+
+# Apply the function to each dataset
+ds1 <- prepare_dataset(ds1)
+ds2 <- prepare_dataset(ds2)
+ds3 <- prepare_dataset(ds3)
+ds4 <- prepare_dataset(ds4)
+ds5 <- prepare_dataset(ds5)
+
+# Combine the datasets
+combined_ds <- rbind(ds1, ds2, ds3, ds4, ds5)
+
+
+```
+
+## Converting Dates
 
 ```{r}
 # Convert Sale Date to Date format
@@ -61,196 +97,230 @@ ds3$`Sale Date` <- dmy(ds3$`Sale Date`)
 ds4$`Sale Date` <- dmy(ds4$`Sale Date`)
 ds5$`Sale Date` <- dmy(ds5$`Sale Date`)
 ```
-
-::: panel-tabset
-## ds1
-
-```{r}
-colSums(is.na(ds1))
-ds1 <- na.omit(ds1)
-
-ds1$`Type of Sale` <- as.factor(ds1$`Type of Sale`)
-ds1$`Property Type` <- as.factor(ds1$`Property Type`)
-ds1$`Transacted Price ($)` <- as.numeric(gsub("[^0-9.]", "", ds1$`Transacted Price ($)`, perl = TRUE))
-ds1$`Area (SQFT)` <- as.numeric(gsub("[^0-9.]", "", ds1$`Area (SQFT)`, perl = TRUE))
-ds1$`Type of Sale` <- tolower(ds1$`Type of Sale`)
-ds1$`Type of Sale` <- ifelse(ds1$`Type of Sale` %in% c("new sale", "resale"), ds1$`Type of Sale`, "other")
-```
-
-## ds2
-
-```{r}
-colSums(is.na(ds2))
-ds2 <- na.omit(ds2)
-
-ds2$`Type of Sale` <- as.factor(ds2$`Type of Sale`)
-ds2$`Property Type` <- as.factor(ds2$`Property Type`)
-ds2$`Transacted Price ($)` <- as.numeric(gsub("[^0-9.]", "", ds2$`Transacted Price ($)`, perl = TRUE))
-ds2$`Area (SQFT)` <- as.numeric(gsub("[^0-9.]", "", ds2$`Area (SQFT)`, perl = TRUE))
-ds2$`Type of Sale` <- tolower(ds2$`Type of Sale`)
-ds2$`Type of Sale` <- ifelse(ds2$`Type of Sale` %in% c("new sale", "resale"), ds2$`Type of Sale`, "other")
-```
-
-## ds3
-
-```{r}
-colSums(is.na(ds3))
-ds3 <- na.omit(ds3)
-
-ds3$`Type of Sale` <- as.factor(ds3$`Type of Sale`)
-ds3$`Property Type` <- as.factor(ds3$`Property Type`)
-ds3$`Transacted Price ($)` <- as.numeric(gsub("[^0-9.]", "", ds3$`Transacted Price ($)`, perl = TRUE))
-ds3$`Area (SQFT)` <- as.numeric(gsub("[^0-9.]", "", ds3$`Area (SQFT)`, perl = TRUE))
-ds3$`Type of Sale` <- tolower(ds3$`Type of Sale`)
-ds3$`Type of Sale` <- ifelse(ds3$`Type of Sale` %in% c("new sale", "resale"), ds3$`Type of Sale`, "other")
-```
-
-## ds4
-
-```{r}
-colSums(is.na(ds4))
-ds4 <- na.omit(ds4)
-
-ds4$`Type of Sale` <- as.factor(ds4$`Type of Sale`)
-ds4$`Property Type` <- as.factor(ds4$`Property Type`)
-ds4$`Transacted Price ($)` <- as.numeric(gsub("[^0-9.]", "", ds4$`Transacted Price ($)`, perl = TRUE))
-ds4$`Area (SQFT)` <- as.numeric(gsub("[^0-9.]", "", ds4$`Area (SQFT)`, perl = TRUE))
-ds4$`Type of Sale` <- tolower(ds4$`Type of Sale`)
-ds4$`Type of Sale` <- ifelse(ds4$`Type of Sale` %in% c("new sale", "resale"), ds4$`Type of Sale`, "other")
-```
-
-## ds5
-
-```{r}
-colSums(is.na(ds5))
-ds5 <- na.omit(ds5)
-
-ds5$`Type of Sale` <- as.factor(ds5$`Type of Sale`)
-ds5$`Property Type` <- as.factor(ds5$`Property Type`)
-ds5$`Transacted Price ($)` <- as.numeric(gsub("[^0-9.]", "", ds5$`Transacted Price ($)`, perl = TRUE))
-ds5$`Area (SQFT)` <- as.numeric(gsub("[^0-9.]", "", ds5$`Area (SQFT)`, perl = TRUE))
-ds5$`Type of Sale` <- tolower(ds5$`Type of Sale`)
-ds5$`Type of Sale` <- ifelse(ds5$`Type of Sale` %in% c("new sale", "resale"), ds5$`Type of Sale`, "other")
-```
-
 :::
 
-# EDA 1
+# EDA
+In this section, we will visualize the relationships between Property Types vs. Planning Region and Sale trend from Jan 2023 - Mar 2024. 
 
-Relationship between Transactions in Jan 2023 to Jan 2024. The month has been extracted from the 'Sale Date' for better visualization. 
+::: panel-tabset
+## Transactions by Regions and Property Type
 
 <details>
 
 <summary>Click to show code</summary>
 
 ```{r}
+transactions_heatmap <- combined_ds %>%
+  group_by(`Planning Region`, `Property Type`) %>%
+  summarise(Transactions = n()) %>%
+  ungroup()
 
-# Extract month from Sale Date
-ds1$Month <- month(ds1$`Sale Date`, label = TRUE)
-ds2$Month <- month(ds2$`Sale Date`, label = TRUE)
-ds3$Month <- month(ds3$`Sale Date`, label = TRUE)
-ds4$Month <- month(ds4$`Sale Date`, label = TRUE)
-ds5$Month <- month(ds5$`Sale Date`, label = TRUE)
-
-
-Q124 <- ggplot(ds1, aes(x = Month)) +
-  geom_bar(fill = "lightgreen", color = "black", alpha = 0.7) +
-  labs(
-    title = "Distribution of Transactions 2024 Q1",
-    x = "Month",
-    y = "Count"
-  ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
-    axis.text.y = element_text(size =8),
-    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),
-    axis.title = element_text(size = 8),
-    legend.text = element_text(size = 8)
-  )
-
-Q423 <- ggplot(ds2, aes(x = Month)) +
-  geom_bar(fill = "skyblue", color = "black", alpha = 0.7) +
-  labs(
-    title = "Distribution of Transactions 2023 Q4",
-    x = "Month",
-    y = "Count"
-  ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
-    axis.text.y = element_text(size =8),
-    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),
-    axis.title = element_text(size = 8),
-    legend.text = element_text(size = 8)
-  )
-
-Q323 <- ggplot(ds3, aes(x = Month)) +
-  geom_bar(fill = "skyblue", color = "black", alpha = 0.7) +
-  labs(
-    title = "Distribution of Transactions 2023 Q3",
-    x = "Month",
-    y = "Count"
-  ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
-    axis.text.y = element_text(size =8),
-    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),
-    axis.title = element_text(size = 8),
-    legend.text = element_text(size = 8)
-  )
-
-Q223 <- ggplot(ds4, aes(x = Month)) +
-  geom_bar(fill = "skyblue", color = "black", alpha = 0.7) +
-  labs(
-    title = "Distribution of Transactions 2023 Q2",
-    x = "Month",
-    y = "Count"
-  ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
-    axis.text.y = element_text(size =8),
-    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),
-    axis.title = element_text(size = 8),
-    legend.text = element_text(size = 8)
-  )
-
-Q123 <- ggplot(ds5, aes(x = Month)) +
-  geom_bar(fill = "skyblue", color = "black", alpha = 0.7) +
-  labs(
-    title = "Distribution of Transactions 2023 Q1",
-    x = "Month",
-    y = "Count"
-  ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
-    axis.text.y = element_text(size =8),
-    plot.title = element_text(hjust = 0.5, size = 10, face = "bold"),
-    axis.title = element_text(size = 8),
-    legend.text = element_text(size = 8)
-  )
- 
+heatmap1 <- ggplot(transactions_heatmap, aes(x = `Planning Region`, y = `Property Type`, fill = Transactions)) +
+  geom_tile() +
+  labs(title = "Heatmap of Transactions by Region and Property Type",
+       x = "Region",
+       y = "Property Type") +
+  scale_fill_viridis_c()
 ```
 
 </details>
 
+## Transactions by Month
+
+<details>
+
+<summary>Click to show code</summary>
+
 ```{r}
-Q123 + Q223 + Q323 +Q423
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+
+# Combine all datasets into one dataframe
+combined_ds <- bind_rows(ds1, ds2, ds3, ds4, ds5)
+
+# Pre-process the combined dataset
+combined_ds$`Sale Date` <- as.Date(combined_ds$`Sale Date`, format = "%Y-%m-%d")
+combined_ds$Year <- year(combined_ds$`Sale Date`)
+combined_ds$Month <- factor(format(combined_ds$`Sale Date`, "%b"), levels = month.abb)
+combined_ds$`Number of Units` <- as.numeric(combined_ds$`Number of Units`)
+
+# Summarize data to get total units sold by month and year
+monthly_sales_combined <- combined_ds %>%
+  group_by(Year, Month) %>%
+  summarise(Units_Sold = sum(`Number of Units`, na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate(Month = factor(Month, levels = month.abb)) # Ensure months are in the correct order
+
+# Create a single bar chart with month and year
+barchart1 <- ggplot(monthly_sales_combined, aes(x = Month, y = Units_Sold, fill = as.factor(Year))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_x_discrete(drop = FALSE) + # Ensures all months are shown
+  labs(title = "Total Number of Units Sold by Month and Year",
+       x = "Month",
+       y = "Number of Units Sold",
+       fill = "Year") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "bottom")
+```
+
+</details>
+
+## Purchaser Address Indicator
+<details>
+
+<summary>Click to show code</summary>
+
+```{r}
+
+percentage_data <- combined_ds %>%
+  group_by(`Property Type`, `Purchaser Address Indicator`) %>%
+  summarise(Count = n()) %>%
+  group_by(`Property Type`) %>%
+  mutate(Percentage = (Count / sum(Count)) * 100) %>%
+  ungroup()
+plot <- ggplot(percentage_data, aes(x = `Property Type`, y = Percentage, fill = `Purchaser Address Indicator`)) +
+  geom_bar(stat = "identity", position = "stack") +
+  geom_text(aes(label = sprintf("%.1f%%", Percentage)), 
+            position = position_stack(vjust = 0.5), 
+            size = 3, 
+            color = "black") +
+  labs(
+    title = "Percentage of Purchaser Address Indicator by Property Type",
+    x = "Property Type",
+    y = "Percentage (%)",
+    fill = "Purchaser Address Indicator"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "top"
+  )
+```
+
+</details>
+
+
+## Sale Categories vs. Property Types
+<details>
+<summary>Click to show code</summary>
+
+```{r}
+counts <- table(combined_ds$`Type of Sale`, combined_ds$`Property Type`)
+percentages <- prop.table(counts, margin = 1) * 100 
+
+df_percentages <- as.data.frame(as.table(percentages))
+
+barchart <- ggplot(df_percentages, aes(x = Var1, y = Freq, fill = Var2)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(label = sprintf("%.1f%%", Freq)), position = position_dodge(width = 0.9), vjust = -0.5, size = 2) +  
+  labs(title = "Comparing Property Types Across Sale Categories",
+       x = "Sale Categories",
+       y = "Percentage (%)", 
+       fill = "Property Type") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(legend.position = "top") 
+
 
 ```
 
+</details>
+
+
+:::
+
+<details>
+
+<summary>Click to show code</summary>
+
 ```{r}
-Q123 + Q124
+# Adjust text size for the bar chart
+barchart1 <- barchart1 + theme(
+  plot.title = element_text(size = 8),      # Adjust title size
+  axis.title = element_text(size = 8),       # Adjust axis titles size
+  axis.text.x = element_text(size = 6, angle = 45, hjust = 1), # Adjust x axis text size
+  axis.text.y = element_text(size = 6),      # Adjust y axis text size
+  legend.text = element_text(size = 6)       # Adjust legend text size
+)
+
+# Adjust text size for the heatmap
+# Adjust the heatmap to move the legend to the bottom
+heatmap1 <- heatmap1 + theme(
+  plot.title = element_text(size = 8), 
+  axis.text.x = element_text(size = 6, angle = 45, hjust = 1), # Adjust x axis text size
+  axis.text.y = element_text(size = 6), 
+  legend.position = "bottom",
+  legend.text = element_text(size = 6, angle = 45, hjust = 1),       # Adjust legend text size if necessary
+  legend.title = element_text(size = 6)       # Adjust legend title size if necessary
+)
+
+# Adjusting theme settings for barchart
+barchart <- barchart + theme(
+  plot.title = element_text(size = 8),  # Smaller plot title
+  axis.title = element_text(size = 8),   # Smaller axis titles
+  axis.text = element_text(size = 6),    # Smaller axis text
+  legend.text = element_text(size = 6),  # Smaller legend text
+  legend.title = element_text(size = 6)  # Smaller legend title
+)
+
+# Adjusting theme settings for plot
+plot <- plot + theme(
+  plot.title = element_text(size = 8),
+  axis.title = element_text(size = 8),
+  axis.text = element_text(size = 6),
+  legend.text = element_text(size = 6),
+  legend.title = element_text(size = 8)
+)
+
+# Now combine the plots using patchwork
+combined_plot2 <- (barchart | plot) +
+  plot_layout(widths = c(1, 1))  # Adjust the relative widths if necessary
+
+# Print the combined plot
+print(combined_plot2)
+
+
 ```
 
-We're comparing the first quarters of 2023 and 2024 to understand any changes in transaction volumes. Notably, January 2023 shows fewer transactions than January 2024. This difference might be due to the easing of COVID-19 restrictions in early 2023. As people adjust to the changing circumstances, there's a cautious approach towards property investments.
+</details>
+
+According to REALIS data dictionary, 'Purchaser Address Indicator' refers to the type of residence (either HDB flat or private property) associated with the purchaser's address as indicated in the caveat. It doesn't necessarily imply ownership but rather reflects the type of housing the purchaser resides in. If this information is unavailable, it's marked as 'N.A'.
+
+```{r}
+combined_plot <- barchart1 + heatmap1 + 
+  plot_layout(widths = c(0.1, 0.1)) # Adjust the width ratio as needed
+print(combined_plot)
+
+
+combined_plot2 <- (barchart | plot) +
+  plot_layout(widths = c(1, 1.5)) 
+print(combined_plot2)
+
+```
+
+
+
+<div style="background-color: #FFF8DC; padding: 10px; border-radius: 5px; border: 1px solid #EEE; margin-bottom: 10px;">
+&#x1F4C8; <strong>Insight:</strong> </br>
+
+
+- Private property sales surge in Jul 2023 due to several big launches on the market and developers sold 1412 units in July compared to 278 in June. <a href="https://www.mingtiandi.com/real-estate/research-policy/singapore-home-sales-surge-five-fold-as-developers-launch-more-projects/" target="_blank">Read more.</a></br>
+- Central Region Apartments are the most sought after in the market according to the heatmap, followed by condominiums.</br>
+-In the new sale market, apartments represent 61% of sales, while condominiums make up 24.5%.</br>
+- In contrast, the resale market sees condominiums accounting for 48% and apartments at 27.2%. Detached, semi-detached, and terrace houses are less prevalent in both markets. This is attributed to land scarcity and high construction costs imposed by the Singapore government. Furthermore, many property owners retain these types of properties due to their freehold tenure.</br>
+- It's notable that a significant majority of private property buyers (presumably those residing in these properties) live in private residences. Interestingly, executive condominiums have the highest proportion of purchasers with HDB addresses, accounting for 53.6%. This could be attributed to the attractive rental yields in Singapore. Consequently, more residents might be purchasing executive condominiums primarily as investment properties.</br>
+
+</div>
+
+
+
+
 
 # EDA 2
 
-We analyzed unit price ($PSF) across Singapore's planning regions for 2023, using four quarterly charts to visualize regional price variations. The Central Region consistently showed the highest median PSF, indicating its premium status. In contrast, the North East and East Regions maintained stable PSF values, balancing affordability with location.
+We analyzed unit price (\$PSF) across Singapore's planning regions for 2023, using four quarterly charts to visualize regional price variations. The Central Region consistently showed the highest median PSF, indicating its premium status. In contrast, the North East and East Regions maintained stable PSF values, balancing affordability with location.
 
 <details>
 
@@ -297,6 +367,7 @@ q1 <- ggplot(ds5, aes(x = `Planning Region`, y = `Unit Price ($ PSF)`)) +
 combined_plot <- wrap_plots(q1, q2, q3, q4)
 combined_plot
 ```
+
 
 <details>
 
@@ -346,87 +417,15 @@ p_plotly <- plotly::ggplotly(p, tooltip = c("Planning Region", "y", "Data_Source
 
 </details>
 
+
 ```{r}
 p_plotly
 
 ```
-In summary, each region in Singapore offers a unique property market landscape catering to different buyer preferences and budgets. The Central Region stands out as a high-end market, while the East offers premium properties at better values. The North East and North Regions provide a mix of affordability and mid-range options, whereas the West Region offers diversity without extreme price outliers.
 
-# EDA 3
-
-Relationship between Property Type & Purchaser Address Indicator
-
-According to REALIS data dictionary, 'Purchaser Address Indicator' refers to the type of residence (either HDB flat or private property) associated with the purchaser's address as indicated in the caveat. It doesn't necessarily imply ownership but rather reflects the type of housing the purchaser resides in. If this information is unavailable, it's marked as 'N.A'.
-
-It's notable that a significant majority of private property buyers (presumably those residing in these properties) live in private residences. Interestingly, executive condominiums have the highest proportion of purchasers with HDB addresses, accounting for 53.6%. This could be attributed to the attractive rental yields in Singapore. Consequently, more residents might be purchasing executive condominiums primarily as investment properties.
-
-<details>
-
-<summary>Click to show code</summary>
-```{r}
-
-percentage_data <- combined_ds %>%
-  group_by(`Property Type`, `Purchaser Address Indicator`) %>%
-  summarise(Count = n()) %>%
-  group_by(`Property Type`) %>%
-  mutate(Percentage = (Count / sum(Count)) * 100) %>%
-  ungroup()
-plot <- ggplot(percentage_data, aes(x = `Property Type`, y = Percentage, fill = `Purchaser Address Indicator`)) +
-  geom_bar(stat = "identity", position = "stack") +
-  geom_text(aes(label = sprintf("%.1f%%", Percentage)), 
-            position = position_stack(vjust = 0.5), 
-            size = 3, 
-            color = "black") +
-  labs(
-    title = "Percentage of Purchaser Address Indicator by Property Type",
-    x = "Property Type",
-    y = "Percentage (%)",
-    fill = "Purchaser Address Indicator"
-  ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    legend.position = "top"
-  )
-```
-</details>
-```{r}
-print(plot)
-```
-
-
-# EDA 4
-
-<details>
-
-<summary>Click to show code</summary>
-
-```{r}
-
-counts <- table(combined_ds$`Type of Sale`, combined_ds$`Property Type`)
-percentages <- prop.table(counts, margin = 1) * 100 
-
-df_percentages <- as.data.frame(as.table(percentages))
-
-barchart <- ggplot(df_percentages, aes(x = Var1, y = Freq, fill = Var2)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  geom_text(aes(label = sprintf("%.1f%%", Freq)), position = position_dodge(width = 0.9), vjust = -0.5, size = 2) +  
-  labs(title = "Comparing Property Types Across Sale Categories",
-       x = "Sale Categories",
-       y = "Percentage (%)", 
-       fill = "Property Type") +
-  scale_fill_brewer(palette = "Set3") +
-  theme_minimal() +
-  theme(legend.position = "top") 
-
-```
-</details> 
-In the new sale market, apartments represent 61% of sales, while condominiums make up 24.5%.
-
-In contrast, the resale market sees condominiums accounting for 48% and apartments at 27.2%.
-Detached, semi-detached, and terrace houses are less prevalent in both markets. This is attributed to land scarcity and high construction costs imposed by the Singapore government. Furthermore, many property owners retain these types of properties due to their freehold tenure.
-
-```{r}
-print(barchart)
-```
-
+<div style="background-color: #FFF8DC; padding: 10px; border-radius: 5px; border: 1px solid #EEE; margin-bottom: 10px;">
+&#x1F4C8; <strong>Insight:</strong> </br>
+Each region in Singapore offers a unique property market landscape catering to different buyer preferences and budgets. </br>
+The Central Region stands out as a high-end market, while the East offers premium properties at better values.</br>
+The North East and North Regions provide a mix of affordability and mid-range options, whereas the West Region offers diversity without extreme price outliers.</br>
+</div>

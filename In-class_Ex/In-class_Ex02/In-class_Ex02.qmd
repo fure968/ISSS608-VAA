@@ -16,11 +16,11 @@ pacman::p_load(ggrepel, patchwork, ggthemes,
                tidyverse, ggridges) 
 ```
 
-
 ```{r, message=FALSE}
 exam_data <- read_csv("Exam_data.csv")
 summary(exam_data)
 ```
+
 ```{r, message=FALSE}
 exam_df <- read_csv("Exam_data.csv")
 summary(exam_df)
@@ -48,7 +48,8 @@ ggplot(data=exam_df,
   )
 ```
 
-The alternative design 
+The alternative design
+
 ```{r}
 median_eng <- median(exam_df$ENGLISH)
 mean_eng <- mean(exam_df$ENGLISH)
