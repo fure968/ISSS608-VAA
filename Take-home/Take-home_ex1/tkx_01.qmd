@@ -448,5 +448,13 @@ ggplot(combined_ds, aes(x = `Unit Price ($ PSF)`, y = `Planning Region`, fill = 
 ```
 
 ::: {style="background-color: #FFF8DC; padding: 10px; border-radius: 5px; border: 1px solid #EEE; margin-bottom: 10px;"}
-📈 <strong>Insight:</strong> </br> - The Central Region's peak is the most pronounced and shifted towards the high, indicating that there is a high concentration of properties with higher unit prices. </br> - The East Region's pea is lower and more towards the middle of the x-axis compared to the Central Region. This implies that while the East Region has properties with moderate unit prices, it does not reach as high of a price point as frequently as the Central Region. </br> - North East and North Regions peaks are less sharp and positioned towards the lower end of the price scale, suggesting a more affordable housing options and a wider distribution of unit prices. North Region appears to have a slightly broader distribution than North East. </br> - West Region has the lowest peak among all the regions and is positioned towards the far left of the plot. This indicates that the West Region is the most affordable in Singapore. </br>
+📈 <strong>Insight:</strong> </br> 
+The Central Region has a wide distribution, indicating a large variation in unit prices within that region.</br>
+The Central Region shows unit prices extending to the highest value on the graph, above $6000 PSF, suggesting it includes the most expensive properties compared to the other regions.</br>   
+The East, North East, North, and West Regions have their distributions concentrated below $2000 PSF, indicating that properties in these regions are generally less expensive than in the Central Region.</br>  
+Each region has a peak where the majority of the unit prices are concentrated. For instance, the North Region has a sharp peak around $1000 PSF, indicating a majority of properties are close to this price point.</br>  
+The Central Region has a long tail on the right side, indicating a few properties with very high unit prices. Meanwhile, the West and North East Regions have distributions that marginally extend into the higher price bracket, hinting at the existence of select premium properties amidst generally more modestly priced homes.</br> 
+
+
+
 :::
