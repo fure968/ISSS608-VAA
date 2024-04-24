@@ -5,10 +5,7 @@ about:
   image: giphy.gif
   image-shape: rounded
   image-width: 10em
-
 ---
-
-
 
 **Lin Guan Jhen, Elise**
 
@@ -16,10 +13,12 @@ ISSS608 Visual Analytics and Applications under Prof. Kam Tin Seong as part of S
 
 [LinkedIn](https://www.linkedin.com/in/elgi753689/) \| [Email](guanjhenlin.2022@mitb.smu.edu.sg)
 
-
-
 <!-- Google tag (gtag.js) -->
+
+```{=html}
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-65B5RWMGTX"></script>
+```
+```{=html}
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -27,3 +26,4 @@ ISSS608 Visual Analytics and Applications under Prof. Kam Tin Seong as part of S
 
   gtag('config', 'G-65B5RWMGTX');
 </script>
+```
