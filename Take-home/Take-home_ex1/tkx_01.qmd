@@ -427,7 +427,11 @@ p_plotly
 ```
 
 ::: {style="background-color: #FFF8DC; padding: 10px; border-radius: 5px; border: 1px solid #EEE; margin-bottom: 10px;"}
-📈 <strong>Insight:</strong> </br> Each region in Singapore offers a unique property market landscape catering to different buyer preferences and budgets. </br> The Central Region stands out as a high-end market, while the East offers premium properties at better values.</br> The North East and North Regions provide a mix of affordability and mid-range options, whereas the West Region offers diversity without extreme price outliers.</br>
+📈 <strong>Insight:</strong> </br>
+
+-   Each region in Singapore offers a unique property market landscape catering to different buyer preferences and budgets.
+-   The Central Region stands out as a high-end market, while the East offers premium properties at better values.
+-   The North East and North Regions provide a mix of affordability and mid-range options, whereas the West Region offers diversity without extreme price outliers.</br>
 :::
 
 # EDA 3
@@ -448,14 +452,10 @@ ggplot(combined_ds, aes(x = `Unit Price ($ PSF)`, y = `Planning Region`, fill = 
 ```
 
 ::: {style="background-color: #FFF8DC; padding: 10px; border-radius: 5px; border: 1px solid #EEE; margin-bottom: 10px;"}
-📈 <strong>Insight:</strong> </br> 
-The Central Region has a wide distribution, indicating a large variation in unit prices within that region.</br>
-The Central Region shows unit prices extending to the highest value on the graph, above $6000 PSF, suggesting it includes the most expensive properties compared to the other regions.</br>   
-The East, North East, North, and West Regions have their distributions concentrated below $2000 PSF, indicating that properties in these regions are generally less expensive than in the Central Region.</br>  
-Each region has a peak where the majority of the unit prices are concentrated. For instance, the North Region has a sharp peak around $1000 PSF, indicating a majority of properties are close to this price point.</br>  
-The Central Region has a long tail on the right side, indicating a few properties with very high unit prices. Meanwhile, the West and North East Regions have distributions that marginally extend into the higher price bracket, hinting at the existence of select premium properties amidst generally more modestly priced homes.</br> 
+📈 <strong>Insight:</strong> </br>
 
-
-
-
+-   The Central Region has a wide distribution, indicating a large variation in unit prices within that region.</br> The Central Region shows unit prices extending to the highest value on the graph, above \$6000 PSF, suggesting it includes the most expensive properties compared to the other regions.</br>
+-   The East, North East, North, and West Regions have their distributions concentrated below \$2000 PSF, indicating that properties in these regions are generally less expensive than in the Central Region.</br>
+-   Each region has a peak where the majority of the unit prices are concentrated. For instance, the North Region has a sharp peak around \$1000 PSF, indicating a majority of properties are close to this price point.</br>
+-   The Central Region has a long tail on the right side, indicating a few properties with very high unit prices. Meanwhile, the West and North East Regions have distributions that marginally extend into the higher price bracket, hinting at the existence of select premium properties amidst generally more modestly priced homes.</br>
 :::
