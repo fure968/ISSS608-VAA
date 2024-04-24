@@ -132,11 +132,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
         <li>
     <a class="dropdown-item" href="../../Hands-on_exercise/Hands-on_ex3/Hands-on_Ex03.html" rel="" target="">
- <span class="dropdown-text">3. Programming Interactive Data Visualisation &amp; Animated Statistical Graphics with R</span></a>
+ <span class="dropdown-text">3. Interactive Data Visualisation</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../../Hands-on_exercise/Hands-on_ex4/Hands-on_Ex04.html" rel="" target="">
- <span class="dropdown-text">4. Visualising Distribution, Statistical Analysis, Uncertainty &amp; Building Funnel Plot with R</span></a>
+ <span class="dropdown-text">4. Fundamentals of Visual Analytics</span></a>
   </li>  
     </ul>
   </li>
@@ -152,6 +152,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li>
     <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex02/In-class_Ex02.html" rel="" target="">
  <span class="dropdown-text">In-class Exercise 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex03/In-class_Ex03.html" rel="" target="">
+ <span class="dropdown-text">In-class Exercise 3</span></a>
   </li>  
     </ul>
   </li>
@@ -343,6 +347,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="visualising-distribution-with-ridgeline-plot" class="level1">
 <h1>Visualising Distribution with Ridgeline Plot</h1>
+<p>Read more <a href="https://r4va.netlify.app/chap09">here</a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(exam_data, <span class="fu">aes</span>(<span class="at">x =</span> ENGLISH, <span class="at">y =</span> <span class="fu">fct_relevel</span>(CLASS, <span class="fu">rev</span>(<span class="fu">unique</span>(CLASS))))) <span class="sc">+</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges</span>() <span class="sc">+</span></span>

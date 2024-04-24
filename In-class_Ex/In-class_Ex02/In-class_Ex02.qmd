@@ -89,6 +89,8 @@ ggplot(exam_data,
 
 # Visualising Distribution with Ridgeline Plot
 
+Read more [here](https://r4va.netlify.app/chap09).
+
 ```{r}
 ggplot(exam_data, aes(x = ENGLISH, y = fct_relevel(CLASS, rev(unique(CLASS))))) +
   geom_density_ridges() +
