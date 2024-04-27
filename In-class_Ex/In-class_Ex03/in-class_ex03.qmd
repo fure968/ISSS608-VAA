@@ -2,7 +2,7 @@
 title: "In-class Exercise 3"
 subtitle: ""
 author: "Guan Jhen Lin"
-date: "Apr 24, 2024"
+date: "Apr 27, 2024"
 date-modified: "last-modified"
 execute: 
   eval: true
