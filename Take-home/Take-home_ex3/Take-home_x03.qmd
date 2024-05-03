@@ -1,1 +1,12 @@
-
+---
+title: "Take Home Exercise 2"
+subtitle: " "
+author: "Guan Jhen Lin"
+date: "2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
