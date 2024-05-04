@@ -11,7 +11,7 @@ execute:
   freeze: true
 ---
 
-# Take-home Exercise 1 Part 2: DataVis Makeover
+# DataVis Makeover
 
 In this take-home exercise, one data visualisation from our fellow classmates will be selected from [here](https://isss608-ay2023-24apr.netlify.app/take-home_ex/th_ex01#peer-learning).
 
