@@ -13,8 +13,10 @@ execute:
 
 
 #Overview
+In the take home exercise 1, REALIS transaction data covering 1st Jan 2023 to 31st March 2024 had been use to make 3 different visualizations. In part 2 of this exercise, one data visualisation will be selected from our fellow classmates' work and we are task to provide a feedback in terms of clarity and aesthetics. 
 
+The original dataset was from REALIS. 
+The file used was <insert file name>
 
+#Original Design 
 
-
-#Getting Started

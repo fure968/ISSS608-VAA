@@ -16,9 +16,9 @@ website:
         - text: "4. Fundamentals of Visual Analytics"
           href: "Hands-on_exercise/Hands-on_ex4/Hands-on_Ex04.html"
         - text: "5. "
-          href: "Hands-on_exercise/Hands-on_ex4/Hands-on_Ex05.html"    
+          href: "Hands-on_exercise/Hands-on_ex5/Hands-on_Ex05.html"    
         - text: "6. "
-          href: "Hands-on_exercise/Hands-on_ex4/Hands-on_Ex06.html"
+          href: "Hands-on_exercise/Hands-on_ex6/Hands-on_Ex06.html"
           
     - text: "In-Class"
       menu:
@@ -29,7 +29,7 @@ website:
           - text: "In-class Exercise 3"
             href: "In-class_Ex/In-class_Ex03/In-class_Ex03.html"
           - text: "In-class Exercise 4"
-            href: "In-class_Ex/In-class_Ex04/In-class_Ex04.html"
+            href: "In-class_Ex/In-class_Ex04/In-class_Ex4.html"
 
 
     - text:  "Take-home"
