@@ -1,12 +1,26 @@
 ---
 title: " "
-author: "Guan Jhen Lin"
 about: 
   template: trestles
   image: dataeverywhere.gif
   image-shape: rounded
   image-width: 15em
+listing: 
+  contents:
+  - "tkx_01.qmd"
+  - "Take_home_x02.qmd"
+  sort:
+  - "date desc"
+  - "title desc"
+  max-items: 3
+  type: grid
+  fields: [image, date, title, author, 
+reading-time]
+toc: false
 ---
+
+
+
 
 **ISSS608-Visual Analytics and Application**
 
