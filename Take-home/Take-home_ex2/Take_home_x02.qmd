@@ -11,15 +11,13 @@ execute:
   freeze: true
 ---
 
-#Overview
+#Overview For this take-home exercise, I will select one data visualization from the [submissions](https://isss608-ay2023-24apr.netlify.app/take-home_ex/th_ex01#peer-learning) of our classmates for Take-Home Exercise 1. My task is to critique the selected visualization with respect to clarity and aesthetics. Following the critique, I will prepare a sketch for an alternative design, utilizing the principles and best practices of data visualization as covered in Lessons 1 and 2. Finally, I will recreate the original design using tools from ggplot2, its extensions, and other packages in the tidyverse suite.
 
-In this take home exercise, one data visualisation will be selected from our fellow classmates' take-home exercise 1 [submissions](https://isss608-ay2023-24apr.netlify.app/take-home_ex/th_ex01#peer-learning) and we are task to provide critic on the submission in terms of clarity and aesthetics. Next, prepare a sketch for the alternative design by using the data visualisation design principles and best practices from Lesson 1 and 2. Lastly, remake the original design by using ggplot2, ggplot2 extensions and tidyverse packages.
+The graph I have chosen is from [here](https://isss608-zjho008.netlify.app/take-home_ex/take-home_ex01/take-home_ex01). It is a geom_history made by our fellow classmate.
 
-The graph I have chosen is from [here](https://isss608-zjho008.netlify.app/take-home_ex/take-home_ex01/take-home_ex01).
+![](images/zijun.png){width="435"}
 
-![](images/zijun.png)
-
-# Critique
+# First Glance
 
 ::: panel:tabset
 ## Positive Points
@@ -36,12 +34,15 @@ The graph I have chosen is from [here](https://isss608-zjho008.netlify.app/take-
 :::
 
 # Data Preparation
+
 <details>
 
 <summary>Click to show code</summary>
+
 ```{r}
 pacman::p_load(tidyverse, scales, patchwork, ggtext, DT)
 ```
+
 </details>
 
 ::: panel-tabset
@@ -50,6 +51,7 @@ pacman::p_load(tidyverse, scales, patchwork, ggtext, DT)
 <details>
 
 <summary>Click to show code</summary>
+
 ```{r}
 ds1 <- read_csv("data/ds1.csv")
 ds2 <- read_csv("data/ds2.csv")
@@ -57,13 +59,15 @@ ds3 <- read_csv("data/ds3.csv")
 ds4 <- read_csv("data/ds4.csv")
 ds5 <- read_csv("data/ds5.csv")
 ```
+
 </details>
 
-
 ## Converting Data
+
 <details>
 
 <summary>Click to show code</summary>
+
 ```{r}
 
 prepare_dataset <- function(ds) {
@@ -95,12 +99,15 @@ combined_ds <- rbind(ds1, ds2, ds3, ds4, ds5)
 
 
 ```
+
 </details>
 
 ## Converting Dates
+
 <details>
 
 <summary>Click to show code</summary>
+
 ```{r}
 # Convert Sale Date to Date format
 ds1$`Sale Date` <- dmy(ds1$`Sale Date`)
@@ -109,11 +116,11 @@ ds3$`Sale Date` <- dmy(ds3$`Sale Date`)
 ds4$`Sale Date` <- dmy(ds4$`Sale Date`)
 ds5$`Sale Date` <- dmy(ds5$`Sale Date`)
 ```
-</details>
 
+</details>
 :::
 
-# Orginal Graph 
+# Orginal Graph
 
 ```{r}
 library(ggplot2)
@@ -127,9 +134,11 @@ ggplot(data = combined_ds, aes(x = `Unit Price ($ PSF)`, fill = `Property Type`)
 # First Try
 
 -   Numbers get clamped together so it is better if the data can appear once hover over.
-<details>
+
+    <details>
 
 <summary>Click to show code</summary>
+
 ```{r}
 library(ggplot2)
 library(plotly)
@@ -165,21 +174,27 @@ p <- ggplot(data = combined_ds, aes(x = `Unit Price ($ PSF)`, fill = `Property T
 # Convert ggplot to plotly for interactivity
 plotly_p <- ggplotly(p, tooltip = "text")  # Enabling hover with tooltip argument
 ```
-</details>
 
+</details>
 
 ```{r}
 plotly_p
 ```
+
 </details>
 
 # Violin Chart
 
-In this case violin graph can be great to visualise the output of Unit Price (\$per square foot) vs. total by property types.
+In this scenario, a violin plot can be a good choice for visualizing the distribution and density of 'Unit Price (\$ per square foot)' across different 'Property Types'. The violin plot combines the both box plots and density plots, offering a deeper understanding of the data's distribution. By visually representing the data's density estimates, it reveals peaks, valleys, and the spread of the data, which are crucial for identifying patterns and outliers. This could provide insightful details such as whether certain property types are more variable in price or if they tend to have a particular pricing structure.
+
+## My sketch using Paint
+
+![](images/Sketch.png){width="402"}
 
 <details>
 
 <summary>Click to show code</summary>
+
 ```{r}
 # Assuming `combined_ds` is your dataset
 violin <- ggplot(combined_ds, aes(x = `Property Type`, y = `Unit Price ($ PSF)`, fill = `Property Type`)) +
@@ -208,6 +223,7 @@ violin <- ggplot(combined_ds, aes(x = `Property Type`, y = `Unit Price ($ PSF)`,
 # p + coord_flip()
 
 ```
+
 </details>
 
 ```{r}
@@ -215,8 +231,7 @@ violin
 ```
 
 # Takeaways
-- Sometimes in order to get the graph to be visually pleasing, clarity of the graph could have been messed up. It is important to balance clarity and aesthetics. 
-- Sometimes what we think versus what we can produce is quite different, it is important for me to get my hands "dirty" in order to understand the code and the way the chart interacts. 
-- Giving others critics is a great way to reflect on yourself, did you make similar mistakes when it comes to creating visual analytics? 
 
-
+-   Sometimes in order to get the graph to be visually pleasing, clarity of the graph could have been messed up. It is important to balance clarity and aesthetics.
+-   Sometimes what we think versus what we can produce is quite different, it is important for me to get my hands "dirty" in order to understand the code and the way the chart interacts.
+-   Giving others critics is a great way to reflect on yourself, did you make similar mistakes when it comes to creating visual analytics?
