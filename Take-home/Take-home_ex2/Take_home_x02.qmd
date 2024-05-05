@@ -15,37 +15,41 @@ execute:
 
 In this take home exercise, one data visualisation will be selected from our fellow classmates' take-home exercise 1 [submissions](https://isss608-ay2023-24apr.netlify.app/take-home_ex/th_ex01#peer-learning) and we are task to provide critic on the submission in terms of clarity and aesthetics. Next, prepare a sketch for the alternative design by using the data visualisation design principles and best practices from Lesson 1 and 2. Lastly, remake the original design by using ggplot2, ggplot2 extensions and tidyverse packages.
 
-The graph I have chosen is from [here](https://lnealicia-isss608.netlify.app/take-home_ex/take-home_ex01/take-home_ex01).
+The graph I have chosen is from [here](https://isss608-zjho008.netlify.app/take-home_ex/take-home_ex01/take-home_ex01).
 
-![](images/th2-01.png){width="384"}
+![](images/zijun.png)
 
 # Critique
 
 ::: panel:tabset
 ## Positive Points
 
--   It is clear for audience to see the comparison between Q1 2023 vs. Q1 2024 and fairly easy to see the trends and changes side by side.
+-   It is clear for audience to see the comparison between different property types.
 
--   Mean line allows audience to take a quick glance and tell from the average units sold across all types of properties whether it is above or below the average.
-
--   Color is consistent and may not be too confusing, straightforward to interpret.
+-   Colour is consistent and may not be too confusing, straightforward to interpret.
 
 ## Improvements
 
--   The labels for property types seem to be in vertical and is difficult for the audience to identify the name at first glance.
+-   If we want to visualise the relationship between total and unit price per square foot according to the property types, we can try to visualise with a different graph such as violin plot.
 
 -   We can add data labels to the bar chart to enhance the overall readability, audience will be able to read the chart based on the labels quickly.
 :::
 
 # Data Preparation
+<details>
 
+<summary>Click to show code</summary>
 ```{r}
 pacman::p_load(tidyverse, scales, patchwork, ggtext, DT)
 ```
+</details>
 
 ::: panel-tabset
 ## Import Data Sets
 
+<details>
+
+<summary>Click to show code</summary>
 ```{r}
 ds1 <- read_csv("data/ds1.csv")
 ds2 <- read_csv("data/ds2.csv")
@@ -53,9 +57,13 @@ ds3 <- read_csv("data/ds3.csv")
 ds4 <- read_csv("data/ds4.csv")
 ds5 <- read_csv("data/ds5.csv")
 ```
+</details>
+
 
 ## Converting Data
+<details>
 
+<summary>Click to show code</summary>
 ```{r}
 
 prepare_dataset <- function(ds) {
@@ -87,9 +95,12 @@ combined_ds <- rbind(ds1, ds2, ds3, ds4, ds5)
 
 
 ```
+</details>
 
 ## Converting Dates
+<details>
 
+<summary>Click to show code</summary>
 ```{r}
 # Convert Sale Date to Date format
 ds1$`Sale Date` <- dmy(ds1$`Sale Date`)
@@ -98,4 +109,111 @@ ds3$`Sale Date` <- dmy(ds3$`Sale Date`)
 ds4$`Sale Date` <- dmy(ds4$`Sale Date`)
 ds5$`Sale Date` <- dmy(ds5$`Sale Date`)
 ```
+</details>
+
 :::
+
+# Orginal Graph 
+<details>
+
+<summary>Click to show code</summary>
+```{r}
+library(ggplot2)
+
+# Assuming `private_property_data` is your combined dataset
+ggplot(data = combined_ds, aes(x = `Unit Price ($ PSF)`, fill = `Property Type`)) +
+  geom_histogram(bins = 20, color = "grey30")
+
+```
+</details>
+
+# First Try
+
+-   Numbers get clamped together so it is better if the data can appear once hover over.
+<details>
+
+<summary>Click to show code</summary>
+```{r}
+library(ggplot2)
+library(plotly)
+library(viridis)  # For vibrant color scales
+
+# Assuming `combined_ds` is your dataset
+threshold_percentage <- 5  # Set a threshold for minimum percentage to display text
+
+# Create the ggplot object
+p <- ggplot(data = combined_ds, aes(x = `Unit Price ($ PSF)`, fill = `Property Type`, text = sprintf("Percentage: %.2f%%", ..count../sum(..count..)*100))) +
+  geom_histogram(bins = 30, color = "grey30", aes(y = ..count../sum(..count..)*100), alpha = 0.8) +
+  scale_fill_viridis(discrete = TRUE, option = "D") +
+  labs(title = "Distribution of Unit Prices by Property Type",
+       subtitle = "Hover over bars to see percentages",
+       x = "Unit Price ($ per Square Foot)",
+       y = "Percentage of Total",
+       fill = "Property Type") +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.background = element_rect(fill = "white"),
+    legend.position = "right",
+    plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 10, face = "italic"),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(color = "grey20"),
+    axis.ticks = element_line(color = "grey80"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.background = element_rect(fill = "grey90", color = "grey50", size = 0.5, linetype = "solid"),
+    legend.key = element_blank()
+  )
+
+# Convert ggplot to plotly for interactivity
+plotly_p <- ggplotly(p, tooltip = "text")  # Enabling hover with tooltip argument
+
+plotly_p
+
+```
+</details>
+
+# Violin Chart
+
+In this case violin graph can be great to visualise the output of Unit Price (\$per square foot) vs. total by property types.
+
+<details>
+
+<summary>Click to show code</summary>
+```{r}
+# Assuming `combined_ds` is your dataset
+ggplot(combined_ds, aes(x = `Property Type`, y = `Unit Price ($ PSF)`, fill = `Property Type`)) +
+  geom_violin(trim = FALSE) +  # Draw the full range of the distribution
+  geom_boxplot(width = 0.1, fill = "white", outlier.shape = NA) +  # Optional: add a narrow boxplot inside each violin for more detail
+  scale_fill_viridis_d() +  # Vibrant color scale
+  labs(title = "Distribution of Unit Prices by Property Type",
+       subtitle = "Violin plots with embedded boxplots",
+       x = "Property Type",
+       y = "Unit Price ($ per Square Foot)") +
+  theme_minimal() +
+  theme(
+    plot.background = element_rect(fill = "white"),
+    legend.position = "none",  # Hide legend if not necessary
+    plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(size = 10, face = "italic"),
+    axis.title.x = element_text(size = 10),  # Adjust x-axis title size
+    axis.title.y = element_text(size = 10),  # Adjust y-axis title size
+    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 10, color = "grey20"),  # Adjust x-axis labels
+    axis.ticks = element_line(color = "grey80"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+
+# If you prefer to flip the axes to make the plot horizontal:
+# p + coord_flip()
+
+```
+</details>
+
+
+# Takeaways
+- Sometimes in order to get the graph to be visually pleasing, clarity of the graph could have been messed up. It is important to balance clarity and aesthetics. 
+- Sometimes what we think versus what we can produce is quite different, it is important for me to get my hands "dirty" in order to understand the code and the way the chart interacts. 
+- Giving others critics is a great way to reflect on yourself, did you make similar mistakes when it comes to creating visual analytics? 
+
+

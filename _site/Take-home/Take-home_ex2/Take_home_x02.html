@@ -102,6 +102,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<link href="../../site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="../../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<script src="../../site_libs/plotly-binding-4.10.4/plotly.js"></script>
+
+<script src="../../site_libs/typedarray-0.1/typedarray.min.js"></script>
+
+<script src="../../site_libs/jquery-3.5.1/jquery.min.js"></script>
+
+<link href="../../site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+
+<script src="../../site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
+<link href="../../site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+
+<script src="../../site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
 
 
 <link rel="stylesheet" href="../../styles.css">
@@ -230,7 +248,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#critique" id="toc-critique" class="nav-link active" data-scroll-target="#critique">Critique</a></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">Data Preparation</a></li>
+  <li><a href="#orginal-graph" id="toc-orginal-graph" class="nav-link" data-scroll-target="#orginal-graph">Orginal Graph</a></li>
+  <li><a href="#first-try" id="toc-first-try" class="nav-link" data-scroll-target="#first-try">First Try</a></li>
+  <li><a href="#violin-chart" id="toc-violin-chart" class="nav-link" data-scroll-target="#violin-chart">Violin Chart</a></li>
+  <li><a href="#takeaways" id="toc-takeaways" class="nav-link" data-scroll-target="#takeaways">Takeaways</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -261,7 +290,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">May 5, 2024</p>
+      <p class="date-modified">May 6, 2024</p>
     </div>
   </div>
     
@@ -273,20 +302,234 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>#Overview</p>
-<p>In the take home exercise 1, REALIS transaction data covering 1st Jan 2023 to 31st March 2024 had been use to make 3 different visualizations. In part 2 of this exercise, one data visualisation will be selected from our fellow classmates’ work and we are task to provide a feedback in terms of clarity and aesthetics.</p>
-<p>The original data set was from REALIS.</p>
+<p>In this take home exercise, one data visualisation will be selected from our fellow classmates’ take-home exercise 1 <a href="https://isss608-ay2023-24apr.netlify.app/take-home_ex/th_ex01#peer-learning">submissions</a> and we are task to provide critic on the submission in terms of clarity and aesthetics. Next, prepare a sketch for the alternative design by using the data visualisation design principles and best practices from Lesson 1 and 2. Lastly, remake the original design by using ggplot2, ggplot2 extensions and tidyverse packages.</p>
+<p>The graph I have chosen is from <a href="https://isss608-zjho008.netlify.app/take-home_ex/take-home_ex01/take-home_ex01">here</a>.</p>
+<p><img src="images/zijun.png" class="img-fluid"></p>
+<section id="critique" class="level1">
+<h1>Critique</h1>
+<div class="panel:tabset">
+<section id="positive-points" class="level2">
+<h2 class="anchored" data-anchor-id="positive-points">Positive Points</h2>
+<ul>
+<li><p>It is clear for audience to see the comparison between different property types.</p></li>
+<li><p>Colour is consistent and may not be too confusing, straightforward to interpret.</p></li>
+</ul>
+</section>
+<section id="improvements" class="level2">
+<h2 class="anchored" data-anchor-id="improvements">Improvements</h2>
+<ul>
+<li><p>If we want to visualise the relationship between total and unit price per square foot according to the property types, we can try to visualise with a different graph such as violin plot.</p></li>
+<li><p>We can add data labels to the bar chart to enhance the overall readability, audience will be able to read the chart based on the labels quickly.</p></li>
+</ul>
+</section>
+</div>
+</section>
+<section id="data-preparation" class="level1">
+<h1>Data Preparation</h1>
+<details>
+<summary>
+Click to show code
+</summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, haven,</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               ggrepel, ggthemes,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>               ggridges, ggdist,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>               patchwork, scales,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>               viridis, cowplot, </span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>               dplyr, plotly,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>               tidyr, lubridate, </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>               ggplot2, ggExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, scales, patchwork, ggtext, DT)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Import Data Sets</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Converting Data</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Converting Dates</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<details>
+<summary>
+Click to show code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ds1 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ds1.csv"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ds2 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ds2.csv"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ds3 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ds3.csv"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>ds4 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ds4.csv"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>ds5 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ds5.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<details>
+<summary>
+Click to show code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>prepare_dataset <span class="ot">&lt;-</span> <span class="cf">function</span>(ds) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colSums</span>(<span class="fu">is.na</span>(ds))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  ds <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(ds)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  ds<span class="sc">$</span><span class="st">`</span><span class="at">Type of Sale</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">as.character</span>(ds<span class="sc">$</span><span class="st">`</span><span class="at">Type of Sale</span><span class="st">`</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  ds<span class="sc">$</span><span class="st">`</span><span class="at">Type of Sale</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(ds<span class="sc">$</span><span class="st">`</span><span class="at">Type of Sale</span><span class="st">`</span> <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"new sale"</span>, <span class="st">"resale"</span>), ds<span class="sc">$</span><span class="st">`</span><span class="at">Type of Sale</span><span class="st">`</span>, <span class="st">"other"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  ds<span class="sc">$</span><span class="st">`</span><span class="at">Type of Sale</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(ds<span class="sc">$</span><span class="st">`</span><span class="at">Type of Sale</span><span class="st">`</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  ds<span class="sc">$</span><span class="st">`</span><span class="at">Property Type</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(ds<span class="sc">$</span><span class="st">`</span><span class="at">Property Type</span><span class="st">`</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  ds<span class="sc">$</span><span class="st">`</span><span class="at">Transacted Price ($)</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"[^0-9.]"</span>, <span class="st">""</span>, ds<span class="sc">$</span><span class="st">`</span><span class="at">Transacted Price ($)</span><span class="st">`</span>, <span class="at">perl =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  ds<span class="sc">$</span><span class="st">`</span><span class="at">Area (SQFT)</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"[^0-9.]"</span>, <span class="st">""</span>, ds<span class="sc">$</span><span class="st">`</span><span class="at">Area (SQFT)</span><span class="st">`</span>, <span class="at">perl =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  ds<span class="sc">$</span><span class="st">`</span><span class="at">Unit Price ($ PSF)</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">"[^0-9.]"</span>, <span class="st">""</span>, ds<span class="sc">$</span><span class="st">`</span><span class="at">Unit Price ($ PSF)</span><span class="st">`</span>, <span class="at">perl =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(ds)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the function to each dataset</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>ds1 <span class="ot">&lt;-</span> <span class="fu">prepare_dataset</span>(ds1)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>ds2 <span class="ot">&lt;-</span> <span class="fu">prepare_dataset</span>(ds2)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>ds3 <span class="ot">&lt;-</span> <span class="fu">prepare_dataset</span>(ds3)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>ds4 <span class="ot">&lt;-</span> <span class="fu">prepare_dataset</span>(ds4)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>ds5 <span class="ot">&lt;-</span> <span class="fu">prepare_dataset</span>(ds5)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine the datasets</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>combined_ds <span class="ot">&lt;-</span> <span class="fu">rbind</span>(ds1, ds2, ds3, ds4, ds5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<details>
+<summary>
+Click to show code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert Sale Date to Date format</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>ds1<span class="sc">$</span><span class="st">`</span><span class="at">Sale Date</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">dmy</span>(ds1<span class="sc">$</span><span class="st">`</span><span class="at">Sale Date</span><span class="st">`</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>ds2<span class="sc">$</span><span class="st">`</span><span class="at">Sale Date</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">dmy</span>(ds2<span class="sc">$</span><span class="st">`</span><span class="at">Sale Date</span><span class="st">`</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ds3<span class="sc">$</span><span class="st">`</span><span class="at">Sale Date</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">dmy</span>(ds3<span class="sc">$</span><span class="st">`</span><span class="at">Sale Date</span><span class="st">`</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>ds4<span class="sc">$</span><span class="st">`</span><span class="at">Sale Date</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">dmy</span>(ds4<span class="sc">$</span><span class="st">`</span><span class="at">Sale Date</span><span class="st">`</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>ds5<span class="sc">$</span><span class="st">`</span><span class="at">Sale Date</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">dmy</span>(ds5<span class="sc">$</span><span class="st">`</span><span class="at">Sale Date</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+</div>
+</div>
+</div>
+</section>
+<section id="orginal-graph" class="level1">
+<h1>Orginal Graph</h1>
+<details>
+<summary>
+Click to show code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming `private_property_data` is your combined dataset</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> combined_ds, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">`</span><span class="at">Unit Price ($ PSF)</span><span class="st">`</span>, <span class="at">fill =</span> <span class="st">`</span><span class="at">Property Type</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">20</span>, <span class="at">color =</span> <span class="st">"grey30"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take_home_x02_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
+</section>
+<section id="first-try" class="level1">
+<h1>First Try</h1>
+<ul>
+<li>Numbers get clamped together so it is better if the data can appear once hover over.
+<details></details></li>
+</ul>
+<summary>
+Click to show code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)  <span class="co"># For vibrant color scales</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming `combined_ds` is your dataset</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>threshold_percentage <span class="ot">&lt;-</span> <span class="dv">5</span>  <span class="co"># Set a threshold for minimum percentage to display text</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the ggplot object</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> combined_ds, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">`</span><span class="at">Unit Price ($ PSF)</span><span class="st">`</span>, <span class="at">fill =</span> <span class="st">`</span><span class="at">Property Type</span><span class="st">`</span>, <span class="at">text =</span> <span class="fu">sprintf</span>(<span class="st">"Percentage: %.2f%%"</span>, ..count..<span class="sc">/</span><span class="fu">sum</span>(..count..)<span class="sc">*</span><span class="dv">100</span>))) <span class="sc">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>, <span class="at">color =</span> <span class="st">"grey30"</span>, <span class="fu">aes</span>(<span class="at">y =</span> ..count..<span class="sc">/</span><span class="fu">sum</span>(..count..)<span class="sc">*</span><span class="dv">100</span>), <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis</span>(<span class="at">discrete =</span> <span class="cn">TRUE</span>, <span class="at">option =</span> <span class="st">"D"</span>) <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Unit Prices by Property Type"</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Hover over bars to see percentages"</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Unit Price ($ per Square Foot)"</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Percentage of Total"</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Property Type"</span>) <span class="sc">+</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>),</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"right"</span>,</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">face =</span> <span class="st">"italic"</span>),</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>),</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"grey20"</span>),</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"grey80"</span>),</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"grey90"</span>, <span class="at">color =</span> <span class="st">"grey50"</span>, <span class="at">size =</span> <span class="fl">0.5</span>, <span class="at">linetype =</span> <span class="st">"solid"</span>),</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.key =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert ggplot to plotly for interactivity</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>plotly_p <span class="ot">&lt;-</span> <span class="fu">ggplotly</span>(p, <span class="at">tooltip =</span> <span class="st">"text"</span>)  <span class="co"># Enabling hover with tooltip argument</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>plotly_p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-474b0577232aa6fe90f7" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-474b0577232aa6fe90f7">{"x":{"data":[{"orientation":"v","width":[193.72413793103453,193.72413793103442,193.72413793103448,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103533,193.7241379310326,193.72413793103442,193.72413793103624,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442],"base":[0.022388059701492536,0.033582089552238806,0.1044776119402985,0.75746268656716409,3.9477611940298507,7.6902985074626864,12.873134328358208,9.156716417910447,5.9738805970149249,5.2835820895522394,4.7425373134328357,3.205223880597015,2.4701492537313436,1.1305970149253732,0.94776119402985082,0.67164179104477606,0.45149253731343286,0.13805970149253732,0.052238805970149252,0.044776119402985072,0.014925373134328358,0.014925373134328358,0.037313432835820899,0.014925373134328358,0.0037313432835820895,0.007462686567164179,0.007462686567164179,0,0,0.007462686567164179],"x":[193.72413793103448,387.44827586206895,581.17241379310349,774.89655172413791,968.62068965517233,1162.344827586207,1356.0689655172414,1549.7931034482758,1743.5172413793102,1937.2413793103447,2130.9655172413791,2324.6896551724139,2518.4137931034484,2712.1379310344828,2905.8620689655172,3099.5862068965516,3293.3103448275861,3487.0344827586205,3680.7586206896549,3874.4827586206893,4068.2068965517242,4261.9310344827591,4455.6551724137926,4649.3793103448279,4843.1034482758623,5036.8275862068967,5230.5517241379312,5424.2758620689656,5618,5811.7241379310344],"y":[0.0037313432835820899,0,0.0074626865671641729,0.085820895522388141,0.97388059701492491,1.3917910447761193,2.3992537313432845,4.1305970149253728,4.5485074626865662,4.1343283582089549,5.1716417910447756,5.1716417910447765,4.8283582089552235,3.8246268656716418,1.3917910447761197,0.77611940298507465,0.67910447761194015,0.31343283582089554,0.21268656716417911,0.063432835820895539,0.037313432835820899,0.011194029850746268,0.0074626865671641798,0.0074626865671641781,0,0.003731343283582089,0,0.011194029850746268,0.007462686567164179,0],"text":["Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.01%","Percentage: 0.09%","Percentage: 0.97%","Percentage: 1.39%","Percentage: 2.40%","Percentage: 4.13%","Percentage: 4.55%","Percentage: 4.13%","Percentage: 5.17%","Percentage: 5.17%","Percentage: 4.83%","Percentage: 3.82%","Percentage: 1.39%","Percentage: 0.78%","Percentage: 0.68%","Percentage: 0.31%","Percentage: 0.21%","Percentage: 0.06%","Percentage: 0.04%","Percentage: 0.01%","Percentage: 0.01%","Percentage: 0.01%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.01%","Percentage: 0.01%","Percentage: 0.00%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(68,1,84,0.8)","line":{"width":1.8897637795275593,"color":"rgba(77,77,77,1)"}},"name":"Apartment","legendgroup":"Apartment","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[193.72413793103453,193.72413793103442,193.72413793103448,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103533,193.7241379310326,193.72413793103442,193.72413793103624,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442],"base":[0.022388059701492536,0.033582089552238806,0.10074626865671642,0.55597014925373134,1.7238805970149251,3.33955223880597,7.2425373134328366,3.440298507462686,0.74626865671641784,0.79850746268656725,0.68656716417910457,0.57462686567164178,0.28731343283582089,0.17164179104477612,0.089552238805970158,0.067164179104477612,0.082089552238805971,0.055970149253731338,0.026119402985074629,0.014925373134328358,0.0037313432835820895,0,0.01865671641791045,0.007462686567164179,0,0,0,0,0,0.0037313432835820895],"x":[193.72413793103448,387.44827586206895,581.17241379310349,774.89655172413791,968.62068965517233,1162.344827586207,1356.0689655172414,1549.7931034482758,1743.5172413793102,1937.2413793103447,2130.9655172413791,2324.6896551724139,2518.4137931034484,2712.1379310344828,2905.8620689655172,3099.5862068965516,3293.3103448275861,3487.0344827586205,3680.7586206896549,3874.4827586206893,4068.2068965517242,4261.9310344827591,4455.6551724137926,4649.3793103448279,4843.1034482758623,5036.8275862068967,5230.5517241379312,5424.2758620689656,5618,5811.7241379310344],"y":[0,0,0.0037313432835820864,0.20149253731343275,2.2238805970149258,4.3507462686567164,5.6305970149253719,5.7164179104477615,5.2276119402985071,4.4850746268656723,4.0559701492537314,2.6305970149253732,2.182835820895523,0.95895522388059717,0.85820895522388063,0.60447761194029848,0.36940298507462688,0.082089552238805985,0.026119402985074622,0.029850746268656712,0.011194029850746268,0.014925373134328358,0.01865671641791045,0.007462686567164179,0.0037313432835820895,0.007462686567164179,0.007462686567164179,0,0,0.0037313432835820895],"text":["Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.20%","Percentage: 2.22%","Percentage: 4.35%","Percentage: 5.63%","Percentage: 5.72%","Percentage: 5.23%","Percentage: 4.49%","Percentage: 4.06%","Percentage: 2.63%","Percentage: 2.18%","Percentage: 0.96%","Percentage: 0.86%","Percentage: 0.60%","Percentage: 0.37%","Percentage: 0.08%","Percentage: 0.03%","Percentage: 0.03%","Percentage: 0.01%","Percentage: 0.01%","Percentage: 0.02%","Percentage: 0.01%","Percentage: 0.00%","Percentage: 0.01%","Percentage: 0.01%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(65,68,135,0.8)","line":{"width":1.8897637795275593,"color":"rgba(77,77,77,1)"}},"name":"Condominium","legendgroup":"Condominium","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[193.72413793103453,193.72413793103442,193.72413793103448,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103533,193.7241379310326,193.72413793103442,193.72413793103624,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442],"base":[0.022388059701492536,0.014925373134328358,0.074626865671641784,0.52985074626865669,1.6492537313432833,3.2462686567164178,7.1417910447761201,3.3582089552238803,0.63805970149253721,0.74253731343283591,0.60074626865671643,0.5074626865671642,0.26119402985074625,0.13805970149253732,0.078358208955223885,0.055970149253731338,0.070895522388059698,0.044776119402985072,0.022388059701492539,0.014925373134328358,0.0037313432835820895,0,0.01865671641791045,0.007462686567164179,0,0,0,0,0,0.0037313432835820895],"x":[193.72413793103448,387.44827586206895,581.17241379310349,774.89655172413791,968.62068965517233,1162.344827586207,1356.0689655172414,1549.7931034482758,1743.5172413793102,1937.2413793103447,2130.9655172413791,2324.6896551724139,2518.4137931034484,2712.1379310344828,2905.8620689655172,3099.5862068965516,3293.3103448275861,3487.0344827586205,3680.7586206896549,3874.4827586206893,4068.2068965517242,4261.9310344827591,4455.6551724137926,4649.3793103448279,4843.1034482758623,5036.8275862068967,5230.5517241379312,5424.2758620689656,5618,5811.7241379310344],"y":[0,0.018656716417910446,0.026119402985074633,0.026119402985074647,0.074626865671641784,0.093283582089552119,0.10074626865671643,0.082089552238805652,0.10820895522388063,0.055970149253731338,0.085820895522388141,0.067164179104477584,0.026119402985074647,0.033582089552238792,0.011194029850746273,0.011194029850746273,0.011194029850746273,0.011194029850746266,0.0037313432835820899,0,0,0,0,0,0,0,0,0,0,0],"text":["Percentage: 0.00%","Percentage: 0.02%","Percentage: 0.03%","Percentage: 0.03%","Percentage: 0.07%","Percentage: 0.09%","Percentage: 0.10%","Percentage: 0.08%","Percentage: 0.11%","Percentage: 0.06%","Percentage: 0.09%","Percentage: 0.07%","Percentage: 0.03%","Percentage: 0.03%","Percentage: 0.01%","Percentage: 0.01%","Percentage: 0.01%","Percentage: 0.01%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(42,120,142,0.8)","line":{"width":1.8897637795275593,"color":"rgba(77,77,77,1)"}},"name":"Detached House","legendgroup":"Detached House","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[193.72413793103453,193.72413793103442,193.72413793103448,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103533,193.7241379310326,193.72413793103442,193.72413793103624,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442],"base":[0.022388059701492536,0.014925373134328358,0.070895522388059698,0.29850746268656714,0.51865671641791045,0.54850746268656714,0.70522388059701502,0.67910447761194026,0.63059701492537301,0.74253731343283591,0.60074626865671643,0.5074626865671642,0.26119402985074625,0.13805970149253732,0.078358208955223885,0.055970149253731338,0.070895522388059698,0.044776119402985072,0.022388059701492539,0.014925373134328358,0.0037313432835820895,0,0.01865671641791045,0.007462686567164179,0,0,0,0,0,0.0037313432835820895],"x":[193.72413793103448,387.44827586206895,581.17241379310349,774.89655172413791,968.62068965517233,1162.344827586207,1356.0689655172414,1549.7931034482758,1743.5172413793102,1937.2413793103447,2130.9655172413791,2324.6896551724139,2518.4137931034484,2712.1379310344828,2905.8620689655172,3099.5862068965516,3293.3103448275861,3487.0344827586205,3680.7586206896549,3874.4827586206893,4068.2068965517242,4261.9310344827591,4455.6551724137926,4649.3793103448279,4843.1034482758623,5036.8275862068967,5230.5517241379312,5424.2758620689656,5618,5811.7241379310344],"y":[0,0,0.0037313432835820864,0.23134328358208955,1.1305970149253728,2.6977611940298507,6.4365671641791051,2.6791044776119399,0.0074626865671642006,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"text":["Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.23%","Percentage: 1.13%","Percentage: 2.70%","Percentage: 6.44%","Percentage: 2.68%","Percentage: 0.01%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(34,168,132,0.8)","line":{"width":1.8897637795275593,"color":"rgba(77,77,77,1)"}},"name":"Executive Condominium","legendgroup":"Executive Condominium","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[193.72413793103453,193.72413793103442,193.72413793103448,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103533,193.7241379310326,193.72413793103442,193.72413793103624,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442],"base":[0.011194029850746268,0.0037313432835820895,0.059701492537313432,0.22014925373134325,0.23880597014925373,0.32835820895522388,0.44776119402985076,0.43656716417910446,0.44029850746268651,0.54477611940298509,0.44402985074626872,0.42910447761194032,0.19402985074626866,0.097014925373134331,0.041044776119402986,0.029850746268656716,0.044776119402985072,0.033582089552238806,0.01865671641791045,0.007462686567164179,0.0037313432835820895,0,0.01865671641791045,0.007462686567164179,0,0,0,0,0,0.0037313432835820895],"x":[193.72413793103448,387.44827586206895,581.17241379310349,774.89655172413791,968.62068965517233,1162.344827586207,1356.0689655172414,1549.7931034482758,1743.5172413793102,1937.2413793103447,2130.9655172413791,2324.6896551724139,2518.4137931034484,2712.1379310344828,2905.8620689655172,3099.5862068965516,3293.3103448275861,3487.0344827586205,3680.7586206896549,3874.4827586206893,4068.2068965517242,4261.9310344827591,4455.6551724137926,4649.3793103448279,4843.1034482758623,5036.8275862068967,5230.5517241379312,5424.2758620689656,5618,5811.7241379310344],"y":[0.011194029850746268,0.011194029850746268,0.011194029850746266,0.078358208955223885,0.27985074626865669,0.22014925373134325,0.25746268656716426,0.2425373134328358,0.19029850746268651,0.19776119402985082,0.15671641791044771,0.078358208955223885,0.067164179104477584,0.041044776119402993,0.037313432835820899,0.026119402985074622,0.026119402985074626,0.011194029850746266,0.0037313432835820899,0.007462686567164179,0,0,0,0,0,0,0,0,0,0],"text":["Percentage: 0.01%","Percentage: 0.01%","Percentage: 0.01%","Percentage: 0.08%","Percentage: 0.28%","Percentage: 0.22%","Percentage: 0.26%","Percentage: 0.24%","Percentage: 0.19%","Percentage: 0.20%","Percentage: 0.16%","Percentage: 0.08%","Percentage: 0.07%","Percentage: 0.04%","Percentage: 0.04%","Percentage: 0.03%","Percentage: 0.03%","Percentage: 0.01%","Percentage: 0.00%","Percentage: 0.01%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(122,209,81,0.8)","line":{"width":1.8897637795275593,"color":"rgba(77,77,77,1)"}},"name":"Semi-Detached House","legendgroup":"Semi-Detached House","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[193.72413793103453,193.72413793103442,193.72413793103448,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103533,193.7241379310326,193.72413793103442,193.72413793103624,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442,193.72413793103442],"base":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"x":[193.72413793103448,387.44827586206895,581.17241379310349,774.89655172413791,968.62068965517233,1162.344827586207,1356.0689655172414,1549.7931034482758,1743.5172413793102,1937.2413793103447,2130.9655172413791,2324.6896551724139,2518.4137931034484,2712.1379310344828,2905.8620689655172,3099.5862068965516,3293.3103448275861,3487.0344827586205,3680.7586206896549,3874.4827586206893,4068.2068965517242,4261.9310344827591,4455.6551724137926,4649.3793103448279,4843.1034482758623,5036.8275862068967,5230.5517241379312,5424.2758620689656,5618,5811.7241379310344],"y":[0.011194029850746268,0.0037313432835820895,0.059701492537313432,0.22014925373134325,0.23880597014925373,0.32835820895522388,0.44776119402985076,0.43656716417910446,0.44029850746268651,0.54477611940298509,0.44402985074626872,0.42910447761194032,0.19402985074626866,0.097014925373134331,0.041044776119402986,0.029850746268656716,0.044776119402985072,0.033582089552238806,0.01865671641791045,0.007462686567164179,0.0037313432835820895,0,0.01865671641791045,0.007462686567164179,0,0,0,0,0,0.0037313432835820895],"text":["Percentage: 0.01%","Percentage: 0.00%","Percentage: 0.06%","Percentage: 0.22%","Percentage: 0.24%","Percentage: 0.33%","Percentage: 0.45%","Percentage: 0.44%","Percentage: 0.44%","Percentage: 0.54%","Percentage: 0.44%","Percentage: 0.43%","Percentage: 0.19%","Percentage: 0.10%","Percentage: 0.04%","Percentage: 0.03%","Percentage: 0.04%","Percentage: 0.03%","Percentage: 0.02%","Percentage: 0.01%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.02%","Percentage: 0.01%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%","Percentage: 0.00%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(253,231,37,0.8)","line":{"width":1.8897637795275593,"color":"rgba(77,77,77,1)"}},"name":"Terrace House","legendgroup":"Terrace House","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":48.943129929431294,"r":9.2984640929846396,"b":51.141552511415526,"l":47.422166874221674},"paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":18.596928185969279},"title":{"text":"<b> Distribution of Unit Prices by Property Type <\/b>","font":{"color":"rgba(0,0,0,1)","family":"","size":19.9252801992528},"x":0.5,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-193.72413793103453,6199.1724137931033],"tickmode":"array","ticktext":["0","2000","4000","6000"],"tickvals":[0,2000,4000,6000],"categoryorder":"array","categoryarray":["0","2000","4000","6000"],"nticks":null,"ticks":"outside","tickcolor":"rgba(204,204,204,1)","ticklen":4.6492320464923198,"tickwidth":0.8453149175440583,"showticklabels":true,"tickfont":{"color":"rgba(51,51,51,1)","family":"","size":14.877542548775427},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":{"text":"Unit Price ($ per Square Foot)","font":{"color":"rgba(0,0,0,1)","family":"","size":18.596928185969279}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.76361940298507469,16.036007462686566],"tickmode":"array","ticktext":["0","5","10","15"],"tickvals":[0,5,10,15],"categoryorder":"array","categoryarray":["0","5","10","15"],"nticks":null,"ticks":"outside","tickcolor":"rgba(204,204,204,1)","ticklen":4.6492320464923198,"tickwidth":0.8453149175440583,"showticklabels":true,"tickfont":{"color":"rgba(51,51,51,1)","family":"","size":14.87754254877543},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":{"text":"Percentage of Total","font":{"color":"rgba(0,0,0,1)","family":"","size":18.596928185969279}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(229,229,229,1)","bordercolor":"rgba(127,127,127,1)","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.877542548775427},"title":{"text":"Property Type","font":{"color":"rgba(0,0,0,1)","family":"","size":18.596928185969279}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"1f445b05960":{"x":{},"fill":{},"text":{},"y":{},"type":"bar"}},"cur_data":"1f445b05960","visdat":{"1f445b05960":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
 </div>
 
+</section>
+<section id="violin-chart" class="level1">
+<h1>Violin Chart</h1>
+<p>In this case violin graph can be great to visualise the output of Unit Price ($per square foot) vs.&nbsp;total by property types.</p>
+<details>
+<summary>
+Click to show code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming `combined_ds` is your dataset</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(combined_ds, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">`</span><span class="at">Property Type</span><span class="st">`</span>, <span class="at">y =</span> <span class="st">`</span><span class="at">Unit Price ($ PSF)</span><span class="st">`</span>, <span class="at">fill =</span> <span class="st">`</span><span class="at">Property Type</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">trim =</span> <span class="cn">FALSE</span>) <span class="sc">+</span>  <span class="co"># Draw the full range of the distribution</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span>  <span class="co"># Optional: add a narrow boxplot inside each violin for more detail</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>() <span class="sc">+</span>  <span class="co"># Vibrant color scale</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Unit Prices by Property Type"</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Violin plots with embedded boxplots"</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Property Type"</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Unit Price ($ per Square Foot)"</span>) <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>),</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>,  <span class="co"># Hide legend if not necessary</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">face =</span> <span class="st">"italic"</span>),</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),  <span class="co"># Adjust x-axis title size</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),  <span class="co"># Adjust y-axis title size</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">10</span>, <span class="at">color =</span> <span class="st">"grey20"</span>),  <span class="co"># Adjust x-axis labels</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"grey80"</span>),</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take_home_x02_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># If you prefer to flip the axes to make the plot horizontal:</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># p + coord_flip()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+</section>
+<section id="takeaways" class="level1">
+<h1>Takeaways</h1>
+<ul>
+<li>Sometimes in order to get the graph to be visually pleasing, clarity of the graph could have been messed up. It is important to balance clarity and aesthetics.</li>
+<li>Sometimes what we think versus what we can produce is quite different, it is important for me to get my hands “dirty” in order to understand the code and the way the chart interacts.</li>
+<li>Giving others critics is a great way to reflect on yourself, did you make similar mistakes when it comes to creating visual analytics?</li>
+</ul>
 
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
