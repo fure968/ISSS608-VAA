@@ -114,9 +114,7 @@ ds5$`Sale Date` <- dmy(ds5$`Sale Date`)
 :::
 
 # Orginal Graph 
-<details>
 
-<summary>Click to show code</summary>
 ```{r}
 library(ggplot2)
 
@@ -125,7 +123,6 @@ ggplot(data = combined_ds, aes(x = `Unit Price ($ PSF)`, fill = `Property Type`)
   geom_histogram(bins = 20, color = "grey30")
 
 ```
-</details>
 
 # First Try
 
@@ -167,9 +164,12 @@ p <- ggplot(data = combined_ds, aes(x = `Unit Price ($ PSF)`, fill = `Property T
 
 # Convert ggplot to plotly for interactivity
 plotly_p <- ggplotly(p, tooltip = "text")  # Enabling hover with tooltip argument
+```
+</details>
 
+
+```{r}
 plotly_p
-
 ```
 </details>
 
@@ -182,7 +182,7 @@ In this case violin graph can be great to visualise the output of Unit Price (\$
 <summary>Click to show code</summary>
 ```{r}
 # Assuming `combined_ds` is your dataset
-ggplot(combined_ds, aes(x = `Property Type`, y = `Unit Price ($ PSF)`, fill = `Property Type`)) +
+violin <- ggplot(combined_ds, aes(x = `Property Type`, y = `Unit Price ($ PSF)`, fill = `Property Type`)) +
   geom_violin(trim = FALSE) +  # Draw the full range of the distribution
   geom_boxplot(width = 0.1, fill = "white", outlier.shape = NA) +  # Optional: add a narrow boxplot inside each violin for more detail
   scale_fill_viridis_d() +  # Vibrant color scale
@@ -210,6 +210,9 @@ ggplot(combined_ds, aes(x = `Property Type`, y = `Unit Price ($ PSF)`, fill = `P
 ```
 </details>
 
+```{r}
+violin
+```
 
 # Takeaways
 - Sometimes in order to get the graph to be visually pleasing, clarity of the graph could have been messed up. It is important to balance clarity and aesthetics. 
