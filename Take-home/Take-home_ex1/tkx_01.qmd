@@ -459,3 +459,17 @@ ggplot(combined_ds, aes(x = `Unit Price ($ PSF)`, y = `Planning Region`, fill = 
 -   Each region has a peak where the majority of the unit prices are concentrated. For instance, the North Region has a sharp peak around \$1000 PSF, indicating a majority of properties are close to this price point.</br>
 -   The Central Region has a long tail on the right side, indicating a few properties with very high unit prices. Meanwhile, the West and North East Regions have distributions that marginally extend into the higher price bracket, hinting at the existence of select premium properties amidst generally more modestly priced homes.</br>
 :::
+
+```{r}
+library(ggplot2)
+
+# Bar chart for average unit price by property type
+ggplot(average_price_by_type, aes(x = `Property Type`, y = Average_Unit_Price_PSF, fill = `Property Type`)) +
+  geom_bar(stat = "identity", color = "black") +
+  theme_minimal() +
+  labs(title = "Average Unit Price per Square Foot by Property Type",
+       x = "Property Type",
+       y = "Average Unit Price ($ PSF)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
