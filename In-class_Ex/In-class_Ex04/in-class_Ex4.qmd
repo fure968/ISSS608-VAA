@@ -138,3 +138,24 @@ ggscatterstats(
 ```
 
 
+Other Notes: 
+
+We can add in the following code chunk to have a listing on our home page. 
+
+<details>
+<summary>Click to show code</summary>
+
+listing: 
+  contents:
+  - "tkx_01.qmd"
+  - "Take_home_x02.qmd"
+  sort:
+  - "date desc"
+  - "title desc"
+  max-items: 3
+  type: grid
+  fields: [image, date, title, author, 
+reading-time]
+toc: false
+
+</details>
