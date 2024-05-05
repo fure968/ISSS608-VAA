@@ -47,7 +47,8 @@ pacman::p_load(tidyverse, haven,
                viridis, cowplot, 
                dplyr, plotly,
                tidyr, lubridate, 
-               ggplot2, ggExtra)
+               ggplot2, ggExtra,
+               ggplotly)
                
 ```
 

@@ -13,17 +13,89 @@ execute:
 
 #Overview
 
-In the take home exercise 1, REALIS transaction data covering 1st Jan 2023 to 31st March 2024 had been use to make 3 different visualizations. In part 2 of this exercise, one data visualisation will be selected from our fellow classmates' work and we are task to provide a feedback in terms of clarity and aesthetics.
+In this take home exercise, one data visualisation will be selected from our fellow classmates' take-home exercise 1 [submissions](https://isss608-ay2023-24apr.netlify.app/take-home_ex/th_ex01#peer-learning) and we are task to provide critic on the submission in terms of clarity and aesthetics. Next, prepare a sketch for the alternative design by using the data visualisation design principles and best practices from Lesson 1 and 2. Lastly, remake the original design by using ggplot2, ggplot2 extensions and tidyverse packages.
 
-The original data set was from REALIS.
+The graph I have chosen is from [here](https://lnealicia-isss608.netlify.app/take-home_ex/take-home_ex01/take-home_ex01).
 
-```{R}
-pacman::p_load(tidyverse, haven,
-               ggrepel, ggthemes,
-               ggridges, ggdist,
-               patchwork, scales,
-               viridis, cowplot, 
-               dplyr, plotly,
-               tidyr, lubridate, 
-               ggplot2, ggExtra)
+![](images/th2-01.png){width="384"}
+
+# Critique
+
+::: panel:tabset
+## Positive Points
+
+-   It is clear for audience to see the comparison between Q1 2023 vs. Q1 2024 and fairly easy to see the trends and changes side by side.
+
+-   Mean line allows audience to take a quick glance and tell from the average units sold across all types of properties whether it is above or below the average.
+
+-   Color is consistent and may not be too confusing, straightforward to interpret.
+
+## Improvements
+
+-   The labels for property types seem to be in vertical and is difficult for the audience to identify the name at first glance.
+
+-   We can add data labels to the bar chart to enhance the overall readability, audience will be able to read the chart based on the labels quickly.
+:::
+
+# Data Preparation
+
+```{r}
+pacman::p_load(tidyverse, scales, patchwork, ggtext, DT)
 ```
+
+::: panel-tabset
+## Import Data Sets
+
+```{r}
+ds1 <- read_csv("data/ds1.csv")
+ds2 <- read_csv("data/ds2.csv")
+ds3 <- read_csv("data/ds3.csv")
+ds4 <- read_csv("data/ds4.csv")
+ds5 <- read_csv("data/ds5.csv")
+```
+
+## Converting Data
+
+```{r}
+
+prepare_dataset <- function(ds) {
+  colSums(is.na(ds))
+  ds <- na.omit(ds)
+  
+  ds$`Type of Sale` <- tolower(as.character(ds$`Type of Sale`))
+  ds$`Type of Sale` <- ifelse(ds$`Type of Sale` %in% c("new sale", "resale"), ds$`Type of Sale`, "other")
+  ds$`Type of Sale` <- as.factor(ds$`Type of Sale`)
+  
+  ds$`Property Type` <- as.factor(ds$`Property Type`)
+  
+  ds$`Transacted Price ($)` <- as.numeric(gsub("[^0-9.]", "", ds$`Transacted Price ($)`, perl = TRUE))
+  ds$`Area (SQFT)` <- as.numeric(gsub("[^0-9.]", "", ds$`Area (SQFT)`, perl = TRUE))
+  ds$`Unit Price ($ PSF)` <- as.numeric(gsub("[^0-9.]", "", ds$`Unit Price ($ PSF)`, perl = TRUE))
+  
+  return(ds)
+}
+
+# Apply the function to each dataset
+ds1 <- prepare_dataset(ds1)
+ds2 <- prepare_dataset(ds2)
+ds3 <- prepare_dataset(ds3)
+ds4 <- prepare_dataset(ds4)
+ds5 <- prepare_dataset(ds5)
+
+# Combine the datasets
+combined_ds <- rbind(ds1, ds2, ds3, ds4, ds5)
+
+
+```
+
+## Converting Dates
+
+```{r}
+# Convert Sale Date to Date format
+ds1$`Sale Date` <- dmy(ds1$`Sale Date`)
+ds2$`Sale Date` <- dmy(ds2$`Sale Date`)
+ds3$`Sale Date` <- dmy(ds3$`Sale Date`)
+ds4$`Sale Date` <- dmy(ds4$`Sale Date`)
+ds5$`Sale Date` <- dmy(ds5$`Sale Date`)
+```
+:::
