@@ -11,7 +11,9 @@ execute:
   freeze: true
 ---
 
-#Overview For this take-home exercise, I will select one data visualization from the [submissions](https://isss608-ay2023-24apr.netlify.app/take-home_ex/th_ex01#peer-learning) of our classmates for Take-Home Exercise 1. My task is to critique the selected visualization with respect to clarity and aesthetics. Following the critique, I will prepare a sketch for an alternative design, utilizing the principles and best practices of data visualization as covered in Lessons 1 and 2. Finally, I will recreate the original design using tools from ggplot2, its extensions, and other packages in the tidyverse suite.
+# Overview
+
+For this take-home exercise, I will select one data visualization from the [submissions](https://isss608-ay2023-24apr.netlify.app/take-home_ex/th_ex01#peer-learning) of our classmates for Take-Home Exercise 1. My task is to critique the selected visualization with respect to clarity and aesthetics. Following the critique, I will prepare a sketch for an alternative design, utilizing the principles and best practices of data visualization as covered in Lessons 1 and 2. Finally, I will recreate the original design using tools from ggplot2, its extensions, and other packages in the tidyverse suite.
 
 The graph I have chosen is from [here](https://isss608-zjho008.netlify.app/take-home_ex/take-home_ex01/take-home_ex01). It is a geom_history made by our fellow classmate.
 
@@ -19,19 +21,19 @@ The graph I have chosen is from [here](https://isss608-zjho008.netlify.app/take-
 
 # First Glance
 
-::: panel:tabset
 ## Positive Points
 
--   It is clear for audience to see the comparison between different property types.
+- The graph effectively clarifies the comparison across various property types, making it easy for the audience to grasp differences at a glance.
 
--   Colour is consistent and may not be too confusing, straightforward to interpret.
+- The colour scheme is okay and overall it is a graph with straightforward interpretation without overwhelming the viewer.
 
 ## Improvements
 
--   If we want to visualise the relationship between total and unit price per square foot according to the property types, we can try to visualise with a different graph such as violin plot.
+- To further explore the relationship between total price and unit price per square foot across different property types, consider employing a more detailed graph, such as a violin plot. This could provide a deeper understanding of data distribution and variance within each category. 
 
--   We can add data labels to the bar chart to enhance the overall readability, audience will be able to read the chart based on the labels quickly.
-:::
+- Enhancing the bar chart with data labels could significantly improve its readability. By directly displaying key information on the graph, viewers can quickly comprehend the data without needing to cross-reference with the axis. This step will streamline the presentation and make the information more accessible at a glance.
+  
+
 
 # Data Preparation
 
@@ -131,107 +133,69 @@ ggplot(data = combined_ds, aes(x = `Unit Price ($ PSF)`, fill = `Property Type`)
 
 ```
 
-# First Try
-
--   Numbers get clamped together so it is better if the data can appear once hover over.
-
-    <details>
-
-<summary>Click to show code</summary>
-
-```{r}
-library(ggplot2)
-library(plotly)
-library(viridis)  # For vibrant color scales
-
-# Assuming `combined_ds` is your dataset
-threshold_percentage <- 5  # Set a threshold for minimum percentage to display text
-
-# Create the ggplot object
-p <- ggplot(data = combined_ds, aes(x = `Unit Price ($ PSF)`, fill = `Property Type`, text = sprintf("Percentage: %.2f%%", ..count../sum(..count..)*100))) +
-  geom_histogram(bins = 30, color = "grey30", aes(y = ..count../sum(..count..)*100), alpha = 0.8) +
-  scale_fill_viridis(discrete = TRUE, option = "D") +
-  labs(title = "Distribution of Unit Prices by Property Type",
-       subtitle = "Hover over bars to see percentages",
-       x = "Unit Price ($ per Square Foot)",
-       y = "Percentage of Total",
-       fill = "Property Type") +
-  theme_minimal(base_size = 14) +
-  theme(
-    plot.background = element_rect(fill = "white"),
-    legend.position = "right",
-    plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
-    plot.subtitle = element_text(size = 10, face = "italic"),
-    axis.title = element_text(size = 14),
-    axis.text = element_text(color = "grey20"),
-    axis.ticks = element_line(color = "grey80"),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    legend.background = element_rect(fill = "grey90", color = "grey50", size = 0.5, linetype = "solid"),
-    legend.key = element_blank()
-  )
-
-# Convert ggplot to plotly for interactivity
-plotly_p <- ggplotly(p, tooltip = "text")  # Enabling hover with tooltip argument
-```
-
-</details>
-
-```{r}
-plotly_p
-```
-
 </details>
 
 # Violin Chart
 
-In this scenario, a violin plot can be a good choice for visualizing the distribution and density of 'Unit Price (\$ per square foot)' across different 'Property Types'. The violin plot combines the both box plots and density plots, offering a deeper understanding of the data's distribution. By visually representing the data's density estimates, it reveals peaks, valleys, and the spread of the data, which are crucial for identifying patterns and outliers. This could provide insightful details such as whether certain property types are more variable in price or if they tend to have a particular pricing structure.
+In this scenario, a violin plot can be a good choice for visualizing the distribution and density of 'Unit Price (\$ per square foot)' across different 'Property Types'. 
+
+The violin plot combines the both box plots and density plots, offering a deeper understanding of the data's distribution. By visually representing the data's density estimates, it reveals peaks, valleys, and the spread of the data, which are crucial for identifying patterns and outliers. 
+
+This could provide insightful details such as whether certain property types are more variable in price or if they tend to have a particular pricing structure.
 
 ## My sketch using Paint
 
+What I have in mind: 
+
 ![](images/Sketch.png){width="402"}
+
+## Changes Implemented
+- Transitioned to a Violin Chart: Instead of using a stacked bar chart, I have switched to a violin chart to better visualize the unit price per square meter across different property types. This change offers a clearer representation of the data distribution and variance.
+
+- Inclusion of IQR (Interquartile Range): The violin chart now includes the Interquartile Range (IQR) to provide a more detailed statistical summary. Additionally, users can hover over specific areas of the chart to view the exact values, enhancing interactive data exploration.
+
+- Modified Representation of Property Types: Rather than distinguishing property types by colour within a single chart, each property type is now represented by its own individual violin chart. This alteration avoids colour overlap and simplifies the differentiation between types, making it easier for the audience to interpret the data visually.
+
 
 <details>
 
 <summary>Click to show code</summary>
 
 ```{r}
-# Assuming `combined_ds` is your dataset
-violin <- ggplot(combined_ds, aes(x = `Property Type`, y = `Unit Price ($ PSF)`, fill = `Property Type`)) +
-  geom_violin(trim = FALSE) +  # Draw the full range of the distribution
-  geom_boxplot(width = 0.1, fill = "white", outlier.shape = NA) +  # Optional: add a narrow boxplot inside each violin for more detail
-  scale_fill_viridis_d() +  # Vibrant color scale
-  labs(title = "Distribution of Unit Prices by Property Type",
-       subtitle = "Violin plots with embedded boxplots",
-       x = "Property Type",
-       y = "Unit Price ($ per Square Foot)") +
-  theme_minimal() +
-  theme(
-    plot.background = element_rect(fill = "white"),
-    legend.position = "none",  # Hide legend if not necessary
-    plot.title = element_text(size = 15, face = "bold", hjust = 0.5),
-    plot.subtitle = element_text(size = 10, face = "italic"),
-    axis.title.x = element_text(size = 10),  # Adjust x-axis title size
-    axis.title.y = element_text(size = 10),  # Adjust y-axis title size
-    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1, size = 10, color = "grey20"),  # Adjust x-axis labels
-    axis.ticks = element_line(color = "grey80"),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank()
-  )
+library(ggplot2)
+library(plotly)
 
-# If you prefer to flip the axes to make the plot horizontal:
-# p + coord_flip()
+# Assuming `combined_ds` is your combined dataset
+ggplot_object <- ggplot(data = combined_ds, aes(x = `Property Type`, y = `Unit Price ($ PSF)`, fill = `Property Type`)) +
+  geom_violin(trim = FALSE) +
+  geom_boxplot(width = 0.1, fill = "white", outlier.shape = NA, alpha = 0.5) +  # Overlay boxplot
+  stat_summary(fun = median, geom = "point", color = "red", size = 3) +  # Add a red dot for the median
+  labs(title = "Distribution of Unit Price by Property Type with IQR",
+       x = "Property Type",
+       y = "Unit Price ($ PSF)") +
+  theme_minimal() +
+  theme(legend.title = element_text(size = 8),
+        legend.text = element_text(size = 8),
+        axis.text.x = element_text(size = 8))  
+
+
+plotly_object <- ggplotly(ggplot_object, tooltip = c("y", "x"))
+```
+
+</details>
+
+
+```{r}
+plotly_object
 
 ```
 
 </details>
 
-```{r}
-violin
-```
-
 # Takeaways
 
--   Sometimes in order to get the graph to be visually pleasing, clarity of the graph could have been messed up. It is important to balance clarity and aesthetics.
--   Sometimes what we think versus what we can produce is quite different, it is important for me to get my hands "dirty" in order to understand the code and the way the chart interacts.
--   Giving others critics is a great way to reflect on yourself, did you make similar mistakes when it comes to creating visual analytics?
+-   Balancing clarity and aesthetics in a graph is not easy, as a visually appealing design can sometimes compromise clarity.
+
+-   Practical experience is essential for truly understanding the nuances of coding and chart interactions. There's often a difference between our initial concepts and the final outputs, highlighting the importance of hands-on experimentation.
+
+-   Offering critiques on others' work is not only constructive for them but also serves as a reflection for ourselves. It prompts us to reflect whether we are making similar mistakes in our own visual analytics projects.
