@@ -11,4 +11,4 @@ execute:
   freeze: true
 ---
 
-xx soon
+Designing Web-enabled Visual Analytics Application with Shiny

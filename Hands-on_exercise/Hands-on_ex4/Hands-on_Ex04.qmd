@@ -16,7 +16,19 @@ output:
 
 # 4.1 Visual Statistical Analysis
 
-Getting Started
+## **Lesson Slides and Hands-on Notes**
+
+-   [Lesson 4: Fundamentals of Visual Analytics](https://isss608-ay2023-24apr.netlify.app/lesson/Lesson04/Lesson04-Fundamentals%20of%20Visual%20Analytics.html) slides
+
+-   Hands-on Exercises
+
+    -   [Hands-on Exercise 4: Visual Statistical Analysis](https://r4va.netlify.app/chap10)
+
+    -   [Hands-on Exercise 4: Visualising Uncertainty](https://r4va.netlify.app/chap11)
+
+    -   [Hands-on Exercise 4: Building Funnel Plot with R](https://r4va.netlify.app/chap12)
+
+## Getting Started
 
 ```{r}
 pacman::p_load(ggstatsplot, tidyverse)
@@ -511,9 +523,9 @@ funnel_plot(
 )
 ```
 
-```        
+```         
 A funnel plot object with 267 points of which 7 are outliers. Plot is adjusted for overdispersion. 
-``` 
+```
 
 Things to learn from the code chunk above.
 
@@ -620,7 +632,13 @@ fp_ggplotly
 
 ```
 
-## **12.6 References**
+# 4.4 Good Reads
+
+[**Indrajeet Patil**](https://sites.google.com/site/indrajeetspatilmorality/home)
+
+[Data Carpentry](https://datacarpentry.org/R-ecology-lesson/)
+
+# 4.5 References
 
 -   [funnelPlotR](https://nhs-r-community.github.io/FunnelPlotR/) package.
 
@@ -629,3 +647,53 @@ fp_ggplotly
 -   [Changing funnel plot options](https://nhs-r-community.github.io/FunnelPlotR/articles/changing_funnel_plot_options.html)
 
 -   [ggplot2](https://ggplot2.tidyverse.org/) package.
+
+## **4.6 Readings on Visualising Uncertainty**
+
+-   [Why It’s So Hard for Us to Visualize Uncertainty](https://hbr.org/2016/11/why-its-so-hard-for-us-to-visualize-uncertainty)
+
+-   [Visualizing the Uncertainty in Data](https://flowingdata.com/2018/01/08/visualizing-the-uncertainty-in-data/)
+
+-   [Uncertainty + Visualization, Explained](https://medium.com/multiple-views-visualization-research-explained/uncertainty-visualization-explained-67e7a73f031b)
+
+### **Error Plots**
+
+-   [Error bar](https://en.wikipedia.org/wiki/Error_bar)
+
+### **Funnel Plots**
+
+-   [Variation and Its Discontents: Funnel Plots for Fair Comparisons](https://www.perceptualedge.com/articles/visual_business_intelligence/variation_and_its_discontents.pdf)
+
+-   [What are the chances of successful fertility treatment?](https://understandinguncertainty.org/fertility)
+
+-   [Three-fold variation in UK bowel cancer death rates(?)](https://understandinguncertainty.org/three-fold-variation-uk-bowel-cancer-death-rates)
+
+-   [Using funnel plots in public health surveillance](https://pophealthmetrics.biomedcentral.com/articles/10.1186/1478-7954-9-58)
+
+-   [Graph Makeover: Where same-sex couples live in the US](https://community.jmp.com/t5/JMP-Blog/Graph-Makeover-Where-same-sex-couples-live-in-the-US/ba-p/30616)
+
+-   [Using maps and funnel plots to explore variation in place of death from cancer within London, 2002–2007](https://pdfs.semanticscholar.org/516b/afaccbd9b9bf82c9afdf507121f1a52e3093.pdf)
+
+## **All About Tableau**
+
+### **Visualising Uncertainty**
+
+-   [Showing uncertainty in survey results](https://www.datarevelations.com/showing-uncertainty.html)
+
+-   [Not a funnel cake, nor funnel charts, it’s funnel plots!](http://drawingwithnumbers.artisart.org/?s=Not+a+funnel+cake)
+
+-   [Funnel Plot in Tableau](https://www.youtube.com/watch?v=HgYzplb5XAU)
+
+-   [Creating Error Bars or CI Bars](https://kb.tableau.com/articles/howto/creating-error-bars)
+
+-   [Standard errors and confidence intervals in Tableau](https://www.theinformationlab.co.uk/2019/10/25/standard-errors-and-confidence-intervals-in-tableau/)
+
+## **All about R**
+
+-   [ggstatsplot](https://indrajeetpatil.github.io/ggstatsplot/): An extension of **ggplot2** package for creating statistical graphics with details from statistical tests.
+
+-   [ggdist](https://mjskay.github.io/ggdist/): An R package that provides a flexible set of ggplot2 geoms and stats designed especially for visualising distributions and uncertainty.
+
+-   [performance](https://easystats.github.io/performance/): An R package provides utilities for computing indices of model quality and goodness of fit including provides many functions to check model assumptions visually.
+
+-   [infer](https://infer.netlify.app/): An R package specially designed to perform statistical inference using an expressive statistical grammar that coheres with the tidyverse design framework. The library also includes functions for visualising the distribution of the simulation-based inferential statistics or the theoretical distribution (or both).

@@ -11,4 +11,20 @@ execute:
   freeze: true
 ---
 
-xxxxx
+# **Lesson 6: Visual Multivariate Analysis**
+
+## **Lesson Slides and Hands-on Notes**
+
+-   [Lesson 6: Visual Multivariate Analysis](https://isss608-ay2023-24apr.netlify.app/lesson/lesson06/lesson06-vma) slides
+
+-   Hands-on Exercises
+
+    -   [Building Ternary Plot with R](https://r4va.netlify.app/chap13).
+
+    -   [Visual Correlation Analysis](https://r4va.netlify.app/chap06).
+
+    -   [Visual Multivariate Analysis with Heatmap](https://r4va.netlify.app/chap14).
+
+    -   [Visual Multivariate Analysis with Parallel Coordinates Plot](https://r4va.netlify.app/chap15).
+
+    -   [Treemap Visualisation with R](https://r4va.netlify.app/chap16)
