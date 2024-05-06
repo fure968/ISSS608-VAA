@@ -39,21 +39,56 @@
     "href": "Hands-on_exercise/Hands-on_ex6/Hands-on_Ex06.html",
     "title": "Hands-on Ex 6",
     "section": "",
-    "text": "xxxxx"
+    "text": "Lesson 6: Visual Multivariate Analysis slides\nHands-on Exercises\n\nBuilding Ternary Plot with R.\nVisual Correlation Analysis.\nVisual Multivariate Analysis with Heatmap.\nVisual Multivariate Analysis with Parallel Coordinates Plot.\nTreemap Visualisation with R"
+  },
+  {
+    "objectID": "Hands-on_exercise/Hands-on_ex6/Hands-on_Ex06.html#lesson-slides-and-hands-on-notes",
+    "href": "Hands-on_exercise/Hands-on_ex6/Hands-on_Ex06.html#lesson-slides-and-hands-on-notes",
+    "title": "Hands-on Ex 6",
+    "section": "",
+    "text": "Lesson 6: Visual Multivariate Analysis slides\nHands-on Exercises\n\nBuilding Ternary Plot with R.\nVisual Correlation Analysis.\nVisual Multivariate Analysis with Heatmap.\nVisual Multivariate Analysis with Parallel Coordinates Plot.\nTreemap Visualisation with R"
   },
   {
     "objectID": "Hands-on_exercise/Hands-on_ex4/Hands-on_Ex04.html",
     "href": "Hands-on_exercise/Hands-on_ex4/Hands-on_Ex04.html",
     "title": "Hands-on Exercise 4",
     "section": "",
-    "text": "Getting Started\n\npacman::p_load(ggstatsplot, tidyverse)\n\n\nexam &lt;- read_csv(\"data/Exam_data.csv\")\n\nOne-sample test: gghistostats() method\n\nset.seed(1234)\n\ngghistostats(\n  data = exam,\n  x = ENGLISH,\n  type = \"bayes\",\n  test.value = 60,\n  xlab = \"English scores\"\n)\n\n\n\n\n\n\n\n\n\nA Bayes factor is the ratio of the likelihood of one particular hypothesis to the likelihood of another. It can be interpreted as a measure of the strength of evidence in favor of one theory among two competing theories.\nThat’s because the Bayes factor gives us a way to evaluate the data in favor of a null hypothesis, and to use external information to do so. It tells us what the weight of the evidence is in favor of a given hypothesis.\n\nLearn how to interpret Bayes Factor Here.\nTwo-sample mean test: ggbetweenstats()\n\nggbetweenstats(\n  data = exam,\n  x = GENDER, \n  y = MATHS,\n  type = \"np\",\n  messages = FALSE\n)\n\n\n\n\n\n\n\n\nOneway ANOVA Test: ggbetweenstats() method\n\nggbetweenstats(\n  data = exam,\n  x = RACE, \n  y = ENGLISH,\n  type = \"p\",\n  mean.ci = TRUE, \n  pairwise.comparisons = TRUE, \n  pairwise.display = \"s\",\n  p.adjust.method = \"fdr\",\n  messages = FALSE\n)\n\n\n\n\n\n\n\n\nSignificant Test of Correlation: ggscatterstats()\n\nggscatterstats(\n  data = exam,\n  x = MATHS,\n  y = ENGLISH,\n  marginal = FALSE,\n  )\n\n\n\n\n\n\n\n\nSignificant Test of Association (Depedence) : ggbarstats() methods\n\nexam1 &lt;- exam %&gt;% \n  mutate(MATHS_bins = \n           cut(MATHS, \n               breaks = c(0,60,75,85,100))\n)\n\nusing ggbarstats\n\nggbarstats(exam1, \n           x = MATHS_bins, \n           y = GENDER)"
+    "text": "Lesson 4: Fundamentals of Visual Analytics slides\nHands-on Exercises\n\nHands-on Exercise 4: Visual Statistical Analysis\nHands-on Exercise 4: Visualising Uncertainty\nHands-on Exercise 4: Building Funnel Plot with R\n\n\n\n\n\n\npacman::p_load(ggstatsplot, tidyverse)\n\n\nexam &lt;- read_csv(\"data/Exam_data.csv\")\n\nOne-sample test: gghistostats() method\n\nset.seed(1234)\n\ngghistostats(\n  data = exam,\n  x = ENGLISH,\n  type = \"bayes\",\n  test.value = 60,\n  xlab = \"English scores\"\n)\n\n\n\n\n\n\n\n\n\nA Bayes factor is the ratio of the likelihood of one particular hypothesis to the likelihood of another. It can be interpreted as a measure of the strength of evidence in favor of one theory among two competing theories.\nThat’s because the Bayes factor gives us a way to evaluate the data in favor of a null hypothesis, and to use external information to do so. It tells us what the weight of the evidence is in favor of a given hypothesis.\n\nLearn how to interpret Bayes Factor Here.\nTwo-sample mean test: ggbetweenstats()\n\nggbetweenstats(\n  data = exam,\n  x = GENDER, \n  y = MATHS,\n  type = \"np\",\n  messages = FALSE\n)\n\n\n\n\n\n\n\n\nOneway ANOVA Test: ggbetweenstats() method\n\nggbetweenstats(\n  data = exam,\n  x = RACE, \n  y = ENGLISH,\n  type = \"p\",\n  mean.ci = TRUE, \n  pairwise.comparisons = TRUE, \n  pairwise.display = \"s\",\n  p.adjust.method = \"fdr\",\n  messages = FALSE\n)\n\n\n\n\n\n\n\n\nSignificant Test of Correlation: ggscatterstats()\n\nggscatterstats(\n  data = exam,\n  x = MATHS,\n  y = ENGLISH,\n  marginal = FALSE,\n  )\n\n\n\n\n\n\n\n\nSignificant Test of Association (Depedence) : ggbarstats() methods\n\nexam1 &lt;- exam %&gt;% \n  mutate(MATHS_bins = \n           cut(MATHS, \n               breaks = c(0,60,75,85,100))\n)\n\nusing ggbarstats\n\nggbarstats(exam1, \n           x = MATHS_bins, \n           y = GENDER)"
   },
   {
-    "objectID": "Hands-on_exercise/Hands-on_ex4/Hands-on_Ex04.html#references",
-    "href": "Hands-on_exercise/Hands-on_ex4/Hands-on_Ex04.html#references",
+    "objectID": "Hands-on_exercise/Hands-on_ex4/Hands-on_Ex04.html#lesson-slides-and-hands-on-notes",
+    "href": "Hands-on_exercise/Hands-on_ex4/Hands-on_Ex04.html#lesson-slides-and-hands-on-notes",
     "title": "Hands-on Exercise 4",
-    "section": "12.6 References",
-    "text": "12.6 References\n\nfunnelPlotR package.\nFunnel Plots for Indirectly-standardised ratios.\nChanging funnel plot options\nggplot2 package."
+    "section": "",
+    "text": "Lesson 4: Fundamentals of Visual Analytics slides\nHands-on Exercises\n\nHands-on Exercise 4: Visual Statistical Analysis\nHands-on Exercise 4: Visualising Uncertainty\nHands-on Exercise 4: Building Funnel Plot with R"
+  },
+  {
+    "objectID": "Hands-on_exercise/Hands-on_ex4/Hands-on_Ex04.html#getting-started",
+    "href": "Hands-on_exercise/Hands-on_ex4/Hands-on_Ex04.html#getting-started",
+    "title": "Hands-on Exercise 4",
+    "section": "",
+    "text": "pacman::p_load(ggstatsplot, tidyverse)\n\n\nexam &lt;- read_csv(\"data/Exam_data.csv\")\n\nOne-sample test: gghistostats() method\n\nset.seed(1234)\n\ngghistostats(\n  data = exam,\n  x = ENGLISH,\n  type = \"bayes\",\n  test.value = 60,\n  xlab = \"English scores\"\n)\n\n\n\n\n\n\n\n\n\nA Bayes factor is the ratio of the likelihood of one particular hypothesis to the likelihood of another. It can be interpreted as a measure of the strength of evidence in favor of one theory among two competing theories.\nThat’s because the Bayes factor gives us a way to evaluate the data in favor of a null hypothesis, and to use external information to do so. It tells us what the weight of the evidence is in favor of a given hypothesis.\n\nLearn how to interpret Bayes Factor Here.\nTwo-sample mean test: ggbetweenstats()\n\nggbetweenstats(\n  data = exam,\n  x = GENDER, \n  y = MATHS,\n  type = \"np\",\n  messages = FALSE\n)\n\n\n\n\n\n\n\n\nOneway ANOVA Test: ggbetweenstats() method\n\nggbetweenstats(\n  data = exam,\n  x = RACE, \n  y = ENGLISH,\n  type = \"p\",\n  mean.ci = TRUE, \n  pairwise.comparisons = TRUE, \n  pairwise.display = \"s\",\n  p.adjust.method = \"fdr\",\n  messages = FALSE\n)\n\n\n\n\n\n\n\n\nSignificant Test of Correlation: ggscatterstats()\n\nggscatterstats(\n  data = exam,\n  x = MATHS,\n  y = ENGLISH,\n  marginal = FALSE,\n  )\n\n\n\n\n\n\n\n\nSignificant Test of Association (Depedence) : ggbarstats() methods\n\nexam1 &lt;- exam %&gt;% \n  mutate(MATHS_bins = \n           cut(MATHS, \n               breaks = c(0,60,75,85,100))\n)\n\nusing ggbarstats\n\nggbarstats(exam1, \n           x = MATHS_bins, \n           y = GENDER)"
+  },
+  {
+    "objectID": "Hands-on_exercise/Hands-on_ex4/Hands-on_Ex04.html#readings-on-visualising-uncertainty",
+    "href": "Hands-on_exercise/Hands-on_ex4/Hands-on_Ex04.html#readings-on-visualising-uncertainty",
+    "title": "Hands-on Exercise 4",
+    "section": "4.6 Readings on Visualising Uncertainty",
+    "text": "4.6 Readings on Visualising Uncertainty\n\nWhy It’s So Hard for Us to Visualize Uncertainty\nVisualizing the Uncertainty in Data\nUncertainty + Visualization, Explained\n\n\nError Plots\n\nError bar\n\n\n\nFunnel Plots\n\nVariation and Its Discontents: Funnel Plots for Fair Comparisons\nWhat are the chances of successful fertility treatment?\nThree-fold variation in UK bowel cancer death rates(?)\nUsing funnel plots in public health surveillance\nGraph Makeover: Where same-sex couples live in the US\nUsing maps and funnel plots to explore variation in place of death from cancer within London, 2002–2007"
+  },
+  {
+    "objectID": "Hands-on_exercise/Hands-on_ex4/Hands-on_Ex04.html#all-about-tableau",
+    "href": "Hands-on_exercise/Hands-on_ex4/Hands-on_Ex04.html#all-about-tableau",
+    "title": "Hands-on Exercise 4",
+    "section": "All About Tableau",
+    "text": "All About Tableau\n\nVisualising Uncertainty\n\nShowing uncertainty in survey results\nNot a funnel cake, nor funnel charts, it’s funnel plots!\nFunnel Plot in Tableau\nCreating Error Bars or CI Bars\nStandard errors and confidence intervals in Tableau"
+  },
+  {
+    "objectID": "Hands-on_exercise/Hands-on_ex4/Hands-on_Ex04.html#all-about-r",
+    "href": "Hands-on_exercise/Hands-on_ex4/Hands-on_Ex04.html#all-about-r",
+    "title": "Hands-on Exercise 4",
+    "section": "All about R",
+    "text": "All about R\n\nggstatsplot: An extension of ggplot2 package for creating statistical graphics with details from statistical tests.\nggdist: An R package that provides a flexible set of ggplot2 geoms and stats designed especially for visualising distributions and uncertainty.\nperformance: An R package provides utilities for computing indices of model quality and goodness of fit including provides many functions to check model assumptions visually.\ninfer: An R package specially designed to perform statistical inference using an expressive statistical grammar that coheres with the tidyverse design framework. The library also includes functions for visualising the distribution of the simulation-based inferential statistics or the theoretical distribution (or both)."
   },
   {
     "objectID": "Hands-on_exercise/Hands-on_ex2/Hands-on_Ex02.html",
@@ -102,7 +137,7 @@
     "href": "Hands-on_exercise/Hands-on_ex5/Hands-on_Ex05.html",
     "title": "Hands-on Ex5",
     "section": "",
-    "text": "xx soon"
+    "text": "Designing Web-enabled Visual Analytics Application with Shiny"
   },
   {
     "objectID": "In-class_Ex/In-class_Ex01/In-class_Ex01.html",
@@ -116,7 +151,7 @@
     "href": "In-class_Ex/In-class_Ex03/in-class_ex03.html",
     "title": "In-class Exercise 3",
     "section": "",
-    "text": "Using Tableau"
+    "text": "Using Tableau for this exercise 📡"
   },
   {
     "objectID": "index.html",
