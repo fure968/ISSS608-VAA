@@ -196,10 +196,14 @@ The code chunk used:
 ```{r}
 set.seed(1234)
 
+max_words_per_cloud <- 10  # Set the maximum number of words per cloud
+
 words_by_newsgroup %>%
   filter(n > 0) %>%
-ggplot(aes(label = word,
-           size = n)) +
+  group_by(newsgroup) %>%
+  slice_max(order_by = n, n = max_words_per_cloud) %>%
+  ggplot(aes(label = word,
+             size = n)) +
   geom_text_wordcloud() +
   theme_minimal() +
   facet_wrap(~newsgroup)
