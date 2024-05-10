@@ -100,9 +100,9 @@
   {
     "objectID": "about.html",
     "href": "about.html",
-    "title": "About",
+    "title": "<strong>ISSS608</strong>",
     "section": "",
-    "text": "Lin Guan Jhen, Elise\nISSS608 Visual Analytics and Applications under Prof. Kam Tin Seong as part of Singapore Management University Master of IT in business.\nLinkedIn | Email"
+    "text": "Who am I?\nWelcome to Lin Guan Jhen’s ISSS608 Visual Analytics and Applications, where data meets design under the guidance of Prof. Kam Tin Seong at Singapore Management University’s Master of IT in Business.\n\n\nCourse Overview 🎨\nIn Visual Analytics and Applications, we dive deep into the art and science of transforming data into actionable insights. Our journey is enriched by real-world applications, cutting-edge analytics tools, and interactive sessions that empower students to lead in the data-driven decision landscape.\n\n\nConnect with me 💡\n\n \n  \n   \n  \n    \n     Github\n  \n  \n    \n     LinkedIn\n  \n  \n    \n     Tableau"
   },
   {
     "objectID": "Hands-on_exercise/Hands-on_ex1/Hands-on_Ex01.html",
@@ -256,7 +256,7 @@
     "href": "Hands-on_exercise/Hands-on_ex5/Hands-on_Ex05.html#create-a-network-graph-from-bigram-data-frame",
     "title": "Hands-on Ex5",
     "section": "6.4Create a network graph from bigram data frame",
-    "text": "6.4Create a network graph from bigram data frame\nIn the code chunk below, a network graph is created by using graph_from_data_frame() of igraph package.\n\nbigram_graph &lt;- bigram_counts %&gt;%\n  filter(n &gt; 3) %&gt;%\n  graph_from_data_frame()\nbigram_graph\n\nIGRAPH e7e6e18 DN-- 40 24 -- \n+ attr: name (v/c), n (e/n)\n+ edges from e7e6e18 (vertex names):\n [1] 1          -&gt;2           1          -&gt;3           static     -&gt;void       \n [4] time       -&gt;pad         1          -&gt;4           infield    -&gt;fly        \n [7] mat        -&gt;28          vv         -&gt;vv          1          -&gt;5          \n[10] cock       -&gt;crow        noticeshell-&gt;widget      27         -&gt;1993       \n[13] 3          -&gt;4           child      -&gt;molestation cock       -&gt;crew       \n[16] gun        -&gt;violence    heat       -&gt;sink        homosexual -&gt;male       \n[19] homosexual -&gt;women       include    -&gt;xol         mary       -&gt;magdalene  \n[22] read       -&gt;write       rev        -&gt;20          tt         -&gt;ee"
+    "text": "6.4Create a network graph from bigram data frame\nIn the code chunk below, a network graph is created by using graph_from_data_frame() of igraph package.\n\nbigram_graph &lt;- bigram_counts %&gt;%\n  filter(n &gt; 3) %&gt;%\n  graph_from_data_frame()\nbigram_graph\n\nIGRAPH af4128a DN-- 40 24 -- \n+ attr: name (v/c), n (e/n)\n+ edges from af4128a (vertex names):\n [1] 1          -&gt;2           1          -&gt;3           static     -&gt;void       \n [4] time       -&gt;pad         1          -&gt;4           infield    -&gt;fly        \n [7] mat        -&gt;28          vv         -&gt;vv          1          -&gt;5          \n[10] cock       -&gt;crow        noticeshell-&gt;widget      27         -&gt;1993       \n[13] 3          -&gt;4           child      -&gt;molestation cock       -&gt;crew       \n[16] gun        -&gt;violence    heat       -&gt;sink        homosexual -&gt;male       \n[19] homosexual -&gt;women       include    -&gt;xol         mary       -&gt;magdalene  \n[22] read       -&gt;write       rev        -&gt;20          tt         -&gt;ee"
   },
   {
     "objectID": "Hands-on_exercise/Hands-on_ex5/Hands-on_Ex05.html#visualizing-a-network-of-bigrams-with-ggraph",
@@ -289,9 +289,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": " ISSS608",
+    "title": "<strong>ISSS608</strong>",
     "section": "",
-    "text": "ISSS608-Visual Analytics and Application\n“We’re entering a new world in which data may be more important than software.”\n- Tim O’Reilly\nAbout"
+    "text": "“We’re entering a new world in which data may be more important than software.”\n— Tim O’Reilly\n\nThe Journey\nWelcome to ISSS608, a journey through the essentials of visual analytics where data not only informs but also transforms decision-making processes across industries.\nHere, you’ll explore innovative tools and techniques that make data visual, interactive, and actionable.\nIn this course, we delve into case studies, hands-on exercises, and collaborative projects that will enhance your ability to analyse complex data sets and communicate findings effectively."
   },
   {
     "objectID": "Take-home/Take-home_ex2/Take_home_x02.html",
