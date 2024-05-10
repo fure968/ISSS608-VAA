@@ -1,5 +1,5 @@
 ---
-title: " "
+title: "about"
 about:
   id: hero-heading
   template: jolla
