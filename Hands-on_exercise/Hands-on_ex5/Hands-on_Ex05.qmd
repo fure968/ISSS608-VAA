@@ -105,6 +105,7 @@ raw_text %>%
 ```
 
 # 3. tidytext
+
 -   Using tidy data principles in processing, analysing and visualising text data.
 -   Much of the infrastructure needed for text mining with tidy data frames already exists in packages like ‘dplyr’, ‘broom’, ‘tidyr’, and ‘ggplot2’. Figure below shows the workflow using tidytext approach for processing and visualising text data.
 
