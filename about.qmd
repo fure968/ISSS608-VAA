@@ -28,7 +28,6 @@ Welcome to **Lin Guan Jhen**'s ISSS608 Visual Analytics and Applications, where 
 In Visual Analytics and Applications, we dive deep into the art and science of transforming data into actionable insights. Our journey is enriched by real-world applications, cutting-edge analytics tools, and interactive sessions that empower students to lead in the data-driven decision landscape.
 
 ##### `Connect with me 💡`
-
 :::
 
 <!-- Google tag (gtag.js) -->
