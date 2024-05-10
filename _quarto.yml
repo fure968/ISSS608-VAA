@@ -2,7 +2,7 @@ project:
   type: website
 
 website: 
-  title: " ISSS608"
+  title: "<strong>ISSS608</strong>"
   navbar:
     left:
     - text: "🚀 Hands On"
@@ -15,7 +15,7 @@ website:
           href: "Hands-on_exercise/Hands-on_ex3/Hands-on_Ex03.html"
         - text: "4. Fundamentals of Visual Analytics"
           href: "Hands-on_exercise/Hands-on_ex4/Hands-on_Ex04.html"
-        - text: "5. Work in Progress"
+        - text: "5. Visualising and Analysing Text Data"
           href: "Hands-on_exercise/Hands-on_ex5/Hands-on_Ex05.html"    
         - text: "6. Work in Progress"
           href: "Hands-on_exercise/Hands-on_ex6/Hands-on_Ex06.html"
@@ -38,7 +38,7 @@ website:
             href: "Take-home/Take-home_ex1/tkx_01.html"
           - text: "Take-home Exercise 2"
             href: "Take-home/Take-home_ex2/Take_home_x02.html"
-          - text: "Take-home Exercise "
+          - text: "Take-home Exercise 3"
             href: "Take-home/Take-home_ex3/Take_home_x03.html"
     
     - text:  "⚙️ Work in Progress"
@@ -50,7 +50,7 @@ website:
     right:
       - about.qmd
       - href: index.qmd
-        text: Home
+        text: home
       
 format:
   html:

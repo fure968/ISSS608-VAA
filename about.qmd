@@ -1,17 +1,35 @@
 ---
-title: "About"
+title: " "
 about:
+  id: hero-heading
   template: jolla
-  image: giphy.gif
-  image-shape: rounded
-  image-width: 10em
+  image: giphy2.gif
+  image-width: 25em
+  image-shape: rectangle
+  links:
+    - icon: github
+      text: Github
+      href: https://github.com
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/elgi753689/
+    - icon: tableau
+      text: Tableau
+      href: http://public.tableau.com
 ---
 
-**Lin Guan Jhen, Elise**
+::: {#hero-heading}
+##### `Who am I?`
 
-ISSS608 Visual Analytics and Applications under Prof. Kam Tin Seong as part of Singapore Management University Master of IT in business.
+Welcome to **Lin Guan Jhen**'s ISSS608 Visual Analytics and Applications, where data meets design under the guidance of Prof. Kam Tin Seong at Singapore Management University's Master of IT in Business.
 
-LinkedIn \| [Email](guanjhenlin.2022@mitb.smu.edu.sg)
+##### `Course Overview 🎨`
+
+In Visual Analytics and Applications, we dive deep into the art and science of transforming data into actionable insights. Our journey is enriched by real-world applications, cutting-edge analytics tools, and interactive sessions that empower students to lead in the data-driven decision landscape.
+
+##### `Connect with me 💡`
+
+:::
 
 <!-- Google tag (gtag.js) -->
 
