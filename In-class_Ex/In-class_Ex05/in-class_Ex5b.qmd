@@ -1,0 +1,57 @@
+---
+title: "In Class Exercise 5b"
+subtitle: " "
+author: "Guan Jhen Lin"
+date: "May 04 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
+
+```{r}
+pacman::p_load(tidyverse, jsonlite)
+```
+
+```{r}
+# Specify the path to your JSON file
+file_path <- "data/mc3.json"
+
+# Read the file as lines of text
+json_data <- readLines(file_path, warn = FALSE)
+json_string <- paste(json_data, collapse = "")
+# Replace 'NaN' with 'null' in the JSON string
+json_string <- gsub("NaN", "null", json_string)
+# Parse the JSON string
+json_list <- fromJSON(json_string)
+
+# Now json_list is a usable R list that you can work with
+# Check the structure of the list
+str(json_list)
+
+# Summary of the list for a quick overview
+summary(json_list)
+# Example: Replacing null values in a specific field
+json_list$PointOfContact <- ifelse(is.null(json_list$PointOfContact), "No Contact", json_list$PointOfContact)
+mc3_data <- fromJSON(json_string)
+```
+
+```{r}
+mc1_data <-fromJSON("data/mc1.json")
+
+#graph data model
+#you may apply this to MC2, MC3 as well
+#refer to MC1 Data Description for the data meanings. 
+#MC3 is bit corrupted please artificially fill in something before run 
+```
+
+
+
+```{r}
+summary(mc1_data)
+summary(mc3_data)
+```
+
+
