@@ -15,7 +15,7 @@ execute:
 
 For this take-home exercise, I will select one data visualization from the [submissions](https://isss608-ay2023-24apr.netlify.app/take-home_ex/th_ex01#peer-learning) of our classmates for Take-Home Exercise 1. My task is to critique the selected visualization with respect to clarity and aesthetics. Following the critique, I will prepare a sketch for an alternative design, utilizing the principles and best practices of data visualization as covered in Lessons 1 and 2. Finally, I will recreate the original design using tools from ggplot2, its extensions, and other packages in the tidyverse suite.
 
-The graph I have chosen is from [here](https://isss608-zjho008.netlify.app/take-home_ex/take-home_ex01/take-home_ex01). It is a geom_history made by our fellow classmate.
+The graph that has chosen is from [here](https://isss608-zjho008.netlify.app/take-home_ex/take-home_ex01/take-home_ex01). It is a geom_history made by our fellow classmate.
 
 ![](images/zijun.png){width="435"}
 
@@ -23,20 +23,29 @@ The graph I have chosen is from [here](https://isss608-zjho008.netlify.app/take-
 
 ## Positive Points
 
-- The graph effectively clarifies the comparison across various property types, making it easy for the audience to grasp differences at a glance.
+-   The graph effectively clarifies the comparison across various property types, making it easy for the audience to grasp differences at a glance.
 
-- The colour scheme is okay and overall it is a graph with straightforward interpretation without overwhelming the viewer.
+-   The colour scheme is okay and overall it is a graph with straightforward interpretation without overwhelming the viewer.
 
 ## Improvements
 
-- To further explore the relationship between total price and unit price per square foot across different property types, consider employing a more detailed graph, such as a violin plot. This could provide a deeper understanding of data distribution and variance within each category. 
+-   To further explore the relationship between total price and unit price per square foot across different property types, consider employing a more detailed graph, such as a violin plot. This could provide a deeper understanding of data distribution and variance within each category.
 
-- Enhancing the bar chart with data labels could significantly improve its readability. By directly displaying key information on the graph, viewers can quickly comprehend the data without needing to cross-reference with the axis. This step will streamline the presentation and make the information more accessible at a glance.
-  
-
+-   Enhancing the bar chart with data labels could significantly improve its readability. By directly displaying key information on the graph, viewers can quickly comprehend the data without needing to cross-reference with the axis. This step will streamline the presentation and make the information more accessible at a glance.
 
 # Data Preparation
 
+1.  **tidyverse**: A collection of R packages that work in harmony to handle data manipulation, exploration, and visualization. Key components include **`ggplot2`** for data visualization, **`dplyr`** for data manipulation, **`tidyr`** for tidying data, and **`readr`** for reading data, among others. It's essential for modern data science in R.
+
+2.  **scales**: This package provides functions for mapping data to visual properties (like color, size, or shape) and formatting axes. It helps customize the scales of visual mappings in **`ggplot2`** charts, making your visualizations more readable and precise.
+
+3.  **patchwork**: An add-on to **`ggplot2`**, designed to make it simple to combine separate ggplots into a single plot layout. It provides a user-friendly syntax for arranging and annotating multiple graphs as one cohesive visualization.
+
+4.  **ggtext**: Enhances **`ggplot2`** by allowing richer text formatting in visualizations. With **`ggtext`**, you can use HTML and CSS to style the text elements in your plots, such as titles, labels, and annotations, giving you greater control over the text aesthetics.
+
+5.  **DT**: Provides an interface to the JavaScript library DataTables. It allows R users to create interactive tables in R Markdown documents or Shiny web applications. These tables can be sorted, filtered, paginated, and even styled without needing to write extensive JavaScript code.
+
+## Load Packages
 <details>
 
 <summary>Click to show code</summary>
@@ -137,25 +146,25 @@ ggplot(data = combined_ds, aes(x = `Unit Price ($ PSF)`, fill = `Property Type`)
 
 # Violin Chart
 
-In this scenario, a violin plot can be a good choice for visualizing the distribution and density of 'Unit Price (\$ per square foot)' across different 'Property Types'. 
+In this scenario, a violin plot can be a good choice for visualizing the distribution and density of 'Unit Price (\$ per square foot)' across different 'Property Types'.
 
-The violin plot combines the both box plots and density plots, offering a deeper understanding of the data's distribution. By visually representing the data's density estimates, it reveals peaks, valleys, and the spread of the data, which are crucial for identifying patterns and outliers. 
+The violin plot combines the both box plots and density plots, offering a deeper understanding of the data's distribution. By visually representing the data's density estimates, it reveals peaks, valleys, and the spread of the data, which are crucial for identifying patterns and outliers.
 
 This could provide insightful details such as whether certain property types are more variable in price or if they tend to have a particular pricing structure.
 
 ## My sketch using Paint
 
-What I have in mind: 
+What I have in mind:
 
 ![](images/Sketch.png){width="402"}
 
 ## Changes Implemented
-- Transitioned to a Violin Chart: Instead of using a stacked bar chart, I have switched to a violin chart to better visualize the unit price per square meter across different property types. This change offers a clearer representation of the data distribution and variance.
 
-- Inclusion of IQR (Interquartile Range): The violin chart now includes the Interquartile Range (IQR) to provide a more detailed statistical summary. Additionally, users can hover over specific areas of the chart to view the exact values, enhancing interactive data exploration.
+-   Transitioned to a Violin Chart: Instead of using a stacked bar chart, I have switched to a violin chart to better visualize the unit price per square meter across different property types. This change offers a clearer representation of the data distribution and variance.
 
-- Modified Representation of Property Types: Rather than distinguishing property types by colour within a single chart, each property type is now represented by its own individual violin chart. This alteration avoids colour overlap and simplifies the differentiation between types, making it easier for the audience to interpret the data visually.
+-   Inclusion of IQR (Interquartile Range): The violin chart now includes the Interquartile Range (IQR) to provide a more detailed statistical summary. Additionally, users can hover over specific areas of the chart to view the exact values, enhancing interactive data exploration.
 
+-   Modified Representation of Property Types: Rather than distinguishing property types by colour within a single chart, each property type is now represented by its own individual violin chart. This alteration avoids colour overlap and simplifies the differentiation between types, making it easier for the audience to interpret the data visually.
 
 <details>
 
@@ -165,7 +174,6 @@ What I have in mind:
 library(ggplot2)
 library(plotly)
 
-# Assuming `combined_ds` is your combined dataset
 ggplot_object <- ggplot(data = combined_ds, aes(x = `Property Type`, y = `Unit Price ($ PSF)`, fill = `Property Type`)) +
   geom_violin(trim = FALSE) +
   geom_boxplot(width = 0.1, fill = "white", outlier.shape = NA, alpha = 0.5) +  # Overlay boxplot
@@ -184,13 +192,49 @@ plotly_object <- ggplotly(ggplot_object, tooltip = c("y", "x"))
 
 </details>
 
-
 ```{r}
 plotly_object
 
 ```
 
 </details>
+
+
+# Second Iteration
+```{r}
+library(ggplot2)
+library(plotly)
+library(RColorBrewer)  # For color palettes
+
+# Assuming `combined_ds` is your combined dataset
+ggplot_object <- ggplot(data = combined_ds, aes(x = `Property Type`, y = `Unit Price ($ PSF)`, fill = `Property Type`)) +
+  geom_violin(trim = FALSE, adjust = 1, alpha = 0.4) +
+  geom_boxplot(width = 0.1, fill = "ivory", outlier.shape = NA, alpha = 0.75) +  # Overlay boxplot
+  stat_summary(fun = median, geom = "point", color = "darkred", size = 1) +  # Add a red dot for the median
+  scale_fill_brewer(palette = "Paired") +  # Improved color palette
+  labs(title = "Distribution of Unit Price by Property Type with IQR",
+       subtitle = "Visualizing spread and central tendency",
+       x = "Property Type",
+       y = "Unit Price ($ PSF)") +
+  theme_minimal(base_size = 10) +  # Base font size
+  theme(legend.title = element_text(size = 8),
+        legend.text = element_text(size = 8),
+        axis.title = element_text(size = 8),
+        plot.title = element_text(size = 10, face = "bold"),
+        plot.subtitle = element_text(size = 10),
+        axis.text.x = element_text(size = 6, angle = 25, hjust = 2, vjust = 1),  # X-axis text angle and size
+        plot.background = element_rect(fill = "ivory"),  # Background color
+        panel.grid.major = element_line(color = "gray80"))  # Grid color
+
+# Convert to plotly object with enhanced tooltips
+plotly_object <- ggplotly(ggplot_object, tooltip = c("y", "x", "fill"))
+
+plotly_object
+
+
+```
+
+
 
 # Takeaways
 

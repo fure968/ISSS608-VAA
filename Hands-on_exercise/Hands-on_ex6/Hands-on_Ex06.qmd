@@ -11,20 +11,38 @@ execute:
   freeze: true
 ---
 
-# **Lesson 6: Visual Multivariate Analysis**
+# 1. Modelling, Visualising and Analysing Network Data with R
 
-## **Lesson Slides and Hands-on Notes**
+-   create graph object data frames, manipulate them using appropriate functions of *dplyr*, *lubridate*, and *tidygraph*,
 
--   [Lesson 6: Visual Multivariate Analysis](https://isss608-ay2023-24apr.netlify.app/lesson/lesson06/lesson06-vma) slides
+-   build network graph visualisation using appropriate functions of *ggraph*,
 
--   Hands-on Exercises
+-   compute network geometrics using *tidygraph*,
 
-    -   [Building Ternary Plot with R](https://r4va.netlify.app/chap13).
+-   build advanced graph visualisation by incorporating the network geometrics, and
 
-    -   [Visual Correlation Analysis](https://r4va.netlify.app/chap06).
+-   build interactive network visualisation using *visNetwork* package.
 
-    -   [Visual Multivariate Analysis with Heatmap](https://r4va.netlify.app/chap14).
+## 1.1 Getting Started
 
-    -   [Visual Multivariate Analysis with Parallel Coordinates Plot](https://r4va.netlify.app/chap15).
+-   **igraph**: A toolkit for complex network analysis, offering functions for creation, modification, and visualization of graph structures.
+-   **tidygraph**: Integrates with the tidyverse to provide a grammar for graph data manipulation, making it easier to work with network data in a tidy format.
+-   **ggraph**: Builds on ggplot2 to allow for the creation of intricate network and graph visualizations with a familiar syntax.
+-   **visNetwork**: Enables interactive network visualization using HTML and JavaScript directly from R, useful for web-based graph presentations.
+-   **lubridate**: Simplifies working with dates and times in R, providing tools that make it easy to parse, manipulate, and compute time data.
+-   **clock**: Offers a robust date-time manipulation toolkit focusing on problems that are difficult to solve with **`lubridate`** alone, such as handling time zones and date arithmetic.
+-   **tidyverse**: A collection of R packages designed for data science, making it easy to import, tidy, transform, visualize, and model data.
+-   **graphlayouts**: Provides algorithms for graph layouts to improve network visualizations, especially enhancing automated graph drawing aesthetics.
 
-    -   [Treemap Visualisation with R](https://r4va.netlify.app/chap16)
+### 1.1.1 Installing and launching R packages
+
+```{r}
+pacman::p_load(igraph, tidygraph, ggraph, 
+               visNetwork, lubridate, clock,
+               tidyverse, graphlayouts)
+```
+
+### 1.1.2 The Data
+
+The data sets used in this hands-on exercise is from an oil exploration and extraction company. There are two data sets. One contains the nodes data and the other contains the edges (also know as link) data.
+

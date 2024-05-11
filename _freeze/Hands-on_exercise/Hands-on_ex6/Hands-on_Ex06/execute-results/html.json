@@ -1,0 +1,15 @@
+{
+  "hash": "961569a1f6581c2a8cfb3809c02ba998",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Hands-on Ex 6\"\nsubtitle: \"\"\nauthor: \"Guan Jhen Lin\"\ndate: \" 2024\"\ndate-modified: \"last-modified\"\nexecute: \n  eval: true\n  echo: true\n  warning: false\n  freeze: true\n---\n\n\n# 1. Modelling, Visualising and Analysing Network Data with R\n\n-   create graph object data frames, manipulate them using appropriate functions of *dplyr*, *lubridate*, and *tidygraph*,\n\n-   build network graph visualisation using appropriate functions of *ggraph*,\n\n-   compute network geometrics using *tidygraph*,\n\n-   build advanced graph visualisation by incorporating the network geometrics, and\n\n-   build interactive network visualisation using *visNetwork* package.\n\n## 1.1 Getting Started\n\n-   **igraph**: A toolkit for complex network analysis, offering functions for creation, modification, and visualization of graph structures.\n-   **tidygraph**: Integrates with the tidyverse to provide a grammar for graph data manipulation, making it easier to work with network data in a tidy format.\n-   **ggraph**: Builds on ggplot2 to allow for the creation of intricate network and graph visualizations with a familiar syntax.\n-   **visNetwork**: Enables interactive network visualization using HTML and JavaScript directly from R, useful for web-based graph presentations.\n-   **lubridate**: Simplifies working with dates and times in R, providing tools that make it easy to parse, manipulate, and compute time data.\n-   **clock**: Offers a robust date-time manipulation toolkit focusing on problems that are difficult to solve with **`lubridate`** alone, such as handling time zones and date arithmetic.\n-   **tidyverse**: A collection of R packages designed for data science, making it easy to import, tidy, transform, visualize, and model data.\n-   **graphlayouts**: Provides algorithms for graph layouts to improve network visualizations, especially enhancing automated graph drawing aesthetics.\n\n### 1.1.1 Installing and launching R packages\n\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(igraph, tidygraph, ggraph, \n               visNetwork, lubridate, clock,\n               tidyverse, graphlayouts)\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\npackage 'visNetwork' successfully unpacked and MD5 sums checked\n\nThe downloaded binary packages are in\n\tC:\\Users\\lgjel\\AppData\\Local\\Temp\\Rtmpsnm6U2\\downloaded_packages\npackage 'clock' successfully unpacked and MD5 sums checked\n\nThe downloaded binary packages are in\n\tC:\\Users\\lgjel\\AppData\\Local\\Temp\\Rtmpsnm6U2\\downloaded_packages\n```\n\n\n:::\n:::\n\n\n### 1.1.2 The Data\n\nThe data sets used in this hands-on exercise is from an oil exploration and extraction company. There are two data sets. One contains the nodes data and the other contains the edges (also know as link) data.\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
