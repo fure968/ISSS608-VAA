@@ -15,12 +15,12 @@ execute:
 
 ## 1. Visualising and Analysing Text Data
 
-1.  Understand the tidytext framework: Learn how it simplifies the processing, analysis, and visualization of text data.
-2.  Master importing techniques: Write functions to efficiently import multiple files into R. Merge data seamlessly: Combine multiple files into a single, coherent data frame.
-3.  Clean and manipulate text data: Utilize the tidyverse approach to streamline your text data wrangling.
-4.  Create engaging visualizations: Generate captivating Word Clouds to visualize key words.
-5.  Calculate TF-IDF: Compute Term Frequency-Inverse Document Frequency using tidytext methods.
-6.  Explore text relationships: Visualize the connections between texts and terms to gain deeper insights.
+-   Understand the tidytext framework: Learn how it simplifies the processing, analysis, and visualization of text data.
+-   Master importing techniques: Write functions to efficiently import multiple files into R. Merge data seamlessly: Combine multiple files into a single, coherent data frame.
+-   Clean and manipulate text data: Utilize the tidyverse approach to streamline your text data wrangling.
+-   Create engaging visualizations: Generate captivating Word Clouds to visualize key words.
+-   Calculate TF-IDF: Compute Term Frequency-Inverse Document Frequency using tidytext methods.
+-   Explore text relationships: Visualize the connections between texts and terms to gain deeper insights.
 
 ## 1.2 R Packages
 
