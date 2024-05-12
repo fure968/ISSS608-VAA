@@ -2,7 +2,7 @@
 title: "In Class Exercise 5b"
 subtitle: " "
 author: "Guan Jhen Lin"
-date: "May 04 2024"
+date: "May 11 2024"
 date-modified: "last-modified"
 execute: 
   eval: true
@@ -10,6 +10,9 @@ execute:
   warning: false
   freeze: true
 ---
+
+We will use jsonlite package to read the files for JSON files.
+Vast challenge 2024's dataset will be used for this in class exercise. 
 
 ```{r}
 pacman::p_load(tidyverse, jsonlite)
@@ -47,11 +50,7 @@ mc1_data <-fromJSON("data/mc1.json")
 #MC3 is bit corrupted please artificially fill in something before run 
 ```
 
-
-
 ```{r}
 summary(mc1_data)
 summary(mc3_data)
 ```
-
-
