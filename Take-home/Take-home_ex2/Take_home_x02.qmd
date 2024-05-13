@@ -17,7 +17,7 @@ For this take-home exercise, I will select one data visualization from the [subm
 
 The graph that has chosen is from [here](https://isss608-zjho008.netlify.app/take-home_ex/take-home_ex01/take-home_ex01). It is a geom_history made by our fellow classmate.
 
-![](images/zijun.png){width="435"}
+![](images/zijun.png){width="494"}
 
 # First Glance
 
@@ -153,11 +153,11 @@ The violin plot combines the both box plots and density plots, offering a deeper
 
 This could provide insightful details such as whether certain property types are more variable in price or if they tend to have a particular pricing structure.
 
-## My sketch using Paint
+## My Sketch 
 
 What I have in mind:
 
-![](images/Sketch.png){width="402"}
+![](images/Sketch.png){width="541"}
 
 ## Changes Implemented
 
@@ -200,7 +200,11 @@ plotly_object
 
 </details>
 
-# Second Iteration
+# First Iteration
+
+<details>
+
+<summary>Click to show code</summary>
 
 ```{r}
 library(ggplot2)
@@ -237,13 +241,27 @@ ggplot_object <- ggplot(data = combined_ds, aes(x = `Property Type`, y = `Unit P
 
 # Convert to plotly object with enhanced tooltips
 plotly_object <- ggplotly(ggplot_object, tooltip = c("y", "x", "fill"))
-
-plotly_object
-
 ```
 
-# Third Iteration 
+</details>
 
+```{r}
+print(plotly_object)
+```
+
+# Thoughts and Improvements
+
+1.  Remove Redundant Legends: The property types are effectively differentiated by colour within the plot itself, making the legends redundant. Removing the legends will de-clutter the visual space, allowing the plot to be extended horizontally. This extension will better utilize the available space, improving the overall layout and readability.
+
+2.  Enhance X-axis Label Readability: Given the importance of property type identification in our analysis, the text labels on the X-axis will be enlarged and bold. This adjustment ensures that these key identifiers are immediately legible, facilitating quicker and clearer comprehension by viewers.
+
+3.  Adjust Y-axis Scale and Tick Marks: To accurately represent all data points, including outliers, the Y-axis will be extended to a maximum of at least 6,500. Additionally, tick marks will be placed every 500 units. These changes will ensure that even outlier values are visible and that the scale of the plot is practical for detailed analysis.
+
+# Second Iteration
+
+<details>
+
+<summary>Click to show code</summary>
 
 ```{r}
 library(ggplot2)
@@ -252,41 +270,42 @@ library(RColorBrewer)  # For color palettes
 # Assuming `combined_ds` is your combined dataset
 overall_median <- median(combined_ds$`Unit Price ($ PSF)`, na.rm = TRUE)  # Calculate the overall median
 
-# Masculine color palette
-colors <- c("slategray4", "darkolivegreen3", "darkslategray")
-
 ggplot_object <- ggplot(data = combined_ds, aes(x = `Property Type`, y = `Unit Price ($ PSF)`, fill = `Property Type`)) +
-  geom_violin(trim = FALSE, adjust = 1, alpha = 0.6, color = "gray30") +
-  geom_boxplot(width = 0.3, fill = colors, outlier.shape = 10, outlier.color = "gray30", outlier.size = 2, alpha = 0.8) +  # Masculine colors for boxplots
+  geom_violin(trim = FALSE, adjust = 1, alpha = 0.4) +
+  geom_boxplot(width = 0.3, fill = "darkgrey", outlier.shape = 10, outlier.color = "black", outlier.size = 2, alpha = 0.75) +
   stat_summary(fun = median, geom = "text", aes(label = round(..y.., 2)), 
-               color = "white", size = 3.5, vjust = 0, hjust = -0.5, fontface = "bold") +  # Bold and larger median text in white
-  geom_hline(yintercept = overall_median, color = "firebrick4", size = 0.75, linetype = "dotted") +  # Dotted and thinner median line
-  annotate("text", label = paste("Median: $", round(overall_median, 2)), x = Inf, y = overall_median, hjust = 1.1, vjust = 0, color = "white", size = 4, fontface = "bold", 
-           bg = "firebrick4", box.colour = "darkred") +  # Label box for median line in masculine colors
-  scale_fill_manual(values = colors) +  # Apply custom colors
+               color = "darkred", size = 3, vjust = 0, hjust = -0.5, fontface = "bold") +
+  geom_hline(yintercept = overall_median, color = "yellow", size = 0.65, linetype = "dotted") +
+  annotate("text", label = paste("Median: $", round(overall_median, 2)), 
+           x = Inf, y = Inf, hjust = 1.05, vjust = -0.05,  # Fine-tuned adjustment to top right
+           color = "black", size = 4, fontface = "bold", 
+           bg = "darkred", box.colour = "black") +  # Adjusted font size and position
+  scale_fill_brewer(palette = "Paired", guide = FALSE) +
   labs(title = "Distribution of Unit Price by Property Type with IQR",
        subtitle = "Visualizing spread and central tendency",
        x = "Property Type",
        y = "Unit Price ($ PSF)") +
-  theme_minimal(base_size = 12) +  # Adjusted base font size
+  theme_minimal(base_size = 12) +
   theme(axis.title = element_text(size = 10),
-        plot.title = element_text(size = 12, face = "bold"),  # One size larger for the title
+        plot.title = element_text(size = 12, face = "bold"),
         plot.subtitle = element_text(size = 11),
-        axis.text.x = element_text(size = 10, face = "bold"),  # Bold and one size up for X-axis labels
-        plot.background = element_rect(fill = "gray20"),  # Dark background color
-        panel.grid.major = element_line(color = "gray50"),  # Darker grid color
-        legend.position = "none") +  # Completely hide the legend
-  scale_y_continuous(breaks = seq(0, 6500, by = 500), limits = c(0, 6500))  # Extend Y-axis to 6500
+        axis.text.x = element_text(size = 9, face = "bold"),
+        plot.background = element_rect(fill = "ivory"),
+        panel.grid.major = element_line(color = "gray80"),
+        legend.position = "none") +
+  scale_y_continuous(breaks = seq(0, 6500, by = 500), limits = c(0, 6500))
 
 # Wrapping the X-axis labels to ensure they do not overlap
 ggplot_object <- ggplot_object + theme(axis.text.x = element_text(face = "bold", size = 10, angle = 0, lineheight = 0.8, hjust = 0.5, vjust = 0.5))
 ggplot_object <- ggplot_object + scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 10))  # Adjust width as needed
 
-print(ggplot_object)
-
-
 ```
 
+</details>
+
+```{r}
+print(ggplot_object)
+```
 
 # Takeaways
 
@@ -295,6 +314,3 @@ print(ggplot_object)
 -   Practical experience is essential for truly understanding the nuances of coding and chart interactions. There's often a difference between our initial concepts and the final outputs, highlighting the importance of hands-on experimentation.
 
 -   Offering critiques on others' work is not only constructive for them but also serves as a reflection for ourselves. It prompts us to reflect whether we are making similar mistakes in our own visual analytics projects.
-
-
-
