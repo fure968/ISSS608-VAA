@@ -5,12 +5,44 @@ about:
   image: water.jpg
   image-shape: rounded
   image-width: 15em
+  
+header-includes:
+  - |
+    <style>
+      .footnote {
+          text-align: center;
+          font-size: 0.8em;
+          color: #555;
+          margin-top: 2em;
+      }
+    </style>
 ---
 
-*"We’re entering a new world in which data may be more important than software."*
+<BR><BR> *"We’re entering a new world in which data may be more important than software."*
 
 — Tim O’Reilly
 
-### `The Journey`
+<BR>
 
-Welcome to ISSS608, your journey through visual analytics and applications. In this course, you'll explore innovative tools and techniques that make data visual, interactive, and actionable. We delve into case studies, engage in hands-on exercises, and collaborate on projects that enhance your ability to analyze complex data sets and communicate findings effectively.
+### `The Journey 🐳`
+
+Welcome to ISSS608, my journey through visual analytics and applications.
+
+Guided by Prof. Kam Tin Seong at Singapore Management University's Master of IT in Business.
+
+<BR>
+
+### `The Takeaways 🥡`
+
+-   Master foundational concepts and methodologies of visual analytics for effective data analysis and presentation.
+
+-   Design and implement advanced visual analytics systems to support data-driven decision-making across various data types.
+
+-   Create analytical dashboards using commercial software and open-source tools.
+
+-   Gain the skills to design and implement advanced visual analytics systems, supporting data-driven decision-making across various data types, including numerical, multivariate, time-series, geographical, and network data. <BR><BR>
+
+
+<div class="footnote" id="footnote">
+2024 by guanjhen
+</div>

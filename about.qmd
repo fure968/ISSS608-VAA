@@ -16,19 +16,33 @@ about:
     - icon: tableau
       text: Tableau
       href: http://public.tableau.com
+      
+header-includes:
+  - |
+    <style>
+      .footnote {
+          text-align: center;
+          font-size: 0.8em;
+          color: #555;
+          margin-top: 2em;
+      }
+    </style>
 ---
 
+
+
+
 ::: {#hero-heading}
-##### `Who am I?`
+##### `Who am I ?`
 
 Welcome to **Lin Guan Jhen**'s ISSS608 Visual Analytics and Applications, where data meets design under the guidance of Prof. Kam Tin Seong at Singapore Management University's Master of IT in Business.
 
-##### `Course Overview 🎨`
-
-In Visual Analytics and Applications, we dive deep into the art and science of transforming data into actionable insights. Our journey is enriched by real-world applications, cutting-edge analytics tools, and interactive sessions that empower students to lead in the data-driven decision landscape.
-
 ##### `Connect with me 💡`
 :::
+
+<div class="footnote" id="footnote">
+2024 by guanjhen
+</div>
 
 <!-- Google tag (gtag.js) -->
 
