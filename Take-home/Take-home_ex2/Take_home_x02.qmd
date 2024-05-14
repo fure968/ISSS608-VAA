@@ -153,7 +153,7 @@ The violin plot combines the both box plots and density plots, offering a deeper
 
 This could provide insightful details such as whether certain property types are more variable in price or if they tend to have a particular pricing structure.
 
-## My Sketch 
+## My Sketch
 
 What I have in mind:
 
