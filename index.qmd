@@ -3,8 +3,8 @@ title: " "
 about:
   template: trestles
   image: water.jpg
-  image-shape: rounded
-  image-width: 15em
+  image-shape: round
+  image-width: 19em
   
 header-includes:
   - |
@@ -41,8 +41,3 @@ Guided by Prof. Kam Tin Seong at Singapore Management University's Master of IT 
 -   Create analytical dashboards using commercial software and open-source tools.
 
 -   Gain the skills to design and implement advanced visual analytics systems, supporting data-driven decision-making across various data types, including numerical, multivariate, time-series, geographical, and network data. <BR><BR>
-
-
-<div class="footnote" id="footnote">
-2024 by guanjhen
-</div>

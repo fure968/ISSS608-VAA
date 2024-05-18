@@ -54,6 +54,3 @@ text_data_splitted <- text_data %>%
                        names = c("X","Y"), 
                        too_few = "align_end")
 ```
-
-
-

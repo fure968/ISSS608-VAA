@@ -29,9 +29,6 @@ header-includes:
     </style>
 ---
 
-
-
-
 ::: {#hero-heading}
 ##### `Who am I ?`
 
@@ -40,9 +37,9 @@ Welcome to **Lin Guan Jhen**'s ISSS608 Visual Analytics and Applications, where 
 ##### `Connect with me 💡`
 :::
 
-<div class="footnote" id="footnote">
+::: {#footnote .footnote}
 2024 by guanjhen
-</div>
+:::
 
 <!-- Google tag (gtag.js) -->
 

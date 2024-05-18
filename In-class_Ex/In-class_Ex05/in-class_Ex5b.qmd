@@ -11,11 +11,10 @@ execute:
   freeze: true
 ---
 
-We will use jsonlite package to read the files for JSON files.
-Vast challenge 2024's dataset will be used for this in class exercise. 
+We will use jsonlite package to read the files for JSON files. Vast challenge 2024's dataset will be used for this in class exercise.
 
 ```{r}
-pacman::p_load(tidyverse, jsonlite)
+pacman::p_load(tidyverse, jsonlite,dplyr)
 ```
 
 ```{r}
@@ -43,6 +42,7 @@ mc3_data <- fromJSON(json_string)
 
 ```{r}
 mc1_data <-fromJSON("data/mc1.json")
+mc2_data <-fromJSON("data/mc2.json")
 
 #graph data model
 #you may apply this to MC2, MC3 as well
@@ -52,5 +52,47 @@ mc1_data <-fromJSON("data/mc1.json")
 
 ```{r}
 summary(mc1_data)
+summary(mc2_data)
 summary(mc3_data)
 ```
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(shiny)
+
+# Load data (assuming the data has been read into mc3)
+nodes <- as_tibble(mc2_data$nodes)
+links <- as_tibble(mc2_data$links) %>%
+  distinct() %>%
+  mutate(across(c(source, target, type), as.character)) %>%
+  group_by(source, target, type) %>%
+  summarise(weights = n(), .groups = 'drop') %>%
+  filter(source != target) %>%
+  select(-weights)
+
+# Separate nodes by type and select relevant columns
+vessels <- nodes %>%
+  filter(type == "Entity.Vessel") %>%
+  select(id, name, company, flag_country, length_overall, tonnage) %>%
+  mutate(across(everything(), as.character))
+
+locations <- nodes %>%
+  filter(type == "Entity.Location") %>%
+  select(id, name, activities, description, fish_species_present, kind) %>%
+  mutate(across(everything(), as.character))
+
+fish <- nodes %>%
+  filter(type == "Entity.Commodity.Fish") %>%
+  select(id, name) %>%
+  mutate(across(everything(), as.character))
+
+delivery_reports <- nodes %>%
+  filter(type == "Entity.Document.DeliveryReport") %>%
+  select(id, description) %>%
+  mutate(across(everything(), as.character))
+
+
+```
+
+
