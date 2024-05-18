@@ -11,9 +11,11 @@ execute:
   freeze: true
 ---
 
+
 Exploring the King James Bible.
 
 We will be using <https://kgjerde.github.io/corporaexplorer/articles/bible.html> for practice.
+
 
 ```{r}
 library(stringi)
@@ -66,7 +68,9 @@ chapters <- str_replace_all(books, "(\\d+:1 )", "NEW_CHAPTER\\1") %>%
 chapters <- lapply(chapters, function(x) x[-1])
 ```
 
+
 Metadata
+
 
 ```{r}
 # We are not quite happy with the long book titles in the King James Bible,
@@ -82,7 +86,9 @@ book_titles <- read_html("https://www.esv.org/resources/esv-global-study-bible/l
 testament <- c(rep("Old", 39), rep("New", 27))
 ```
 
+
 Creating data frame with text and metadata
+
 
 ```{r}
 # Data frame with one book as one row.
@@ -94,7 +100,9 @@ bible_df <- tibble::tibble(Text = chapters,
 bible_df <- tidyr::unnest(bible_df, Text)
 ```
 
+
 corporaexplorer When we first have a data frame with text and metadata, creating a “corporaexplorerobject” for exploration is very simple:
+
 
 ```{r}
 # As this is a corpus which is not organised by date,
@@ -108,6 +116,7 @@ KJB <- prepare_data(dataset = bible_df,
                     grouping_variable = "Book",
                     columns_doc_info = c("Testament", "Book"))
 ```
+
 ```{r}
 class(KJB) #have to be before explore
 ```
@@ -116,12 +125,14 @@ class(KJB) #have to be before explore
 explore(KJB) #opens shiney app
 ```
 
+
 ![](images/KJB_moses_new_doc.png)
 
 
 Extra Notes: 
 - This particular exercise is very useful for MC1 in VAST challenge. 
 - 
+
 
 
 
