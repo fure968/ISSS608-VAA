@@ -108,6 +108,7 @@ KJB <- prepare_data(dataset = bible_df,
                     grouping_variable = "Book",
                     columns_doc_info = c("Testament", "Book"))
 ```
+
 ```{r}
 class(KJB) #have to be before explore
 ```
@@ -118,10 +119,4 @@ explore(KJB) #opens shiney app
 
 ![](images/KJB_moses_new_doc.png)
 
-
-Extra Notes: 
-- This particular exercise is very useful for MC1 in VAST challenge. 
-- 
-
-
-
+Extra Notes: - This particular exercise is very useful for MC1 in VAST challenge. -
