@@ -108,9 +108,21 @@ KJB <- prepare_data(dataset = bible_df,
                     grouping_variable = "Book",
                     columns_doc_info = c("Testament", "Book"))
 ```
+```{r}
+class(KJB) #have to be before explore
+```
 
 ```{r}
-explore(KJB)
+explore(KJB) #opens shiney app
 ```
 
 ![](images/KJB_moses_new_doc.png)
+
+
+Extra Notes: 
+
+
+
+
+
+
