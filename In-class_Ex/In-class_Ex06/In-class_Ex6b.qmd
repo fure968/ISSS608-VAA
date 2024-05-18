@@ -10,7 +10,8 @@ execute:
   warning: false
   freeze: true
 ---
-MC 3 Kick Starter, dataset we are using is from last year 2023. The dataset is slightly different from 2024. 
+
+MC 3 Kick Starter, dataset we are using is from last year 2023. The dataset is slightly different from 2024.
 
 ```{r}
 pacman::p_load(jsonlite, tidygraph,ggraph,
@@ -21,8 +22,6 @@ pacman::p_load(jsonlite, tidygraph,ggraph,
 ```{r}
 mc3_data <- fromJSON("MC3_2023.json")
 ```
-
-
 
 ```{r}
 class(mc3_data)
@@ -67,6 +66,7 @@ mc3_nodes1 <- rbind(id1, id2) %>%
   left_join(mc3_nodes,
             unmatched = "drop")
 ```
+
 ```{r}
 mc3_graph <- tbl_graph(nodes = mc3_nodes1,
                        edges = mc3_edges,
@@ -89,6 +89,7 @@ ggraph(layout = "fr") +
   scale_size_continuous(range=c(1,10))+
   theme_graph()
 ```
+
 ```{r}
 mc3_graph %>%
   filter(betweenness_centrality >= 100000) %>%
