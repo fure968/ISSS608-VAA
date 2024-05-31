@@ -1,16 +1,3 @@
-{
-  "hash": "fa12e9e3007911607b899b4787c236bc",
-  "result": {
-    "markdown": "---\ntitle: \"In-class Exercise 1\"\nauthor: \"Guan Jhen Lin\"\ndate: \"Apr 13, 2024\"\ndate-modified: \"last-modified\"\nexecute: \n  eval: true\n  echo: true\n  warning: false\n  freeze: true\n---\n\n\n# Getting Started\n\nIn the code chunk below, [p_load()](https://www.rdocumentation.org/packages/pacman/versions/0.5.1) of [pacman](https://cran.r-project.org/web/packages/pacman/readme/README.html) package is used to load tidyverse family of packages.\n\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(tidyverse)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nrealis <-read_csv(\"data/realis2019.csv\")\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nggplot(data = realis,\n       aes(x = `Unit Price ($ psm)`)) +\n  geom_histogram()\n```\n\n::: {.cell-output-display}\n![](In-class_Ex01_files/figure-html/unnamed-chunk-3-1.png){width=672}\n:::\n:::\n",
-    "supporting": [
-      "In-class_Ex01_files"
-    ],
-    "filters": [
-      "rmarkdown/pagebreak.lua"
-    ],
-    "includes": {},
-    "engineDependencies": {},
-    "preserve": {},
-    "postProcess": true
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:eca1fbba5331c7223660f62001c569ed5309ed0e0272d10775906af355c4e8c2
+size 1169

@@ -1,0 +1,2 @@
+*.json filter=lfs diff=lfs merge=lfs -text
+Take-home/Take-home_ex3/mc3.json filter=lfs diff=lfs merge=lfs -text
