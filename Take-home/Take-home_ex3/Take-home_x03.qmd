@@ -1,8 +1,8 @@
 ---
-title: "Take Home Exercise 2"
+title: "Take Home 3"
 subtitle: " "
 author: "Guan Jhen Lin"
-date: "2024"
+date: "May 31 2024"
 date-modified: "last-modified"
 execute: 
   eval: true
@@ -11,4 +11,63 @@ execute:
   freeze: true
 ---
 
-xx
+![](images/fisheye-lens-underwater-photography-2-1024x683.jpg){fig-align="center" width="332"}
+
+# 1. Introduction
+
+FishEye International monitors business records of commercial fishing operators in Oceanus to identify and prevent illegal fishing. Analysts work with company data, including ownership, shareholders, transactions, and products/services, to build the CatchNet Knowledge Graph.
+
+Last year, SouthSeafood Express Corp was caught illegally fishing, leading to its closure. FishEye wants to understand the temporal patterns and infer how the fishing market reacted to this event, as some businesses may have tried to capture SouthSeafood's market share, while others may have become more cautious about illegal activities.
+
+FishEye aims to develop visualization tools for CatchNet to identify influential people in business networks, considering the varied and changing shareholder and ownership relationships.
+
+# 2. Mini-Challenge 3: Temporal Analysis
+## 2.1 Tasks and Questions:
+
+-    Create a visual analytics approach to highlight temporal patterns and changes in corporate structures, examining the most active people and businesses.
+-    Use visualizations to display typical and atypical business transactions (mergers, acquisitions, etc.) and infer the motivations behind changes in their activity.
+-    Develop a visual approach to examine inferences about how a company's influence changes over time and if ownership or influence over a network can be inferred.
+-    Identify and visualize SouthSeafood Express Corp's network and how it and competing businesses changed due to their illegal fishing behavior. Determine which companies benefited from SouthSeafood's legal troubles and if there are other suspicious transactions related to illegal fishing, providing visual evidence for your conclusions.
+
+Data Source: [VAST Challenge 2024: Mini-Challenge 3](https://vast-challenge.github.io/2024/MC3.html)
+
+
+# 3. Data Preparation
+
+Load Packages
+```{r}
+pacman::p_load(jsonlite,tidyverse, readtext,ggplot2,visNetwork)
+```
+
+Load Data
+Use jsonlite package to read .json file
+```{r}
+mc3 <- fromJSON("data/mc3.json")
+```
+
+  
+```{r}
+glimpse(mc3)
+```
+```{r}
+mc3_links <- as_tibble(mc3$links) %>%
+  distinct() %>%
+  # Change all variable types to character to create dataframe
+  mutate(source = as.character(source),
+         target = as.character(target),
+         type = as.character(type)) %>%
+  group_by(source, target, type) %>%
+  summarise(weights = n()) %>%
+  filter(source != target) %>%
+  select(-weights) %>%
+  ungroup
+
+mc3_nodes <- as_tibble(mc3$nodes) %>%
+  mutate(id = as.character(id), 
+         type = as.character(type), 
+         country = as.character(country), 
+         product_services = as.character(ProductServices),
+         revenue_omu = as.numeric(as.character(revenue))) %>%
+  select(id, country, type, revenue, product_services)
+
+```
