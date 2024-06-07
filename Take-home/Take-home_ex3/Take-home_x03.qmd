@@ -1,7 +1,7 @@
 ---
 title: "Take Home 3"
 subtitle: " "
-author: "Guan Jhen Lin"
+author: "Guan Jhen LIN"
 date: "May 31 2024"
 date-modified: "last-modified"
 execute: 
@@ -11,7 +11,9 @@ execute:
   freeze: true
 ---
 
-![](images/fisheye-lens-underwater-photography-2-1024x683.jpg){fig-align="center" width="332"}
+![](images/fisheye-lens-underwater-photography-2-1024x683.jpg){fig-align="center" width="558"}
+
+Credit: John Blank Photography
 
 # 1. Introduction
 
@@ -22,52 +24,444 @@ Last year, SouthSeafood Express Corp was caught illegally fishing, leading to it
 FishEye aims to develop visualization tools for CatchNet to identify influential people in business networks, considering the varied and changing shareholder and ownership relationships.
 
 # 2. Mini-Challenge 3: Temporal Analysis
+
 ## 2.1 Tasks and Questions:
 
--    Create a visual analytics approach to highlight temporal patterns and changes in corporate structures, examining the most active people and businesses.
--    Use visualizations to display typical and atypical business transactions (mergers, acquisitions, etc.) and infer the motivations behind changes in their activity.
--    Develop a visual approach to examine inferences about how a company's influence changes over time and if ownership or influence over a network can be inferred.
--    Identify and visualize SouthSeafood Express Corp's network and how it and competing businesses changed due to their illegal fishing behavior. Determine which companies benefited from SouthSeafood's legal troubles and if there are other suspicious transactions related to illegal fishing, providing visual evidence for your conclusions.
+-   Develop an approach using visual analytics to highlight temporal patterns and changes in corporate structures, focusing on identifying the most active individuals and businesses.
+
+-   Utilize visualizations to display typical and atypical business transactions, such as mergers and acquisitions, and infer the underlying motivations behind changes in their activity levels.
+
+-   Create a visual approach to examine inferences about how a company's influence evolves over time and whether ownership or influence over a network can be deduced.
+
+-   Identify and visualize the network of SouthSeafood Express Corp and competing businesses, and how they changed due to SouthSeafood's illegal fishing behavior.
+
+-   Determine which companies benefited from SouthSeafood's legal troubles and if there are other suspicious transactions related to illegal fishing, providing visual evidence to support your conclusions.
 
 Data Source: [VAST Challenge 2024: Mini-Challenge 3](https://vast-challenge.github.io/2024/MC3.html)
 
+# 3. Data
 
-# 3. Data Preparation
+The MC3 dataset is a comprehensive collection comprising 60,520 nodes (entities) and 75,817 edges (relationships or connections) organized into 4,782 distinct components. The nodes in this dataset represent various types of entities, including individuals (Person), chief executive officers (CEO), companies, and other organizational structures.
 
-Load Packages
+On the other hand, the edges capture different types of relationships or interactions between these nodes. Some examples of edge types include shareholdership (ownership of shares in a company), beneficial ownership (enjoying the benefits of owning a property or asset without being the legal owner), and potentially other forms of associations or transactions.
+
+The dataset is structured such that the `nodes` key contains a list representing all the node entities, with each node carrying attributes or properties that describe its characteristics, such as ID, type, country, revenue, founding date, and potentially other relevant details.
+
+Correspondingly, the `links` key holds a list that represents all the edges or connections between these nodes. Each edge entry typically includes properties like the edge type, start and end dates (if applicable), and identifiers for the source and target nodes involved in the relationship.
+
+With this comprehensive dataset capturing both node entities and their interconnections through various types of edges, researchers and analysts can conduct in-depth analyses to uncover patterns, understand the dynamics of relationships, and gain insights into the complex network of entities and their interactions.
+
+## 3.1 Data Preparations
+
+Load R Packages
+
+-   **jsonlite**: The `jsonlite` package is designed to work with JSON (JavaScript Object Notation) data in R. It provides functions for reading, writing, and converting JSON data to and from R objects. JSON is a lightweight data interchange format that is easy for humans to read and write, and easy for machines to parse and generate.
+
+<!-- -->
+
+-   **tidyverse**: The `tidyverse` is a collection of R packages designed for data science. It includes packages like `ggplot2` for data visualization, `dplyr` for data manipulation, `tidyr` for data tidying, `readr` for data import, and `purrr` for functional programming. The tidyverse packages are designed to work together seamlessly and provide a consistent grammar for data manipulation and visualization.
+
+<!-- -->
+
+-   **readtext**: The `readtext` package is used for importing and handling text data in R. It provides functions for reading text files, web pages, PDFs, and other sources into a corpus object, which can then be processed and analyzed using other text mining packages.
+
+<!-- -->
+
+-   **ggplot2**: The `ggplot2` package is a powerful data visualization package in R. It is part of the tidyverse and is based on the grammar of graphics, a conceptual framework for creating graphics. `ggplot2` allows you to create complex and publication-quality plots with a consistent and intuitive syntax.
+
+<!-- -->
+
+-   **visNetwork**: The `visNetwork` package is used for creating interactive and dynamic network visualizations in R. It is built on top of the popular vis.js library and allows you to create, customize, and interact with network graphs directly in the R environment or in web applications. This package is useful for visualizing and exploring complex network data, such as social networks, communication networks, or biological networks.
+
 ```{r}
-pacman::p_load(jsonlite,tidyverse, readtext,ggplot2,visNetwork)
+pacman::p_load(jsonlite,dplyr,tidyr,stringr,lubridate,tidyverse,readtext,ggplot2,visNetwork,stringr)
 ```
 
-Load Data
-Use jsonlite package to read .json file
+Load mc3 file
 ```{r}
 mc3 <- fromJSON("data/mc3.json")
 ```
 
-  
-```{r}
-glimpse(mc3)
-```
-```{r}
-mc3_links <- as_tibble(mc3$links) %>%
-  distinct() %>%
-  # Change all variable types to character to create dataframe
-  mutate(source = as.character(source),
-         target = as.character(target),
-         type = as.character(type)) %>%
-  group_by(source, target, type) %>%
-  summarise(weights = n()) %>%
-  filter(source != target) %>%
-  select(-weights) %>%
-  ungroup
+Temporal analysis involves studying how entities and their relationships evolve over time. In many real-world scenarios, data can contain information about entities (nodes) and the relationships or interactions between them (edges), along with timestamps or date ranges associated with these elements.
 
+To effectively perform temporal analysis on such data, it can be beneficial to separate the data set into two distinct data frames: one for the node entities and another for the relationships or edges between them.
+
+`mc3_nodes` is created by transforming the nodes data in mc3.
+
+Actions:
+
+-   Convert `id`, `type`, `country`, and `ProductServices` columns to character data type.
+
+-   Convert `revenue` column to numeric, handling missing values (`NA`) with `na.rm = TRUE`.
+
+-   Convert `dob` (date of birth) and `founding_date` columns to Date objects.
+
+-   Create new columns `head_of_org`, `trade_description`, and `point_of_contact` from the original data.
+
+-   Remove leading numbers and special characters in id column.
+
+-   Replace NA values in revenue_omu column with 0.
+
+-   Column type is separated into three new columns based on the "." delimiter.
+
+```{r}
 mc3_nodes <- as_tibble(mc3$nodes) %>%
-  mutate(id = as.character(id), 
-         type = as.character(type), 
-         country = as.character(country), 
-         product_services = as.character(ProductServices),
-         revenue_omu = as.numeric(as.character(revenue))) %>%
-  select(id, country, type, revenue, product_services)
+  # Convert types and clean data
+  mutate(
+    id = as.character(id),
+    type = as.character(type),
+    country = as.character(country),
+    ProductServices = as.character(ProductServices),
+    revenue_omu = as.numeric(revenue),
+    head_of_org = as.character(HeadOfOrg),
+    TradeDescription = as.character(TradeDescription),
+    PointOfContact = as.character(PointOfContact),
+    id = gsub("^[0-9]+\\.\\s*", "", id),  # Clean up IDs
+    revenue_omu = ifelse(is.na(revenue_omu), 0, revenue_omu)
+  ) %>%
+  # Using separate more flexibly
+  separate(
+    type, 
+    into = paste0("type_", 1:3), 
+    sep = "\\.", 
+    remove = FALSE, 
+    extra = "merge", 
+    fill = "right"  # Fill missing pieces on the right with NA to avoid errors
+  ) %>%
+  filter(!is.na(type_3) & !is.na(head_of_org)) %>%
+  mutate(
+    across(where(is.character), ~str_replace_all(., '^\\s*"\\s*"$', NA_character_)),
+    across(where(is.numeric), ~replace_na(., 0))
+  ) %>%
+  # Rename columns to handle potential pre-existing similar names
+  rename(
+    last_edited_by = `_last_edited_by`,
+    last_edited_date = `_last_edited_date`,
+    date_added = `_date_added`,
+    raw_source = `_raw_source`,
+    algorithm = `_algorithm`
+  ) %>%
+  # Ensure all columns are included
+  select(everything())
 
 ```
+
+`mc3_edges` is created by transforming the links data in mc3.
+
+Actions:
+
+-   Convert the `type` column to character data type.
+
+-   Convert the `start_date` column to a Date object.
+
+-   Convert the `end_date` column to a Date object, replacing any missing values (`NA`) with `NA` of class Date using the `if_else()` function.
+
+-   Convert the `source` and `target` columns to character data types.
+
+-   Column type is separated into three new columns based on the "." delimiter.
+
+```{r}
+
+mc3_edges <- as_tibble(mc3$links) %>%
+  mutate(
+    type = as.character(type),
+    type_new = stringr::str_extract(type, "[^.]+$"),
+    source = as.character(source),
+    target = as.character(target),
+    last_edited_by = as.character(`_last_edited_by`),
+    last_edited_date = as.Date(`_last_edited_date`),
+    date_added = as.Date(`_date_added`),
+    raw_source = as.character(`_raw_source`),
+    algorithm = as.character(`_algorithm`)
+  ) %>%
+  mutate(
+    start_date = as.Date(start_date), 
+    end_date = if_else(is.na(end_date), as.Date(NA), as.Date(end_date)),
+    id = target
+  ) %>%
+  # Remove `_last_edited_by`, `_last_edited_date`, `_date_added`, `_raw_source`, `_algorithm` if they exist
+  select(-c(`_last_edited_by`, `_last_edited_date`, `_date_added`, `_raw_source`, `_algorithm`)) %>%
+  # Rename columns directly within the same pipeline to ensure no duplicates are created
+  rename(
+    last_edited_by = last_edited_by,
+    last_edited_date = last_edited_date,
+    date_added = date_added,
+    raw_source = raw_source,
+    algorithm = algorithm
+  ) %>%
+  # Ensure all columns are included
+  select(everything())
+```
+
+```{r}
+print(colnames(mc3_nodes))
+print(colnames(mc3_edges))
+```
+
+Rename column that has special characters such as `_last_edited_by` into last_edited_by.
+
+
+Checking if the formats are correct.
+```{r}
+glimpse(mc3_edges)
+glimpse(mc3_nodes)
+```
+
+After inspecting the MC3 dataset, it was discovered that some of the date-related columns were not in the correct format. Specifically, certain columns that should represent dates were stored as character strings (chr) or as Date objects, instead of the more appropriate POSIXct format.
+
+The POSIXct format is a widely used date-time format in R, which represents dates and times as the number of seconds since the POSIX epoch (January 1, 1970, 00:00:00 UTC).
+
+```{r}
+  mc3_edges <- mc3_edges %>%
+    mutate(
+      start_date = as.POSIXct(start_date),
+      last_edited_date = as.POSIXct(last_edited_date),
+      date_added = as.POSIXct(date_added),
+      end_date = if_else(is.na(end_date), as.POSIXct(NA), as.POSIXct(end_date)),
+      id = target
+    )
+
+mc3_nodes <- mc3_nodes %>%
+  mutate(
+    last_edited_date = as.POSIXct(last_edited_date),
+    date_added = as.POSIXct(date_added),
+    founding_date = as.POSIXct(founding_date),
+    dob = as.POSIXct(dob)
+  )
+```
+
+Removing duplicates
+
+```{r}
+mc3_edges [duplicated(mc3_edges ),]
+mc3_nodes [duplicated(mc3_nodes ),]
+```
+
+
+```{r}
+nodes <- mc3_nodes %>%
+  select(
+    type_2, type_3, id, dob, country, 
+    head_of_org, revenue, last_edited_by, 
+    last_edited_date, date_added, raw_source, algorithm
+  )
+
+edges <- mc3_edges %>%
+  select(
+    type_new, id, start_date, end_date, 
+    last_edited_by, last_edited_date, date_added, 
+    raw_source, algorithm
+  )
+```
+
+# Charts
+Highest count of type in mc3 nodes
+
+```{r plot-wider, fig.width=9, fig.height=4}
+barchart_type_counts <- mc3_nodes %>%
+  count(type_3, sort = TRUE)
+
+ggplot(barchart_type_counts, aes(x = reorder(type_3, -n), y = n)) +
+geom_bar(stat = "identity", fill = "steelblue") +
+labs(
+title = "Distribution of Types (Nodes)",
+x = "Type",
+y = "Count"
+) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.8) 
+  )
+```
+
+
+```{r}
+top_10_ids <- edges %>%
+  group_by(id) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count)) %>%
+  slice(1:10)
+
+print(top_10_ids)
+```
+
+
+```{r plot-wider-2, fig.width=9, fig.height=4}
+barchart_type_counts <- mc3_edges %>%
+  count(type_new, sort = TRUE)
+
+ggplot(barchart_type_counts, aes(x = reorder(type_new, -n), y = n)) +
+geom_bar(stat = "identity", fill = "steelblue") +
+labs(
+title = "Distribution of Edges Types",
+x = "Node Type",
+y = "Count"
+) +
+theme_minimal() +
+theme(
+axis.text.x = element_text(angle = 0, hjust = 1)
+)
+```
+
+```{r plot-wider-3, fig.width=9, fig.height=4}
+top_countries <- mc3_nodes %>%
+  count(country) %>%
+  top_n(10) %>%
+  arrange(desc(n))
+
+# Create a bar chart
+ggplot(top_countries, aes(x = reorder(country, n), y = n, fill = country)) +
+  geom_bar(stat = "identity", fill = "steelblue") +  # Using gray as an example
+  labs(x = "Country", y = "Count", title = "Top 10 Countries") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 0, hjust = 0.3))
+```
+
+
+```{r plot-wider-4, fig.width=9, fig.height=4}
+library(plotly)
+#BubblePlot
+company_revenue <- mc3_nodes %>%
+  group_by(id, type_3) %>%
+  summarise(total_revenue = sum(revenue_omu, na.rm = TRUE), .groups = 'drop') 
+
+# Create a plotly interactive bubble chart
+plot <- plot_ly(data = company_revenue, 
+                x = ~id,  # Use head_of_org to distribute bubbles along x-axis
+                y = ~total_revenue, 
+                text = ~paste("Name:", id, 
+                              "<br>Total Revenue:", total_revenue,
+                              "<br>Type:", type_3), 
+                type = "scatter",  # Type scatter for bubble chart
+                mode = "markers",  # Markers for bubbles
+                marker = list(size = ~total_revenue / 1000000,  # Adjust size scaling
+                              sizemode = 'area', 
+                              sizeref = 0.1,  # Adjust sizeref for relative sizing
+                              color = ~total_revenue,  # Color bubbles by revenue
+                              colorscale = "Viridis",  # Color scale
+                              showscale = TRUE))  # Show color scale
+
+plot <- plot %>%
+  layout(title = "Interactive Bubble Chart of Company Revenue",
+         xaxis = list(title = "", showticklabels = FALSE),  # Hide x-axis labels
+         yaxis = list(title = "Total Revenue"),
+         hovermode = "closest")
+# Display the plot
+plot
+```
+
+
+```{r}
+library(igraph)
+# Count occurrences of each id
+top_companies <- mc3_edges %>%
+  count(id, sort = TRUE) %>%
+  top_n(20, wt = n)
+
+# Print the top companies to verify
+print(top_companies)
+
+# Filter edges for the top companies
+filtered_edges <- mc3_edges %>%
+  filter(id %in% top_companies$id) %>%
+  select(id, type_new)
+
+# Create a bipartite graph
+edges_for_graph <- filtered_edges %>%
+  rename(from = id, to = type_new)
+
+# Create igraph object
+bipartite_graph <- graph_from_data_frame(d = edges_for_graph, directed = FALSE)
+
+# Add bipartite attribute
+V(bipartite_graph)$type <- bipartite_mapping(bipartite_graph)$type
+
+# Print graph summary
+print(summary(bipartite_graph))
+# Prepare data for visNetwork
+nodes_vis <- data.frame(id = V(bipartite_graph)$name, 
+                        label = V(bipartite_graph)$name, 
+                        group = ifelse(V(bipartite_graph)$type, "Type", "Company"))
+edges_vis <- as_data_frame(bipartite_graph, what = "edges")
+
+# Create the network visualization
+visNetwork(nodes_vis, edges_vis, width = "100%", height = "800px") %>%
+  visNodes(shape = "dot", scaling = list(label = list(enabled = TRUE))) %>%
+  visEdges(arrows = "none", color = list(color = "lightgray", highlight = "red")) %>%
+  visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visGroups(groupname = "Type", shape = "dot", color = "blue") %>%
+  visGroups(groupname = "Company", shape = "dot", color = "green") %>%
+  visLayout(randomSeed = 21) %>%
+  visInteraction(navigationButtons = TRUE)
+
+```
+
+
+
+```{r plot-wider-5, fig.width=9, fig.height=4}
+
+
+top_10_ids <- mc3_edges %>%
+  group_by(id) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count)) %>%
+  slice(1:10)
+
+# Print the result to check
+print(top_10_ids)
+
+# Filter the original edges for the top ids
+filtered_edges <- mc3_edges %>%
+  filter(id %in% top_10_ids$id)
+
+# Count occurrences of each type_new per id
+type_new_counts <- filtered_edges %>%
+  group_by(id, type_new) %>%
+  summarise(count = n(), .groups = "drop") %>%
+  arrange(desc(count))
+
+# Print the result to check
+print(type_new_counts)
+
+# Define custom colors for each type_new
+type_new_colors <- c("Shareholdership" = "pink", 
+                     "BeneficialOwnership" = "lightblue", 
+                     "WorksFor" = "lightgreen")
+
+# Function to wrap text, including handling hyphens
+wrap_text <- function(text, width) {
+  # Temporarily replace hyphens with spaces before wrapping
+  wrapped_text <- str_replace_all(text, "-", " ")
+  wrapped_text <- str_wrap(wrapped_text, width = width)
+  # Optionally replace spaces back with hyphens
+  wrapped_text <- str_replace_all(wrapped_text, " ", "-")
+  return(wrapped_text)
+}
+
+# Apply the wrap_text function to the id labels
+type_new_counts <- type_new_counts %>%
+  mutate(id_wrapped = wrap_text(id, 10))  # Adjust the width as necessary
+
+# Order id_wrapped by total count from large to small
+type_new_counts <- type_new_counts %>%
+  mutate(id_wrapped = factor(id_wrapped, levels = type_new_counts %>%
+                               group_by(id_wrapped) %>%
+                               summarize(total_count = sum(count)) %>%
+                               arrange(desc(total_count)) %>%
+                               pull(id_wrapped)))
+
+# Create the bar plot with wrapped text and smaller font
+ggplot(type_new_counts, aes(x = id_wrapped, y = count, fill = type_new)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.7) +
+  geom_text(aes(label = count), position = position_dodge(width = 0.9), vjust = 0.8, size = 3) + # Add text labels
+  labs(x = " ", y = " ", title = "Top Names with Multiple Type Relationships") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5, size = 8),  # Adjusted font size
+    legend.position = "bottom"
+  ) +
+  scale_fill_manual(values = type_new_colors, name = "Type")
+
+```
+

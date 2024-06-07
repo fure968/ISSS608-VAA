@@ -165,6 +165,7 @@ theme(axis.ticks = element_blank(),
 Then we can simply group the count by hour and wkday and plot it, since we know that we have values for every combination there’s no need to further preprocess the data.
 
 # 5. Building Multiple Calendar Heatmaps
+
 Challenge: Building multiple heatmaps for the top four countries with the highest number of attacks.
 
 ## 5.1 Plotting Multiple Calendar Heatmaps
@@ -173,9 +174,7 @@ Step 1: Deriving attack by country object
 
 In order to identify the top 4 countries with the highest number of attacks, you are required to do the followings:
 
-count the number of attacks by country,
-calculate the percent of attackes by country, and
-save the results in a tibble data frame.
+count the number of attacks by country, calculate the percent of attackes by country, and save the results in a tibble data frame.
 
 ```{r}
 attacks_by_country <- count(
@@ -187,6 +186,7 @@ attacks_by_country <- count(
 Step 2: Preparing the tidy data frame
 
 In this step, you are required to extract the attack records of the top 4 countries from attacks data frame and save the data in a new tibble data frame (i.e. top4_attacks).
+
 ```{r}
 top4 <- attacks_by_country$source_country[1:4]
 top4_attacks <- attacks %>%
@@ -198,8 +198,7 @@ top4_attacks <- attacks %>%
   na.omit()
 ```
 
-Plotting Multiple Calendar Heatmaps
-Step 3: Plotting the Multiple Calender Heatmap by using ggplot2 package.
+Plotting Multiple Calendar Heatmaps Step 3: Plotting the Multiple Calender Heatmap by using ggplot2 package.
 
 ```{r}
 ggplot(top4_attacks, 
@@ -228,8 +227,7 @@ ggplot(top4_attacks,
 
 In this section, you will learn how to plot a cycle plot showing the time-series patterns and trend of visitor arrivals from Vietnam programmatically by using ggplot2 functions.
 
-Step 1: Data Import
-For the purpose of this hands-on exercise, arrivals_by_air.xlsx will be used.
+Step 1: Data Import For the purpose of this hands-on exercise, arrivals_by_air.xlsx will be used.
 
 The code chunk below imports arrivals_by_air.xlsx by using read_excel() of readxl package and save it as a tibble data frame called air.
 
@@ -249,8 +247,7 @@ air$month <- factor(month(air$`Month-Year`),
 air$year <- year(ymd(air$`Month-Year`))
 ```
 
-Step 3: Extracting the target country
-Next, the code chunk below is use to extract data for the target country (i.e. Vietnam)
+Step 3: Extracting the target country Next, the code chunk below is use to extract data for the target country (i.e. Vietnam)
 
 ```{r}
 Vietnam <- air %>% 
@@ -260,8 +257,7 @@ Vietnam <- air %>%
   filter(year >= 2010)
 ```
 
-Step 4: Computing year average arrivals by month
-The code chunk below uses group_by() and summarise() of dplyr to compute year average arrivals by month.
+Step 4: Computing year average arrivals by month The code chunk below uses group_by() and summarise() of dplyr to compute year average arrivals by month.
 
 ```{r}
 hline.data <- Vietnam %>% 
@@ -269,9 +265,7 @@ hline.data <- Vietnam %>%
   summarise(avgvalue = mean(`Vietnam`))
 ```
 
-
-Srep 5: Plotting the cycle plot
-The code chunk below is used to plot the cycle plot as shown in Slide 12/23.
+Srep 5: Plotting the cycle plot The code chunk below is used to plot the cycle plot as shown in Slide 12/23.
 
 ```{r}
 ggplot() + 
@@ -301,12 +295,12 @@ In this section you will learn how to plot a slopegraph by using R.
 Before getting start, make sure that CGPfunctions has been installed and loaded onto R environment. Then, refer to Using newggslopegraph to learn more about the function. Lastly, read more about newggslopegraph() and its arguments by referring to this link.
 
 Step 1: Data Import
+
 ```{r}
 rice <- read_csv("rice.csv")
 ```
 
-Step 2: Plotting the slopegraph
-Next, code chunk below will be used to plot a basic slopegraph as shown below.
+Step 2: Plotting the slopegraph Next, code chunk below will be used to plot a basic slopegraph as shown below.
 
 ```{r}
 rice %>% 
