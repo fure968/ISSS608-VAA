@@ -2,7 +2,7 @@ project:
   type: website
 
 website: 
-  title: "<strong>ISSS608</strong>"
+  title: "ISSS 608"
   navbar:
     left:
     - text: "🚀 Hands On"
