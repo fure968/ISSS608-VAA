@@ -33,12 +33,6 @@ header-includes:
 ##### `Who am I ?`
 
 Welcome to **Lin Guan Jhen**'s ISSS608 Visual Analytics and Applications, where data meets design under the guidance of Prof. Kam Tin Seong at Singapore Management University's Master of IT in Business.
-
-##### `Connect with me 💡`
-:::
-
-::: {#footnote .footnote}
-2024 by guanjhen
 :::
 
 <!-- Google tag (gtag.js) -->
