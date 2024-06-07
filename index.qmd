@@ -4,7 +4,7 @@ about:
   template: trestles
   image: water.jpg
   image-shape: round
-  image-width: 19em
+  image-width: 15em
   
 header-includes:
   - |
