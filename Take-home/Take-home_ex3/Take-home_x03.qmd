@@ -233,6 +233,10 @@ barchart_type_counts_nodes <- mc3_nodes %>%
 barchart_type_counts_edges <- mc3_edges %>%
   count(type_new, sort = TRUE)
 
+```
+
+
+```{r}
 b1 <- ggplot(barchart_type_counts_nodes, aes(x = reorder(type_3, -n), y = n)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   labs(
@@ -244,7 +248,9 @@ b1 <- ggplot(barchart_type_counts_nodes, aes(x = reorder(type_3, -n), y = n)) +
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.8, size=7)
   )
+```
 
+```{r}
 b2 <- ggplot(barchart_type_counts_edges, aes(x = reorder(type_new, -n), y = n)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   labs(
@@ -256,10 +262,11 @@ b2 <- ggplot(barchart_type_counts_edges, aes(x = reorder(type_new, -n), y = n)) 
   theme(
     axis.text.x = element_text(angle = 0, hjust = 0.5, size=7)
   )
+```
 
+```{r}
 combined_plot <- b1 / b2
 combined_plot
-
 ```
 
 ```{r plot-wider-3, fig.width=9, fig.height=4}
