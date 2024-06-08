@@ -1,1 +1,18 @@
+---
+title: "In-class Exercise 8"
+subtitle: " "
+author: "Guan Jhen LIN"
+date: "8 June 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
 
+🌐 We will be using **Tableau** for today. 🌐
+
+Map: https://www.onemap.gov.sg/ Treemap: https://r4va.netlify.app/chap16
+
+Whenever using R to handle geographical data please use simple features for R https://r-spatial.github.io/sf/articles/sf1.html
