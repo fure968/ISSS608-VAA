@@ -1,1 +1,14 @@
+---
+title: "In-class Exercise 7"
+subtitle: " "
+author: "Guan Jhen LIN"
+date: "1 June 2024"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
 
+ShinyApp class.

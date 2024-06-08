@@ -406,6 +406,43 @@ print(b3)
 
 # Top companies and the Types
 
+Network Graph 
+```{r}
+top_companies <- mc3_edges %>%
+  count(id, sort = TRUE) %>%
+  top_n(20, wt = n)
+
+
+filtered_edges <- mc3_edges %>%
+  filter(id %in% top_companies$id) %>%
+  select(id, type_new)
+
+edges_for_graph <- filtered_edges %>%
+  rename(from = id, to = type_new)
+
+bipartite_graph <- graph_from_data_frame(d = edges_for_graph, directed = FALSE)
+
+V(bipartite_graph)$type <- bipartite_mapping(bipartite_graph)$type
+
+nodes_vis <- data.frame(id = V(bipartite_graph)$name, 
+                        label = V(bipartite_graph)$name, 
+                        group = ifelse(V(bipartite_graph)$type, "Type", "Company"))
+
+edges_vis <- igraph::as_data_frame(bipartite_graph, what = "edges")
+
+visNetwork(nodes_vis, edges_vis, width = "100%", height = "800px") %>%
+  visNodes(shape = "dot", scaling = list(label = list(enabled = TRUE))) %>%
+  visEdges(arrows = "none", color = list(color = "lightgray", highlight = "red")) %>%
+  visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visGroups(groupname = "Type", shape = "dot", color = "blue") %>%
+  visGroups(groupname = "Company", shape = "dot", color = "green") %>%
+  visLayout(randomSeed = 21) %>%
+  visInteraction(navigationButtons = TRUE) %>%
+  visPhysics(stabilization = FALSE, enabled = FALSE)
+```
+
+
 <details>
 
 <summary>Click to show code</summary>
@@ -459,12 +496,13 @@ b4 <- ggplot(type_new_counts, aes(x = id_wrapped, y = count, fill = type_new)) +
   scale_fill_manual(values = type_new_colors, name = "Type")
 
 ```
-
 </details>
+
 
 ```{r}
 print(b4)
 ```
+
 
 # Which Companies has the highest Revenue?
 
@@ -474,12 +512,10 @@ print(b4)
 
 ```{r plot-wider-4, fig.width=9, fig.height=4}
 library(plotly)
-#BubblePlot
 company_revenue <- mc3_nodes %>%
   group_by(id, type_3) %>%
   summarise(total_revenue = sum(revenue_omu, na.rm = TRUE), .groups = 'drop') 
 
-# Create the plot using plotly
 plot <- plot_ly(data = company_revenue, 
                 x = ~id,  
                 y = ~total_revenue, 
@@ -488,7 +524,7 @@ plot <- plot_ly(data = company_revenue,
                               "<br>Type:", type_3), 
                 type = "scatter",  
                 mode = "markers",  
-                marker = list(size = ~total_revenue / 1000000,  # Adjust size scaling
+                marker = list(size = ~total_revenue / 1000000,  
                               sizemode = 'area', 
                               sizeref = 0.1, 
                               color = ~total_revenue, 
@@ -508,38 +544,7 @@ plot <- plot %>%
 plot
 ```
 
-```{r}
-top_companies <- mc3_edges %>%
-  count(id, sort = TRUE) %>%
-  top_n(20, wt = n)
 
-
-filtered_edges <- mc3_edges %>%
-  filter(id %in% top_companies$id) %>%
-  select(id, type_new)
-
-edges_for_graph <- filtered_edges %>%
-  rename(from = id, to = type_new)
-bipartite_graph <- graph_from_data_frame(d = edges_for_graph, directed = FALSE)
-
-V(bipartite_graph)$type <- bipartite_mapping(bipartite_graph)$type
-
-nodes_vis <- data.frame(id = V(bipartite_graph)$name, 
-                        label = V(bipartite_graph)$name, 
-                        group = ifelse(V(bipartite_graph)$type, "Type", "Company"))
-edges_vis <- as_data_frame(bipartite_graph, what = "edges")
-
-visNetwork(nodes_vis, edges_vis, width = "100%", height = "800px") %>%
-  visNodes(shape = "dot", scaling = list(label = list(enabled = TRUE))) %>%
-  visEdges(arrows = "none", color = list(color = "lightgray", highlight = "red")) %>%
-  visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
-  visLegend() %>%
-  visGroups(groupname = "Type", shape = "dot", color = "blue") %>%
-  visGroups(groupname = "Company", shape = "dot", color = "green") %>%
-  visLayout(randomSeed = 21) %>%
-  visInteraction(navigationButtons = TRUE)
-
-```
 
 # Irregular Patterns by Revenue
 
@@ -564,6 +569,9 @@ Other companies like Short, Hernandez and Myers maintained consistent low-level 
 
 Key recommendations include investigating high-activity years, understanding recent trends, analysing consistent patterns, and cross-referencing with external data to identify potential causes or correlations.
 
+<details>
+
+<summary>Click to show code</summary>
 ```{r}
 edges <- edges %>%
   mutate(
@@ -603,7 +611,11 @@ g2 <- ggplot(MC2_node_abno, aes(Start_Year, id)) +
   theme(axis.text.x = element_text(angle = 0, hjust = 1, size = 8)) +
   theme(axis.text.y = element_text(size = 6)) +
   labs(title = "Irregular Pattern by Out-Degree")
+```
+</details>
 
+```{r}
 ggarrange(g1, g2, nrow = 2)
 
 ```
+
