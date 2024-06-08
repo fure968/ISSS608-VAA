@@ -57,8 +57,7 @@ pacman::p_load(tidyverse, scales, patchwork, ggtext, DT)
 
 </details>
 
-::: panel-tabset
-## Import Data Sets
+
 
 <details>
 

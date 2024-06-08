@@ -53,40 +53,119 @@ With this comprehensive dataset capturing both node entities and their interconn
 
 ## 3.1 Data Preparations
 
-Load R Packages
+::: panel-tabset
+## Load R Packages
 
--   jsonlite: The `jsonlite` package is designed to work with JSON (JavaScript Object Notation) data in R. It provides functions for reading, writing, and converting JSON data to and from R objects. JSON is a lightweight data interchange format that is easy for humans to read and write, and easy for machines to parse and generate.
+-   **jsonlite**: This package provides functionality for parsing and generating JSON data in R.
 
--   tidyverse: The `tidyverse` is a collection of R packages designed for data science. It includes packages like `ggplot2` for data visualization, `dplyr` for data manipulation, `tidyr` for data tidying, `readr` for data import, and `purrr` for functional programming. The tidyverse packages are designed to work together seamlessly and provide a consistent grammar for data manipulation and visualization.
+<!-- -->
 
-- readtext: The `readtext` package is used for importing and handling text data in R. It provides functions for reading text files, web pages, PDFs, and other sources into a corpus object, which can then be processed and analyzed using other text mining packages.
+-   **dplyr**: A part of the tidyverse, dplyr provides a consistent set of verbs for data manipulation, making it easier to transform and summarize data frames.
 
-- ggplot2: The `ggplot2` package is a powerful data visualization package in R. It is part of the tidyverse and is based on the grammar of graphics, a conceptual framework for creating graphics. `ggplot2` allows you to create complex and publication-quality plots with a consistent and intuitive syntax.
+<!-- -->
 
-- visNetwork: The `visNetwork` package is used for creating interactive and dynamic network visualizations in R. It is built on top of the popular vis.js library and allows you to create, customize, and interact with network graphs directly in the R environment or in web applications. This package is useful for visualizing and exploring complex network data, such as social networks, communication networks, or biological networks.
+-   **tidyr**: Another tidyverse package, tidyr helps in creating tidy data sets by providing functions for reshaping data frames.
+
+<!-- -->
+
+-   **stringr**: This package provides a cohesive set of functions for string manipulation and regular expressions in R.
+
+<!-- -->
+
+-   **lubridate**: lubridate is designed to make it easier to work with date-time data in R.
+
+<!-- -->
+
+-   **tidyverse**: The tidyverse is a collection of R packages designed for data science, including dplyr, ggplot2, tidyr, and others.
+
+<!-- -->
+
+-   **readtext**: readtext makes it easier to import and handle text data in R, particularly for text mining and analysis.
+
+<!-- -->
+
+-   **ggplot2**: Part of the tidyverse, ggplot2 is a powerful data visualization package for creating complex and publication-ready plots.
+
+<!-- -->
+
+-   **visNetwork**: visNetwork is a package for creating interactive network visualizations in R, using the vis.js library.
+
+<!-- -->
+
+-   **ggpubr**: ggpubr provides easy-to-use functions for creating publication-ready plots and combining multiple ggplot2 plots into a single figure.
+
+<!-- -->
+
+-   **igraph**: igraph is a collection of network analysis tools for creating and analyzing graphs and networks in R.
+
+<!-- -->
+
+-   **patchwork**: patchwork is a package for composing multiple ggplot2 plots into a single figure, with easy layout control.
+
+<details>
+
+<summary>Click to show code</summary>
 
 ```{r}
-pacman::p_load(jsonlite,dplyr,tidyr,stringr,lubridate,tidyverse,readtext,ggplot2,visNetwork,stringr)
+pacman::p_load(jsonlite,dplyr,tidyr,stringr,lubridate,tidyverse,readtext,ggplot2,visNetwork,stringr,ggpubr, igraph, patchwork)
+
 ```
 
-Load mc3 file
+</details>
+
+## Load mc3 file
+
+<details>
+
+<summary>Click to show code</summary>
 
 ```{r}
 mc3 <- fromJSON("data/mc3.json")
 ```
+
+</details>
+:::
 
 To effectively perform temporal analysis on such data, it can be beneficial to separate the data set into two distinct data frames: one for the node entities and another for the relationships or edges between them.
 
 `mc3_nodes` is created by transforming the nodes data in mc3.
 
 Actions:
--   Convert `id`, `type`, `country`, and `ProductServices` columns to character data type.
--   Convert `revenue` column to numeric, handling missing values (`NA`) with `na.rm = TRUE`.
--   Convert `dob` (date of birth) and `founding_date` columns to Date objects.
--   Create new columns `head_of_org`, `trade_description`, and `point_of_contact` from the original data.
--   Remove leading numbers and special characters in id column.
--   Replace NA values in revenue_omu column with 0.
--   Column type is separated into three new columns based on the "." delimiter.
+
+\- Convert `id`, `type`, `country`, and `ProductServices` columns to character data type.
+
+\- Convert `revenue` column to numeric, handling missing values (`NA`) with `na.rm = TRUE`.
+
+\- Convert `dob` (date of birth) and `founding_date` columns to Date objects.
+
+\- Create new columns `head_of_org`, `trade_description`, and `point_of_contact` from the original data. - Remove leading numbers and special characters in id column.
+
+\- Replace NA values in revenue_omu column with 0.
+
+\- Column type is separated into three new columns based on the "." delimiter.
+
+`mc3_edges` is created by transforming the links data in mc3.
+
+Actions:
+
+\- Convert the `type` column to character data type.
+
+\- Convert the `start_date` column to a Date object.
+
+\- Convert the `end_date` column to a Date object, replacing any missing values (`NA`) with `NA` of class Date using the `if_else()` function.
+
+\- Convert the `source` and `target` columns to character data types.
+
+\- Column type is separated into three new columns based on the "." delimiter.
+
+Dates: certain columns that should represent dates were stored as character strings (chr) or as Date objects, instead of the more appropriate POSIXct format.
+
+::: panel-tabset
+## Cleaning Nodes
+
+<details>
+
+<summary>Click to show code</summary>
 
 ```{r}
 mc3_nodes <- as_tibble(mc3$nodes) %>%
@@ -127,13 +206,13 @@ mc3_nodes <- as_tibble(mc3$nodes) %>%
   select(everything())
 ```
 
-`mc3_edges` is created by transforming the links data in mc3.
-Actions:
--   Convert the `type` column to character data type.
--   Convert the `start_date` column to a Date object.
--   Convert the `end_date` column to a Date object, replacing any missing values (`NA`) with `NA` of class Date using the `if_else()` function.
--   Convert the `source` and `target` columns to character data types.
--   Column type is separated into three new columns based on the "." delimiter.
+</details>
+
+## Clean Edges
+
+<details>
+
+<summary>Click to show code</summary>
 
 ```{r}
 mc3_edges <- as_tibble(mc3$links) %>%
@@ -167,8 +246,13 @@ mc3_edges <- as_tibble(mc3$links) %>%
   select(everything())
 ```
 
+</details>
 
-After inspecting the MC3 dataset, it was discovered that some of the date-related columns were not in the correct format. Specifically, certain columns that should represent dates were stored as character strings (chr) or as Date objects, instead of the more appropriate POSIXct format. The POSIXct format is a widely used date-time format in R, which represents dates and times as the number of seconds since the POSIX epoch (January 1, 1970, 00:00:00 UTC).
+## Dates
+
+<details>
+
+<summary>Click to show code</summary>
 
 ```{r}
   mc3_edges <- mc3_edges %>%
@@ -189,14 +273,27 @@ mc3_nodes <- mc3_nodes %>%
   )
 ```
 
-Removing duplicates
+</details>
+
+## Remove duplicates
+
+<details>
+
+<summary>Click to show code</summary>
 
 ```{r}
 mc3_edges [duplicated(mc3_edges ),]
 mc3_nodes [duplicated(mc3_nodes ),]
 ```
 
-Selecting columns that will be used for analysis and rename datasets.
+</details>
+
+## Final Data
+
+<details>
+
+<summary>Click to show code</summary>
+
 ```{r}
 nodes <- mc3_nodes %>%
   select(
@@ -213,7 +310,17 @@ edges <- mc3_edges %>%
   )
 ```
 
-# Charts
+</details>
+:::
+
+# What are the Company Types?
+
+Extracting the top 10 `id` to see the different company types in edges and nodes file.
+
+<details>
+
+<summary>Click to show code</summary>
+
 ```{r}
 top_10_ids <- edges %>%
   group_by(id) %>%
@@ -222,23 +329,23 @@ top_10_ids <- edges %>%
   slice(1:10)
 ```
 
+</details>
 
-````{r}
-library(ggplot2)
-library(patchwork)
+Create a barchart for nodes and edges.
 
+<details>
+
+<summary>Click to show code</summary>
+
+```{r}
 barchart_type_counts_nodes <- mc3_nodes %>%
   count(type_3, sort = TRUE)
 
 barchart_type_counts_edges <- mc3_edges %>%
   count(type_new, sort = TRUE)
 
-```
-
-
-```{r}
 b1 <- ggplot(barchart_type_counts_nodes, aes(x = reorder(type_3, -n), y = n)) +
-  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_bar(stat = "identity", fill = "lightblue") +
   labs(
     title = "Distribution of Nodes Types",
     x = "Nodes Type",
@@ -246,13 +353,11 @@ b1 <- ggplot(barchart_type_counts_nodes, aes(x = reorder(type_3, -n), y = n)) +
   ) +
   theme_minimal() +
   theme(
-    axis.text.x = element_text(angle = 0, hjust = 0.8, size=7)
+    axis.text.x = element_text(angle = 0, hjust = 0.8, size = 7)
   )
-```
 
-```{r}
 b2 <- ggplot(barchart_type_counts_edges, aes(x = reorder(type_new, -n), y = n)) +
-  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_bar(stat = "identity", fill = "lightblue") +
   labs(
     title = "Distribution of Edges Types",
     x = "Edge Type",
@@ -260,96 +365,50 @@ b2 <- ggplot(barchart_type_counts_edges, aes(x = reorder(type_new, -n), y = n)) 
   ) +
   theme_minimal() +
   theme(
-    axis.text.x = element_text(angle = 0, hjust = 0.5, size=7)
+    axis.text.x = element_text(angle = 0, hjust = 0.5, size = 7)
   )
 ```
 
+</details>
+
 ```{r}
 combined_plot <- b1 / b2
-combined_plot
+print(combined_plot)
 ```
 
+# What are the Top Countries?
+
+<details>
+
+<summary>Click to show code</summary>
+
 ```{r plot-wider-3, fig.width=9, fig.height=4}
-top_countries <- mc3_nodes %>%
+ top_countries <- mc3_nodes %>%
   count(country) %>%
   top_n(10) %>%
   arrange(desc(n))
 
 # Create a bar chart
-ggplot(top_countries, aes(x = reorder(country, n), y = n, fill = country)) +
+b3 <- ggplot(top_countries, aes(x = reorder(country, n), y = n, fill = country)) +
   geom_bar(stat = "identity", fill = "steelblue") +  # Using gray as an example
   labs(x = "Country", y = "Count", title = "Top 10 Countries") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 0, hjust = 0.3))
 ```
 
-```{r plot-wider-4, fig.width=9, fig.height=4}
-library(plotly)
-#BubblePlot
-company_revenue <- mc3_nodes %>%
-  group_by(id, type_3) %>%
-  summarise(total_revenue = sum(revenue_omu, na.rm = TRUE), .groups = 'drop') 
+</details>
 
-# Create a plotly interactive bubble chart
-plot <- plot_ly(data = company_revenue, 
-                x = ~id,  # Use head_of_org to distribute bubbles along x-axis
-                y = ~total_revenue, 
-                text = ~paste("Name:", id, 
-                              "<br>Total Revenue:", total_revenue,
-                              "<br>Type:", type_3), 
-                type = "scatter",  # Type scatter for bubble chart
-                mode = "markers",  # Markers for bubbles
-                marker = list(size = ~total_revenue / 1000000,  # Adjust size scaling
-                              sizemode = 'area', 
-                              sizeref = 0.1,  # Adjust sizeref for relative sizing
-                              color = ~total_revenue,  # Color bubbles by revenue
-                              colorscale = "Viridis",  # Color scale
-                              showscale = TRUE))  # Show color scale
-
-plot <- plot %>%
-  layout(title = "Interactive Bubble Chart of Company Revenue",
-         xaxis = list(title = "", showticklabels = FALSE),  # Hide x-axis labels
-         yaxis = list(title = "Total Revenue"),
-         hovermode = "closest")
-# Display the plot
-plot
-```
+According to the barchart, Oceanus, Marwalara and Naraliket are the top countries.
 
 ```{r}
-library(igraph)
-
-top_companies <- mc3_edges %>%
-  count(id, sort = TRUE) %>%
-  top_n(20, wt = n)
-
-
-filtered_edges <- mc3_edges %>%
-  filter(id %in% top_companies$id) %>%
-  select(id, type_new)
-
-edges_for_graph <- filtered_edges %>%
-  rename(from = id, to = type_new)
-bipartite_graph <- graph_from_data_frame(d = edges_for_graph, directed = FALSE)
-
-# Add bipartite attribute
-V(bipartite_graph)$type <- bipartite_mapping(bipartite_graph)$type
-
-nodes_vis <- data.frame(id = V(bipartite_graph)$name, 
-                        label = V(bipartite_graph)$name, 
-                        group = ifelse(V(bipartite_graph)$type, "Type", "Company"))
-edges_vis <- as_data_frame(bipartite_graph, what = "edges")
-
-visNetwork(nodes_vis, edges_vis, width = "100%", height = "800px") %>%
-  visNodes(shape = "dot", scaling = list(label = list(enabled = TRUE))) %>%
-  visEdges(arrows = "none", color = list(color = "lightgray", highlight = "red")) %>%
-  visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
-  visLegend() %>%
-  visGroups(groupname = "Type", shape = "dot", color = "blue") %>%
-  visGroups(groupname = "Company", shape = "dot", color = "green") %>%
-  visLayout(randomSeed = 21) %>%
-  visInteraction(navigationButtons = TRUE)
-
+print(b3)
 ```
+
+# Top companies and the Types
+
+<details>
+
+<summary>Click to show code</summary>
 
 ```{r plot-wider-5, fig.width=9, fig.height=4}
 
@@ -388,7 +447,7 @@ type_new_counts <- type_new_counts %>%
                                arrange(desc(total_count)) %>%
                                pull(id_wrapped)))
 
-ggplot(type_new_counts, aes(x = id_wrapped, y = count, fill = type_new)) +
+b4 <- ggplot(type_new_counts, aes(x = id_wrapped, y = count, fill = type_new)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.7) +
   geom_text(aes(label = count), position = position_dodge(width = 0.9), vjust = 0.8, size = 3) + # Add text labels
   labs(x = " ", y = " ", title = "Top Names with Multiple Type Relationships") +
@@ -401,8 +460,91 @@ ggplot(type_new_counts, aes(x = id_wrapped, y = count, fill = type_new)) +
 
 ```
 
+</details>
 
-Extracting year from full date as using the full date format is too detail for analysis. 
+```{r}
+print(b4)
+```
+
+# Which Companies has the highest Revenue?
+
+<details>
+
+<summary>Click to show code</summary>
+
+```{r plot-wider-4, fig.width=9, fig.height=4}
+library(plotly)
+#BubblePlot
+company_revenue <- mc3_nodes %>%
+  group_by(id, type_3) %>%
+  summarise(total_revenue = sum(revenue_omu, na.rm = TRUE), .groups = 'drop') 
+
+# Create the plot using plotly
+plot <- plot_ly(data = company_revenue, 
+                x = ~id,  
+                y = ~total_revenue, 
+                text = ~paste("Name:", id, 
+                              "<br>Total Revenue:", total_revenue,
+                              "<br>Type:", type_3), 
+                type = "scatter",  
+                mode = "markers",  
+                marker = list(size = ~total_revenue / 1000000,  # Adjust size scaling
+                              sizemode = 'area', 
+                              sizeref = 0.1, 
+                              color = ~total_revenue, 
+                              colorscale = "Viridis", 
+                              showscale = TRUE)) 
+
+plot <- plot %>%
+  layout(title = "Interactive Bubble Chart of Company Revenue",
+         xaxis = list(title = "", showticklabels = FALSE),  # Hide x-axis labels
+         yaxis = list(title = "Total Revenue"),
+         hovermode = "closest")
+```
+
+</details>
+
+```{r}
+plot
+```
+
+```{r}
+top_companies <- mc3_edges %>%
+  count(id, sort = TRUE) %>%
+  top_n(20, wt = n)
+
+
+filtered_edges <- mc3_edges %>%
+  filter(id %in% top_companies$id) %>%
+  select(id, type_new)
+
+edges_for_graph <- filtered_edges %>%
+  rename(from = id, to = type_new)
+bipartite_graph <- graph_from_data_frame(d = edges_for_graph, directed = FALSE)
+
+V(bipartite_graph)$type <- bipartite_mapping(bipartite_graph)$type
+
+nodes_vis <- data.frame(id = V(bipartite_graph)$name, 
+                        label = V(bipartite_graph)$name, 
+                        group = ifelse(V(bipartite_graph)$type, "Type", "Company"))
+edges_vis <- as_data_frame(bipartite_graph, what = "edges")
+
+visNetwork(nodes_vis, edges_vis, width = "100%", height = "800px") %>%
+  visNodes(shape = "dot", scaling = list(label = list(enabled = TRUE))) %>%
+  visEdges(arrows = "none", color = list(color = "lightgray", highlight = "red")) %>%
+  visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visGroups(groupname = "Type", shape = "dot", color = "blue") %>%
+  visGroups(groupname = "Company", shape = "dot", color = "green") %>%
+  visLayout(randomSeed = 21) %>%
+  visInteraction(navigationButtons = TRUE)
+
+```
+
+# Irregular Patterns by Revenue
+
+Extracting year from full date as using the full date format is too detail for analysis.
+
 ```{r}
 edges <- edges %>%
   mutate(
@@ -414,52 +556,38 @@ nodes <- nodes %>%
   mutate(added_year = year(date_added))
 ```
 
-The `id` with top 8 revenues had been extracted and visualise using heat map. 
-- Yang PLC and Williams, Stanley and Butler, show spikes in activity in certain years (e.g., 2033 and 2034).
-- Short, Hernandez and Myers and Roth Ltd show more consistent, lower-level activity across multiple years.
-- Cooper, Jacobs and Gonzalez and Briggs-Wilson have high counts in the most recent years (e.g., 2034), indicating recent irregularities or high revenue-generating activities.
-- Pearson-Williams and Dunlap, Fleming and Brown show lower and more dispersed activity, suggesting less frequent irregularities or events.
+The `id` with top 8 revenues had been extracted and visualise using heat map. - Yang PLC and Williams, Stanley and Butler, show spikes in activity in certain years (e.g., 2033 and 2034). - Short, Hernandez and Myers and Roth Ltd show more consistent, lower-level activity across multiple years. - Cooper, Jacobs and Gonzalez and Briggs-Wilson have high counts in the most recent years (e.g., 2034), indicating recent irregularities or high revenue-generating activities. - Pearson-Williams and Dunlap, Fleming and Brown show lower and more dispersed activity, suggesting less frequent irregularities or events.
 
-The analysis revealed significant surges in activity for some companies like Yang PLC and Williams, Stanley and Butler, indicating potential irregular patterns or events warranting further investigation. Other companies like Short, Hernandez and Myers maintained consistent low-level activity, suggesting regular but less intense involvement. Recent increases in revenue and network connections for entities like Cooper, Jacobs and Gonzalez and Briggs-Wilson could signal new strategies or expansions. Comparing revenue and network patterns provides insights into both financial activities and connection dynamics. Key recommendations include investigating high-activity years, understanding recent trends, analysing consistent patterns, and cross-referencing with external data to identify potential causes or correlations.
+The analysis revealed significant surges in activity for some companies like Yang PLC and Williams, Stanley and Butler, indicating potential irregular patterns or events warranting further investigation.
+
+Other companies like Short, Hernandez and Myers maintained consistent low-level activity, suggesting regular but less intense involvement. Recent increases in revenue and network connections for entities like Cooper, Jacobs and Gonzalez and Briggs-Wilson could signal new strategies or expansions. Comparing revenue and network patterns provides insights into both financial activities and connection dynamics.
+
+Key recommendations include investigating high-activity years, understanding recent trends, analysing consistent patterns, and cross-referencing with external data to identify potential causes or correlations.
+
 ```{r}
-library(dplyr)
-library(ggplot2)
-library(ggpubr)
-
-# Assuming nodes and edges data are already loaded into data frames `nodes` and `edges`
-
-# Create new columns for Start_Year and End_Year in edges data
 edges <- edges %>%
   mutate(
     Start_Year = year(start_date),
     End_Year = year(end_date)
   )
 
-# Create new column for added_year in nodes data
 nodes <- nodes %>%
   mutate(added_year = year(date_added))
 
-# Extract the top 8 nodes by revenue
 top_8_revenue_nodes <- nodes %>%
   arrange(desc(revenue)) %>%
   slice_head(n = 8)
 
-# Print the top 8 nodes to verify
-print(top_8_revenue_nodes)
-
-# Prepare data for heatmap visualization
 MC2_node_abnor <- edges %>%
   filter(id %in% top_8_revenue_nodes$id) %>%
   group_by(id, Start_Year) %>%
   summarise(weight = n(), .groups = "drop")
 
-# Prepare data for out-degree connections heatmap
 MC2_node_abno <- edges %>%
   filter(id %in% top_8_revenue_nodes$id) %>%
   group_by(id, Start_Year) %>%
   summarise(weight = n(), .groups = "drop")
 
-# Heatmap for weight by revenue
 g1 <- ggplot(MC2_node_abnor, aes(Start_Year, id)) +
   geom_tile(aes(fill = weight)) +
   geom_text(aes(label = weight), size = 3) +
@@ -468,7 +596,6 @@ g1 <- ggplot(MC2_node_abnor, aes(Start_Year, id)) +
   theme(axis.text.x = element_text(angle = 0, hjust = 1, size = 8)) +
   theme(axis.text.y = element_text(size = 6))
 
-# Heatmap for out-degree connections
 g2 <- ggplot(MC2_node_abno, aes(Start_Year, id)) +
   geom_tile(aes(fill = weight)) +
   geom_text(aes(label = weight), size = 3) +
@@ -477,8 +604,6 @@ g2 <- ggplot(MC2_node_abno, aes(Start_Year, id)) +
   theme(axis.text.y = element_text(size = 6)) +
   labs(title = "Irregular Pattern by Out-Degree")
 
-# Combine heatmaps
 ggarrange(g1, g2, nrow = 2)
-
 
 ```
