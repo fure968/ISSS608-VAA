@@ -54,11 +54,11 @@ website:
     - text:  "💻 Take Home"
       menu: 
           - text: "Take-home Exercise 1"
-            href: "take-home/take-home_ex1/tkx01.html"
+            href: "Take-home/Take-home_ex1/tkx01.html"
           - text: "Take-home Exercise 2"
             href: "Take-home/Take-home_ex2/Take_home_x02.html"
           - text: "Take-home Exercise 3"
-            href: "Take-home/Take-home_ex3/Take_home_x03.html"
+            href: "Take-home/Take-home_ex3/Take-home_x03.html"
     
     - text:  "⚙️ Work in Progress"
       menu: 

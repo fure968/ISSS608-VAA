@@ -16,3 +16,9 @@ execute:
 Map: https://www.onemap.gov.sg/ Treemap: https://r4va.netlify.app/chap16
 
 Whenever using R to handle geographical data please use simple features for R https://r-spatial.github.io/sf/articles/sf1.html
+
+Example:
+
+OceanusGeography = st_read("file")
+
+st transform(crs = 4326) \<- this is **EPSG** code. (

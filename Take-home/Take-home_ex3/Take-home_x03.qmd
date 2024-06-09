@@ -128,37 +128,6 @@ mc3 <- fromJSON("data/mc3.json")
 
 To effectively perform temporal analysis on such data, it can be beneficial to separate the data set into two distinct data frames: one for the node entities and another for the relationships or edges between them.
 
-`mc3_nodes` is created by transforming the nodes data in mc3.
-
-Actions:
-
-\- Convert `id`, `type`, `country`, and `ProductServices` columns to character data type.
-
-\- Convert `revenue` column to numeric, handling missing values (`NA`) with `na.rm = TRUE`.
-
-\- Convert `dob` (date of birth) and `founding_date` columns to Date objects.
-
-\- Create new columns `head_of_org`, `trade_description`, and `point_of_contact` from the original data. - Remove leading numbers and special characters in id column.
-
-\- Replace NA values in revenue_omu column with 0.
-
-\- Column type is separated into three new columns based on the "." delimiter.
-
-`mc3_edges` is created by transforming the links data in mc3.
-
-Actions:
-
-\- Convert the `type` column to character data type.
-
-\- Convert the `start_date` column to a Date object.
-
-\- Convert the `end_date` column to a Date object, replacing any missing values (`NA`) with `NA` of class Date using the `if_else()` function.
-
-\- Convert the `source` and `target` columns to character data types.
-
-\- Column type is separated into three new columns based on the "." delimiter.
-
-Dates: certain columns that should represent dates were stored as character strings (chr) or as Date objects, instead of the more appropriate POSIXct format.
 
 ::: panel-tabset
 ## Cleaning Nodes
@@ -168,6 +137,12 @@ Dates: certain columns that should represent dates were stored as character stri
 <summary>Click to show code</summary>
 
 ```{r}
+# Load necessary libraries
+library(dplyr)
+library(tidyr)
+library(stringr)
+
+# Assuming mc3 is already loaded as a list containing nodes dataframe
 mc3_nodes <- as_tibble(mc3$nodes) %>%
   mutate(
     id = as.character(id),
@@ -181,19 +156,8 @@ mc3_nodes <- as_tibble(mc3$nodes) %>%
     id = gsub("^[0-9]+\\.\\s*", "", id),  # Clean up IDs
     revenue_omu = ifelse(is.na(revenue_omu), 0, revenue_omu)
   ) %>%
-
-  separate(
-    type, 
-    into = paste0("type_", 1:3), 
-    sep = "\\.", 
-    remove = FALSE, 
-    extra = "merge", 
-    fill = "right"  
-  ) %>%
-  filter(!is.na(type_3) & !is.na(head_of_org)) %>%
   mutate(
-    across(where(is.character), ~str_replace_all(., '^\\s*"\\s*"$', NA_character_)),
-    across(where(is.numeric), ~replace_na(., 0))
+    type = ifelse(type == "Entity.Person", "Entity.Person.Person", type)  # Rename Entity.Person
   ) %>%
   rename(
     last_edited_by = `_last_edited_by`,
@@ -202,9 +166,32 @@ mc3_nodes <- as_tibble(mc3$nodes) %>%
     raw_source = `_raw_source`,
     algorithm = `_algorithm`
   ) %>%
-
   select(everything())
+
+# Display the first few rows of the updated dataframe
+print(head(mc3_nodes))
+
+
 ```
+
+```{r}
+(mc3_nodes$type) %>% unique()
+```
+```{r}
+# Further processing to separate the 'type' column
+mc3_nodes <- mc3_nodes %>%
+  separate(type, into = c("type_1", "type_2", "type_3"), sep = "\\.", fill = "right", extra = "drop")
+
+# Display the first few rows of the updated dataframe
+print(head(mc3_nodes))
+
+```
+
+```{r}
+(mc3_nodes$type_2) %>% unique()
+(mc3_nodes$type_3) %>% unique()
+```
+
 
 </details>
 
@@ -247,6 +234,8 @@ mc3_edges <- as_tibble(mc3$links) %>%
 ```
 
 </details>
+
+
 
 ## Dates
 
@@ -315,6 +304,20 @@ edges <- mc3_edges %>%
 
 # What are the Company Types?
 
+```{r}
+# Count the unique values in type_2
+type_2_unique_counts <- mc3_nodes %>%
+  group_by(type_2) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+# Display the summary table
+print(type_2_unique_counts)
+
+```
+
+
+
 Extracting the top 10 `id` to see the different company types in edges and nodes file.
 
 <details>
@@ -376,74 +379,72 @@ combined_plot <- b1 / b2
 print(combined_plot)
 ```
 
-# What are the Top Countries?
+# Top companies and the Types
 
+Network Graph
 <details>
 
 <summary>Click to show code</summary>
 
-```{r plot-wider-3, fig.width=9, fig.height=4}
- top_countries <- mc3_nodes %>%
-  count(country) %>%
-  top_n(10) %>%
-  arrange(desc(n))
-
-# Create a bar chart
-b3 <- ggplot(top_countries, aes(x = reorder(country, -n), y = n, fill = country)) +
-  geom_bar(stat = "identity", fill = "lightblue") +  
-  labs(x = "Country", y = "Count", title = "Top 10 Countries") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 0, hjust = 0.3))
-
-```
-
-</details>
-
-According to the barchart, Oceanus, Marwalara and Naraliket are the top countries.
 
 ```{r}
-print(b3)
-```
+library(dplyr)
+library(igraph)
+library(visNetwork)
 
-# Top companies and the Types
+# Assuming mc3_edges is already loaded as a dataframe
 
-Network Graph
-
-```{r}
+# Get the top 20 companies based on the count of edges
 top_companies <- mc3_edges %>%
   count(id, sort = TRUE) %>%
   top_n(20, wt = n)
 
-
+# Filter edges to include only those involving the top 20 companies
 filtered_edges <- mc3_edges %>%
   filter(id %in% top_companies$id) %>%
   select(id, type_new)
 
+# Prepare edges for graph creation
 edges_for_graph <- filtered_edges %>%
   rename(from = id, to = type_new)
 
+# Create a bipartite graph
 bipartite_graph <- graph_from_data_frame(d = edges_for_graph, directed = FALSE)
 
+# Assign types for bipartite mapping
 V(bipartite_graph)$type <- bipartite_mapping(bipartite_graph)$type
 
-nodes_vis <- data.frame(id = V(bipartite_graph)$name, 
-                        label = V(bipartite_graph)$name, 
-                        group = ifelse(V(bipartite_graph)$type, "Type", "Company"))
+# Prepare nodes for visualization
+nodes_vis <- data.frame(
+  id = V(bipartite_graph)$name, 
+  label = V(bipartite_graph)$name, 
+  group = ifelse(V(bipartite_graph)$type, "Type", "Company")
+)
 
+# Prepare edges for visualization
 edges_vis <- igraph::as_data_frame(bipartite_graph, what = "edges")
 
-visNetwork(nodes_vis, edges_vis, width = "100%", height = "800px") %>%
-  visNodes(shape = "dot", scaling = list(label = list(enabled = TRUE))) %>%
-  visEdges(arrows = "none", color = list(color = "lightgray", highlight = "red")) %>%
-  visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
-  visLegend() %>%
-  visGroups(groupname = "Type", shape = "dot", color = "blue") %>%
-  visGroups(groupname = "Company", shape = "dot", color = "green") %>%
-  visLayout(randomSeed = 21) %>%
-  visInteraction(navigationButtons = TRUE) %>%
-  visPhysics(stabilization = FALSE, enabled = FALSE)
+# Create and customize the visNetwork graph
+vis1 <- visNetwork(nodes_vis, edges_vis, width = "100%", height = "800px") %>%
+        visNodes(shape = "dot", scaling = list(label = list(enabled = TRUE))) %>%
+        visEdges(arrows = "none", color = list(color = "lightgray", highlight = "red")) %>%
+        visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
+        visLegend() %>%
+        visGroups(groupname = "Type", shape = "dot", color = "blue") %>%
+        visGroups(groupname = "Company", shape = "dot", color = "green") %>%
+        visLayout(randomSeed = 21) %>%
+        visInteraction(navigationButtons = TRUE) %>%
+        visPhysics(stabilization = FALSE, enabled = FALSE)
+
+```
+</details>
+
+```{r}
+# Display the graph
+vis1
 ```
 
+# Companies and amount of types
 <details>
 
 <summary>Click to show code</summary>
@@ -559,14 +560,7 @@ nodes <- nodes %>%
   mutate(added_year = year(date_added))
 ```
 
-The `id` with top 8 revenues had been extracted and visualise using heat map. - Yang PLC and Williams, Stanley and Butler, show spikes in activity in certain years (e.g., 2033 and 2034). - Short, Hernandez and Myers and Roth Ltd show more consistent, lower-level activity across multiple years. - Cooper, Jacobs and Gonzalez and Briggs-Wilson have high counts in the most recent years (e.g., 2034), indicating recent irregularities or high revenue-generating activities. - Pearson-Williams and Dunlap, Fleming and Brown show lower and more dispersed activity, suggesting less frequent irregularities or events.
-
-The analysis revealed significant surges in activity for some companies like Yang PLC and Williams, Stanley and Butler, indicating potential irregular patterns or events warranting further investigation.
-
-Other companies like Short, Hernandez and Myers maintained consistent low-level activity, suggesting regular but less intense involvement. Recent increases in revenue and network connections for entities like Cooper, Jacobs and Gonzalez and Briggs-Wilson could signal new strategies or expansions. Comparing revenue and network patterns provides insights into both financial activities and connection dynamics.
-
-Key recommendations include investigating high-activity years, understanding recent trends, analysing consistent patterns, and cross-referencing with external data to identify potential causes or correlations.
-
+The `id` with top 8 revenues had been extracted and visualise using heat map.
 <details>
 
 <summary>Click to show code</summary>
@@ -603,18 +597,328 @@ g1 <- ggplot(MC2_node_abnor, aes(Start_Year, id)) +
   theme(axis.text.x = element_text(angle = 0, hjust = 1, size = 8)) +
   theme(axis.text.y = element_text(size = 6))
 
-g2 <- ggplot(MC2_node_abno, aes(Start_Year, id)) +
-  geom_tile(aes(fill = weight)) +
-  geom_text(aes(label = weight), size = 3) +
-  scale_fill_gradient(low = "white", high = "orange") +
-  theme(axis.text.x = element_text(angle = 0, hjust = 1, size = 8)) +
-  theme(axis.text.y = element_text(size = 6)) +
-  labs(title = "Irregular Pattern by Out-Degree")
 ```
 
-</details>
 
-```{r}
+</details>
 ggarrange(g1, g2, nrow = 2)
 
+```{r}
+print(g1)
+```
+
+```{r}
+# Load necessary libraries
+library(dplyr)
+library(igraph)
+library(visNetwork)
+
+# Step 1: Ensure mc3_nodes and mc3_edges are loaded
+# Assuming mc3_nodes and mc3_edges are already loaded
+
+# Step 2: Preprocess mc3_nodes and mc3_edges
+
+# Preprocess mc3_nodes to include id and type_3
+mc3_nodes2 <- mc3_nodes %>%
+  mutate(id = as.character(id),
+         type_3 = as.character(type_3))
+
+# Preprocess mc3_edges to include source, target, and type_new
+mc3_edges2 <- mc3_edges %>%
+  mutate(source = as.character(source),
+         target = as.character(target),
+         type_new = as.character(type_new))
+
+# Extract edges to include relevant source and target, and type_new
+edges2 <- mc3_edges2 %>%
+  select(from = source, to = target, type_new)
+
+# Extract distinct nodes from source and target
+all_nodes <- unique(c(edges2$from, edges2$to))
+nodes2 <- mc3_nodes2 %>%
+  filter(id %in% all_nodes) %>%
+  select(id, type_3) %>%
+  distinct() %>%
+  rename(name = id, group = type_3)
+
+# Ensure there are no missing nodes
+missing_nodes <- setdiff(all_nodes, nodes2$name)
+if (length(missing_nodes) > 0) {
+  additional_nodes <- data.frame(name = missing_nodes, group = "Unknown")
+  nodes2 <- bind_rows(nodes2, additional_nodes)
+}
+
+# Remove duplicates
+nodes2 <- nodes2 %>%
+  distinct(name, .keep_all = TRUE)
+
+# Print nodes and edges for inspection
+print("Nodes dataframe:")
+print(head(nodes2))
+
+print("Edges dataframe:")
+print(head(edges2))
+
+# Create the graph object
+graph <- graph_from_data_frame(d = edges2, vertices = nodes2, directed = TRUE)
+
+# Convert the graph to data frames for visNetwork
+nodes_vis <- data.frame(id = V(graph)$name, label = V(graph)$name, group = V(graph)$group)
+edges_vis <- igraph::as_data_frame(graph, what = "edges")
+
+# Print nodes and edges for visNetwork for inspection
+print("Nodes for visNetwork:")
+print(head(nodes_vis))
+print("Edges for visNetwork:")
+print(head(edges_vis))
+
+# Create and customize the visNetwork graph
+vis1 <- visNetwork(
+  nodes_vis, 
+  edges_vis, 
+  width = "100%", 
+  main = list(
+    text = "Separate Clusters Without Overlapping Ownership",
+    style = "font-size:17px; font-weight:bold; text-align:right;"
+  )
+) %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visGroups(groupname = "Unknown", color = "#D3D3D3") %>%
+  visGroups(groupname = "Company", color = "#1696d2") %>%
+  visLegend() %>%
+  visEdges(arrows = "to", color = list(color = "lightgray", highlight = "red")) %>%
+  visOptions(
+    highlightNearest = list(enabled = TRUE, degree = 2, hover = TRUE),
+    nodesIdSelection = TRUE,
+    selectedBy = "group",
+    collapse = TRUE
+  ) %>%
+  visInteraction(navigationButtons = TRUE) %>%
+  visPhysics(stabilization = FALSE, enabled = FALSE)
+
+# Add additional groups based on edge types
+unique_types <- unique(edges2$type_new)
+for (t in unique_types) {
+  vis1 <- vis1 %>%
+    visGroups(groupname = t, color = scales::hue_pal()(length(unique_types))[which(unique_types == t)])
+}
+
+# Display the graph
+vis1
+```
+
+
+```{r}
+# Load necessary libraries
+library(dplyr)
+library(ggraph)
+library(igraph)
+library(lubridate)
+library(ggplot2)
+library(ggrepel)
+
+
+# Extract data with both start_date and end_date
+filtered_edges <- edges %>%
+  filter(!is.na(start_date) & !is.na(end_date))
+
+# Add year for faceting and coloring
+filtered_edges <- filtered_edges %>%
+  mutate(year = year(start_date))
+
+# Step 2: Identify the top 30 entities for each type_new based on their frequency
+top_entities <- filtered_edges %>%
+  group_by(type_new) %>%
+  count(id) %>%
+  top_n(10, wt = n) %>%
+  ungroup() %>%
+  pull(id)
+
+# Filter the dataset to include only the top 30 entities of each type_new
+filtered_edges_top <- filtered_edges %>%
+  filter(id %in% top_entities)
+
+# Create a unique nodes dataframe
+nodes <- filtered_edges_top %>%
+  select(id, type_new) %>%
+  distinct() %>%
+  rename(name = id)
+
+# Ensure all nodes in the edge list are in the nodes data frame
+all_nodes <- unique(c(filtered_edges_top$id, filtered_edges_top$type_new))
+missing_nodes <- setdiff(all_nodes, nodes$name)
+
+if (length(missing_nodes) > 0) {
+  additional_nodes <- data.frame(name = missing_nodes, type_new = NA)
+  nodes <- bind_rows(nodes, additional_nodes)
+}
+
+# Remove duplicates
+nodes <- nodes %>%
+  distinct(name, .keep_all = TRUE)
+
+# Define custom shapes and colors for each type_new
+node_shapes <- c(
+  "Fishing-related Companies" = 22,
+  "Unknown" = 21,
+  "Non-fishing Companies" = 23,
+  "Beneficial Owner" = 24,
+  "Ultimate Beneficial Owner" = 25,
+  "Multi-role Entity" = 20
+)
+
+node_colors <- c(
+  "Fishing-related Companies" = "blue",
+  "Unknown" = "grey",
+  "Non-fishing Companies" = "green",
+  "Beneficial Owner" = "yellow",
+  "Ultimate Beneficial Owner" = "red",
+  "Multi-role Entity" = "purple"
+)
+
+# Create the graph
+graph <- graph_from_data_frame(d = filtered_edges_top, vertices = nodes, directed = TRUE)
+
+# Compute degree centrality
+V(graph)$degree <- degree(graph, mode = "all")
+
+# Create a layout
+layout <- create_layout(graph, layout = "fr")
+
+# Visualize the graph using ggraph
+g <- ggraph(layout) + 
+  geom_edge_link(aes(color = factor(year)), alpha = 0.5, edge_width = 0.8) +
+  geom_node_point(aes(x = x, y = y, size = degree, shape = type_new, fill = type_new), color = "black", stroke = 0.5) +
+  scale_shape_manual(values = node_shapes) +
+  scale_fill_manual(values = node_colors) +
+  scale_color_manual(values = rainbow(length(unique(filtered_edges_top$year)))) +  # Assign colors to years
+  geom_text_repel(aes(x = x, y = y, label = name), size = 2.5) +
+  theme_void() +
+  theme(legend.position = "right") +
+  labs(title = "Network Visualization of Top 30 Entities by Type and Year",
+       color = "Year",
+       fill = "Type")
+
+# Plot the graph
+print(g)
+
+```
+
+
+```{r}
+# Load necessary libraries
+library(dplyr)
+library(ggplot2)
+library(ggrepel)
+
+# Extract data with both start_date and end_date
+filtered_edges <- edges %>%
+  filter(!is.na(start_date) & !is.na(end_date))
+
+# Add year for aggregation and anomaly detection
+filtered_edges <- filtered_edges %>%
+  mutate(year = year(start_date))
+
+# Calculate the number of activities per `id` and `type_new` for each year
+activity_counts <- filtered_edges %>%
+  group_by(year, id, type_new) %>%
+  summarise(activity_count = n()) %>%
+  ungroup()
+
+# Calculate the IQR and identify outliers
+activity_counts <- activity_counts %>%
+  group_by(type_new) %>%
+  mutate(
+    Q1 = quantile(activity_count, 0.25),
+    Q3 = quantile(activity_count, 0.75),
+    IQR = Q3 - Q1,
+    lower_bound = Q1 - 1.5 * IQR,
+    upper_bound = Q3 + 1.5 * IQR,
+    is_outlier = activity_count < lower_bound | activity_count > upper_bound
+  ) %>%
+  ungroup()
+
+# Plot activity counts and highlight outliers
+ggplot(activity_counts, aes(x = year, y = activity_count, color = is_outlier)) +
+  geom_point() +
+  geom_text_repel(aes(label = ifelse(is_outlier, id, "")), size = 2.5) +
+  facet_wrap(~ type_new) +
+  labs(title = "Activity Counts per Year with Outliers Highlighted",
+       x = "Year", y = "Activity Count", color = "Outlier") +
+  theme_minimal()
+
+```
+
+
+```{r}
+# Load necessary libraries
+library(dplyr)
+library(ggplot2)
+library(ggrepel)
+library(lubridate)
+
+# Assuming edges is already loaded
+
+# Extract data with both start_date and end_date
+filtered_edges <- edges %>%
+  filter(!is.na(start_date) & !is.na(end_date))
+
+# Add year for aggregation and anomaly detection
+filtered_edges <- filtered_edges %>%
+  mutate(year = year(start_date))
+# Calculate the number of activities per `id` and `type_new` for each year
+activity_counts <- filtered_edges %>%
+  group_by(year, id, type_new) %>%
+  summarise(activity_count = n()) %>%
+  ungroup()
+
+# Calculate the IQR and identify outliers
+activity_counts <- activity_counts %>%
+  group_by(type_new) %>%
+  mutate(
+    Q1 = quantile(activity_count, 0.25),
+    Q3 = quantile(activity_count, 0.75),
+    IQR = Q3 - Q1,
+    lower_bound = Q1 - 1.5 * IQR,
+    upper_bound = Q3 + 1.5 * IQR,
+    is_outlier = activity_count < lower_bound | activity_count > upper_bound
+  ) %>%
+  ungroup()
+# Plot activity counts and highlight outliers
+ggplot(activity_counts, aes(x = year, y = activity_count, color = is_outlier)) +
+  geom_point() +
+  geom_text_repel(aes(label = ifelse(is_outlier, id, "")), size = 2.5) +
+  facet_wrap(~ type_new, scales = "free_y") +  # Using free_y scale for better visualization
+  labs(title = "Activity Counts per Year with Outliers Highlighted",
+       x = "Year", y = "Activity Count", color = "Outlier") +
+  scale_color_manual(values = c("FALSE" = "blue", "TRUE" = "red")) +  # Color coding outliers
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(size = 14, face = "bold")
+  )
+```
+```{r}
+# Summarize outliers
+outliers_summary <- activity_counts %>%
+  filter(is_outlier) %>%
+  select(year, id, type_new, activity_count) %>%
+  arrange(type_new, year, desc(activity_count))
+
+print(outliers_summary)
+```
+
+```{r}
+# Create a heatmap for outliers
+ggplot(outliers_summary, aes(x = year, y = id, fill = activity_count)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient(low = "lightblue", high = "red") +
+  facet_wrap(~ type_new, scales = "free_y") +
+  labs(title = "Heatmap of Outliers in Activity Counts",
+       x = "Year", y = "Entity", fill = "Activity Count") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(size = 14, face = "bold")
+  )
 ```
