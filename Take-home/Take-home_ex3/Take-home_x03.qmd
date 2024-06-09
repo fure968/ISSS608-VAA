@@ -607,10 +607,16 @@ g1 <- ggplot(MC2_node_abnor, aes(Start_Year, id)) +
 print(g1)
 ```
 
+# Network Visualization with Node and Edge Groups
+
+This graph visualises the relationships between various entities, highlighting different types of organisations and their connections.
+
 <details>
 
 <summary>Click to show code</summary>
+
 ```{r}
+
 mc3_nodes2 <- mc3_nodes %>%
   mutate(id = as.character(id),
          type_3 = as.character(type_3))
@@ -649,7 +655,7 @@ vis1 <- visNetwork(
   edges_vis, 
   width = "100%", 
   main = list(
-    text = "Separate Clusters Without Overlapping Ownership",
+    text = "Network Visualization with Node and Edge Groups",
     style = "font-size:17px; font-weight:bold; text-align:right;"
   )
 ) %>%
@@ -755,7 +761,10 @@ g <- ggraph(layout) +
 print(g)
 ```
 
+# Activity Counts per Year with Outliers Highlighted
+<details>
 
+<summary>Click to show code</summary>
 ```{r}
 filtered_edges <- edges %>%
   filter(!is.na(start_date) & !is.na(end_date))
@@ -780,13 +789,18 @@ activity_counts <- activity_counts %>%
   ) %>%
   ungroup()
 
-ggplot(activity_counts, aes(x = year, y = activity_count, color = is_outlier)) +
-  geom_point() +
-  geom_text_repel(aes(label = ifelse(is_outlier, id, "")), size = 2.5) +
-  facet_wrap(~ type_new) +
-  labs(title = "Activity Counts per Year with Outliers Highlighted",
-       x = "Year", y = "Activity Count", color = "Outlier") +
-  theme_minimal()
+o1 <- ggplot(activity_counts, aes(x = year, y = activity_count, color = is_outlier)) +
+      geom_point() +
+      geom_text_repel(aes(label = ifelse(is_outlier, id, "")), size = 2.5) +
+      facet_wrap(~ type_new) +
+      labs(title = "Activity Counts per Year with Outliers Highlighted",
+           x = "Year", y = "Activity Count", color = "Outlier") +
+      theme_minimal()
+```
+</details>
+
+```{r}
+print(o1)
 ```
 
 <details>
