@@ -107,7 +107,7 @@ With this comprehensive dataset capturing both node entities and their interconn
 <summary>Click to show code</summary>
 
 ```{r}
-pacman::p_load(jsonlite,dplyr,tidyr,stringr,lubridate,tidyverse,readtext,ggplot2,visNetwork,stringr,ggpubr, igraph, patchwork)
+pacman::p_load(jsonlite,dplyr,tidyr,stringr,lubridate,tidyverse,readtext,ggplot2,visNetwork,stringr,ggpubr, igraph, patchwork,igraph,ggraph,ggrepel)
 
 ```
 
@@ -601,39 +601,28 @@ g1 <- ggplot(MC2_node_abnor, aes(Start_Year, id)) +
 
 
 </details>
-ggarrange(g1, g2, nrow = 2)
+
 
 ```{r}
 print(g1)
 ```
 
+<details>
+
+<summary>Click to show code</summary>
 ```{r}
-# Load necessary libraries
-library(dplyr)
-library(igraph)
-library(visNetwork)
-
-# Step 1: Ensure mc3_nodes and mc3_edges are loaded
-# Assuming mc3_nodes and mc3_edges are already loaded
-
-# Step 2: Preprocess mc3_nodes and mc3_edges
-
-# Preprocess mc3_nodes to include id and type_3
 mc3_nodes2 <- mc3_nodes %>%
   mutate(id = as.character(id),
          type_3 = as.character(type_3))
 
-# Preprocess mc3_edges to include source, target, and type_new
 mc3_edges2 <- mc3_edges %>%
   mutate(source = as.character(source),
          target = as.character(target),
          type_new = as.character(type_new))
 
-# Extract edges to include relevant source and target, and type_new
 edges2 <- mc3_edges2 %>%
   select(from = source, to = target, type_new)
 
-# Extract distinct nodes from source and target
 all_nodes <- unique(c(edges2$from, edges2$to))
 nodes2 <- mc3_nodes2 %>%
   filter(id %in% all_nodes) %>%
@@ -641,38 +630,20 @@ nodes2 <- mc3_nodes2 %>%
   distinct() %>%
   rename(name = id, group = type_3)
 
-# Ensure there are no missing nodes
 missing_nodes <- setdiff(all_nodes, nodes2$name)
 if (length(missing_nodes) > 0) {
   additional_nodes <- data.frame(name = missing_nodes, group = "Unknown")
   nodes2 <- bind_rows(nodes2, additional_nodes)
 }
 
-# Remove duplicates
 nodes2 <- nodes2 %>%
   distinct(name, .keep_all = TRUE)
 
-# Print nodes and edges for inspection
-print("Nodes dataframe:")
-print(head(nodes2))
-
-print("Edges dataframe:")
-print(head(edges2))
-
-# Create the graph object
 graph <- graph_from_data_frame(d = edges2, vertices = nodes2, directed = TRUE)
 
-# Convert the graph to data frames for visNetwork
 nodes_vis <- data.frame(id = V(graph)$name, label = V(graph)$name, group = V(graph)$group)
 edges_vis <- igraph::as_data_frame(graph, what = "edges")
 
-# Print nodes and edges for visNetwork for inspection
-print("Nodes for visNetwork:")
-print(head(nodes_vis))
-print("Edges for visNetwork:")
-print(head(edges_vis))
-
-# Create and customize the visNetwork graph
 vis1 <- visNetwork(
   nodes_vis, 
   edges_vis, 
@@ -696,37 +667,27 @@ vis1 <- visNetwork(
   visInteraction(navigationButtons = TRUE) %>%
   visPhysics(stabilization = FALSE, enabled = FALSE)
 
-# Add additional groups based on edge types
 unique_types <- unique(edges2$type_new)
 for (t in unique_types) {
   vis1 <- vis1 %>%
     visGroups(groupname = t, color = scales::hue_pal()(length(unique_types))[which(unique_types == t)])
 }
+```
+</details>
 
-# Display the graph
+```{r}
 vis1
 ```
 
+<details>
 
+<summary>Click to show code</summary>
 ```{r}
-# Load necessary libraries
-library(dplyr)
-library(ggraph)
-library(igraph)
-library(lubridate)
-library(ggplot2)
-library(ggrepel)
-
-
-# Extract data with both start_date and end_date
 filtered_edges <- edges %>%
   filter(!is.na(start_date) & !is.na(end_date))
-
-# Add year for faceting and coloring
 filtered_edges <- filtered_edges %>%
   mutate(year = year(start_date))
 
-# Step 2: Identify the top 30 entities for each type_new based on their frequency
 top_entities <- filtered_edges %>%
   group_by(type_new) %>%
   count(id) %>%
@@ -734,17 +695,14 @@ top_entities <- filtered_edges %>%
   ungroup() %>%
   pull(id)
 
-# Filter the dataset to include only the top 30 entities of each type_new
 filtered_edges_top <- filtered_edges %>%
   filter(id %in% top_entities)
 
-# Create a unique nodes dataframe
 nodes <- filtered_edges_top %>%
   select(id, type_new) %>%
   distinct() %>%
   rename(name = id)
 
-# Ensure all nodes in the edge list are in the nodes data frame
 all_nodes <- unique(c(filtered_edges_top$id, filtered_edges_top$type_new))
 missing_nodes <- setdiff(all_nodes, nodes$name)
 
@@ -753,11 +711,9 @@ if (length(missing_nodes) > 0) {
   nodes <- bind_rows(nodes, additional_nodes)
 }
 
-# Remove duplicates
 nodes <- nodes %>%
   distinct(name, .keep_all = TRUE)
 
-# Define custom shapes and colors for each type_new
 node_shapes <- c(
   "Fishing-related Companies" = 22,
   "Unknown" = 21,
@@ -776,16 +732,10 @@ node_colors <- c(
   "Multi-role Entity" = "purple"
 )
 
-# Create the graph
 graph <- graph_from_data_frame(d = filtered_edges_top, vertices = nodes, directed = TRUE)
-
-# Compute degree centrality
 V(graph)$degree <- degree(graph, mode = "all")
-
-# Create a layout
 layout <- create_layout(graph, layout = "fr")
 
-# Visualize the graph using ggraph
 g <- ggraph(layout) + 
   geom_edge_link(aes(color = factor(year)), alpha = 0.5, edge_width = 0.8) +
   geom_node_point(aes(x = x, y = y, size = degree, shape = type_new, fill = type_new), color = "black", stroke = 0.5) +
@@ -798,34 +748,26 @@ g <- ggraph(layout) +
   labs(title = "Network Visualization of Top 30 Entities by Type and Year",
        color = "Year",
        fill = "Type")
+```
+</details>
 
-# Plot the graph
+```{r}
 print(g)
-
 ```
 
 
 ```{r}
-# Load necessary libraries
-library(dplyr)
-library(ggplot2)
-library(ggrepel)
-
-# Extract data with both start_date and end_date
 filtered_edges <- edges %>%
   filter(!is.na(start_date) & !is.na(end_date))
 
-# Add year for aggregation and anomaly detection
 filtered_edges <- filtered_edges %>%
   mutate(year = year(start_date))
 
-# Calculate the number of activities per `id` and `type_new` for each year
 activity_counts <- filtered_edges %>%
   group_by(year, id, type_new) %>%
   summarise(activity_count = n()) %>%
   ungroup()
 
-# Calculate the IQR and identify outliers
 activity_counts <- activity_counts %>%
   group_by(type_new) %>%
   mutate(
@@ -838,7 +780,6 @@ activity_counts <- activity_counts %>%
   ) %>%
   ungroup()
 
-# Plot activity counts and highlight outliers
 ggplot(activity_counts, aes(x = year, y = activity_count, color = is_outlier)) +
   geom_point() +
   geom_text_repel(aes(label = ifelse(is_outlier, id, "")), size = 2.5) +
@@ -846,33 +787,23 @@ ggplot(activity_counts, aes(x = year, y = activity_count, color = is_outlier)) +
   labs(title = "Activity Counts per Year with Outliers Highlighted",
        x = "Year", y = "Activity Count", color = "Outlier") +
   theme_minimal()
-
 ```
 
+<details>
 
+<summary>Click to show code</summary>
 ```{r}
-# Load necessary libraries
-library(dplyr)
-library(ggplot2)
-library(ggrepel)
-library(lubridate)
-
-# Assuming edges is already loaded
-
-# Extract data with both start_date and end_date
 filtered_edges <- edges %>%
   filter(!is.na(start_date) & !is.na(end_date))
 
-# Add year for aggregation and anomaly detection
 filtered_edges <- filtered_edges %>%
   mutate(year = year(start_date))
-# Calculate the number of activities per `id` and `type_new` for each year
+
 activity_counts <- filtered_edges %>%
   group_by(year, id, type_new) %>%
   summarise(activity_count = n()) %>%
   ungroup()
 
-# Calculate the IQR and identify outliers
 activity_counts <- activity_counts %>%
   group_by(type_new) %>%
   mutate(
@@ -884,7 +815,7 @@ activity_counts <- activity_counts %>%
     is_outlier = activity_count < lower_bound | activity_count > upper_bound
   ) %>%
   ungroup()
-# Plot activity counts and highlight outliers
+
 ggplot(activity_counts, aes(x = year, y = activity_count, color = is_outlier)) +
   geom_point() +
   geom_text_repel(aes(label = ifelse(is_outlier, id, "")), size = 2.5) +
@@ -899,17 +830,20 @@ ggplot(activity_counts, aes(x = year, y = activity_count, color = is_outlier)) +
   )
 ```
 ```{r}
-# Summarize outliers
+
 outliers_summary <- activity_counts %>%
   filter(is_outlier) %>%
   select(year, id, type_new, activity_count) %>%
   arrange(type_new, year, desc(activity_count))
 
+```
+</details>
+
+```{r}
 print(outliers_summary)
 ```
 
 ```{r}
-# Create a heatmap for outliers
 ggplot(outliers_summary, aes(x = year, y = id, fill = activity_count)) +
   geom_tile(color = "white") +
   scale_fill_gradient(low = "lightblue", high = "red") +
