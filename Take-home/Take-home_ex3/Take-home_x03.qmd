@@ -865,6 +865,7 @@ ggplot(activity_counts, aes(x = year, y = activity_count, color = is_outlier)) +
     plot.title = element_text(size = 14, face = "bold")
   )
 ```
+</details>
 The scatter plot displays activity counts per year, categorised by BeneficialOwnership, Shareholdership, and WorksFor relationships. The y-axis represents the activity count, while the x-axis shows the year. Outliers, highlighted in blue, indicate entities with unusually high activity levels. Notably, `Stephens-Lopez` stands out with consistent high activity counts in the BeneficialOwnership category around 2030. Similarly, `Duncan-Williams` shows significant activity in the early 2020s in the same category. In Shareholdership, `Haas-Tran` and `Blair PLC` display peaks around 2030 and 2025, respectively.
 
 
@@ -877,7 +878,7 @@ outliers_summary <- activity_counts %>%
 
 ```
 
-</details>
+
 
 ```{r}
 print(outliers_summary)
