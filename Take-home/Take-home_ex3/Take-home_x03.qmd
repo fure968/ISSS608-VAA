@@ -102,6 +102,12 @@ With this comprehensive dataset capturing both node entities and their interconn
 
 -   **patchwork**: patchwork is a package for composing multiple ggplot2 plots into a single figure, with easy layout control.
 
+-   **igraph**: A package for creating and analysing graphs and networks.
+
+-   **ggraph**: A package for creating graph-based data visualisations using the 'ggplot2' syntax.
+
+-   **ggrepel**: A package for automatically adjusting text labels to avoid overlapping in 'ggplot2' visualisations.
+
 <details>
 
 <summary>Click to show code</summary>
@@ -127,7 +133,6 @@ mc3 <- fromJSON("data/mc3.json")
 :::
 
 To effectively perform temporal analysis on such data, it can be beneficial to separate the data set into two distinct data frames: one for the node entities and another for the relationships or edges between them.
-
 
 ::: panel-tabset
 ## Cleaning Nodes
@@ -177,6 +182,7 @@ print(head(mc3_nodes))
 ```{r}
 (mc3_nodes$type) %>% unique()
 ```
+
 ```{r}
 # Further processing to separate the 'type' column
 mc3_nodes <- mc3_nodes %>%
@@ -191,7 +197,6 @@ print(head(mc3_nodes))
 (mc3_nodes$type_2) %>% unique()
 (mc3_nodes$type_3) %>% unique()
 ```
-
 
 </details>
 
@@ -234,8 +239,6 @@ mc3_edges <- as_tibble(mc3$links) %>%
 ```
 
 </details>
-
-
 
 ## Dates
 
@@ -304,6 +307,8 @@ edges <- mc3_edges %>%
 
 # What are the Company Types?
 
+
+
 ```{r}
 # Count the unique values in type_2
 type_2_unique_counts <- mc3_nodes %>%
@@ -315,8 +320,6 @@ type_2_unique_counts <- mc3_nodes %>%
 print(type_2_unique_counts)
 
 ```
-
-
 
 Extracting the top 10 `id` to see the different company types in edges and nodes file.
 
@@ -378,14 +381,16 @@ b2 <- ggplot(barchart_type_counts_edges, aes(x = reorder(type_new, -n), y = n)) 
 combined_plot <- b1 / b2
 print(combined_plot)
 ```
+The dataset primarily consists of nodes categorized as 'Person,' with a count exceeding 50,000, indicating that individuals are the most common entities in the network. Companies are the next most prevalent node type, numbering around 5,000, showing significant but lesser representation compared to individuals. Nodes identified as 'CEO' are present but much fewer, reflecting a small proportion of individuals with this specific role. Other organization types, such as 'FishingCompany,' 'LogisticsCompany,' 'FinancialCompany,' 'NewsCompany,' and 'NGO,' are present in minimal numbers, highlighting their minority status in the dataset. The most common type of relationship is 'Shareholdership,' with over 35,000 connections, indicating ownership stakes in companies as a primary form of interaction. 'BeneficialOwnership' is the second most common relationship, with around 20,000 instances, showing significant connections where entities benefit from asset ownership. 'WorksFor' relationships also appear frequently, denoting employment links between individuals and organizations. 'FamilyRelationship' connections are the least represented, suggesting that familial ties are not as prominent as business and ownership relations in the dataset. Overall, the network focuses heavily on business and economic interactions.
+
 
 # Top companies and the Types
 
 Network Graph
+
 <details>
 
 <summary>Click to show code</summary>
-
 
 ```{r}
 library(dplyr)
@@ -437,6 +442,7 @@ vis1 <- visNetwork(nodes_vis, edges_vis, width = "100%", height = "800px") %>%
         visPhysics(stabilization = FALSE, enabled = FALSE)
 
 ```
+
 </details>
 
 ```{r}
@@ -444,7 +450,10 @@ vis1 <- visNetwork(nodes_vis, edges_vis, width = "100%", height = "800px") %>%
 vis1
 ```
 
+Each node represents an entity, such as a company or individual, and the edges depict the relationships between them, including shareholdership, beneficial ownership, and employment links. This visualisation helps in understanding the complex web of interactions in the dataset, highlighting how entities are interconnected through various types of relationships.
+
 # Companies and amount of types
+
 <details>
 
 <summary>Click to show code</summary>
@@ -505,6 +514,8 @@ b4 <- ggplot(type_new_counts, aes(x = id_wrapped, y = count, fill = type_new)) +
 print(b4)
 ```
 
+This bar chart visualises the top names with multiple types of relationships in the network. The x-axis lists the top entities, while the y-axis represents the count of different relationship types. The chart highlights the entities with the highest number of connections, illustrating how some organisations or individuals are central to multiple types of interactions within the network. For example, Downs Group and Mills, Atkinson and Chavez have the highest number of relationships, indicating their significant roles in various types of network interactions.
+
 # Which Companies has the highest Revenue?
 
 <details>
@@ -545,6 +556,9 @@ plot <- plot %>%
 plot
 ```
 
+This bubble chart visualises the distribution of total revenue for different entities in the network. Each bubble represents an entity, with the size of the bubble corresponding to the total revenue and the colour indicating the magnitude of the revenue. For example, the largest yellow bubble represents Briggs-Wilson, a company with a total revenue of approximately 310.6 million. This visualisation helps in identifying entities with significant financial influence within the network.
+
+
 # Irregular Patterns by Revenue
 
 Extracting year from full date as using the full date format is too detail for analysis.
@@ -561,6 +575,7 @@ nodes <- nodes %>%
 ```
 
 The `id` with top 8 revenues had been extracted and visualise using heat map.
+
 <details>
 
 <summary>Click to show code</summary>
@@ -599,13 +614,12 @@ g1 <- ggplot(MC2_node_abnor, aes(Start_Year, id)) +
 
 ```
 
-
 </details>
-
 
 ```{r}
 print(g1)
 ```
+This heatmap visualises the irregular patterns in revenue for different entities over time. Each cell represents a specific entity and year, with the numbers indicating the weight or frequency of revenue changes. The colour intensity highlights periods and entities with more significant variations. For instance, Yang PLC shows notable irregularities with higher weights in recent years, indicating fluctuating revenue patterns. This visualisation helps in identifying entities with inconsistent revenue trends over time.
 
 # Network Visualization with Node and Edge Groups
 
@@ -679,6 +693,7 @@ for (t in unique_types) {
     visGroups(groupname = t, color = scales::hue_pal()(length(unique_types))[which(unique_types == t)])
 }
 ```
+
 </details>
 
 ```{r}
@@ -688,6 +703,7 @@ vis1
 <details>
 
 <summary>Click to show code</summary>
+
 ```{r}
 filtered_edges <- edges %>%
   filter(!is.na(start_date) & !is.na(end_date))
@@ -755,16 +771,20 @@ g <- ggraph(layout) +
        color = "Year",
        fill = "Type")
 ```
+
 </details>
 
 ```{r}
 print(g)
 ```
+This network visualisation showcases the top 30 entities, highlighting their connections and interactions from 2005 to 2034. Larger nodes signify entities with more connections, illustrating their influence within the network. The varied colours and connections provide insights into the temporal dynamics and key players within the network.
 
 # Activity Counts per Year with Outliers Highlighted
+
 <details>
 
 <summary>Click to show code</summary>
+
 ```{r}
 filtered_edges <- edges %>%
   filter(!is.na(start_date) & !is.na(end_date))
@@ -797,6 +817,7 @@ o1 <- ggplot(activity_counts, aes(x = year, y = activity_count, color = is_outli
            x = "Year", y = "Activity Count", color = "Outlier") +
       theme_minimal()
 ```
+
 </details>
 
 ```{r}
@@ -806,6 +827,7 @@ print(o1)
 <details>
 
 <summary>Click to show code</summary>
+
 ```{r}
 filtered_edges <- edges %>%
   filter(!is.na(start_date) & !is.na(end_date))
@@ -843,6 +865,9 @@ ggplot(activity_counts, aes(x = year, y = activity_count, color = is_outlier)) +
     plot.title = element_text(size = 14, face = "bold")
   )
 ```
+The scatter plot displays activity counts per year, categorised by BeneficialOwnership, Shareholdership, and WorksFor relationships. The y-axis represents the activity count, while the x-axis shows the year. Outliers, highlighted in blue, indicate entities with unusually high activity levels. Notably, `Stephens-Lopez` stands out with consistent high activity counts in the BeneficialOwnership category around 2030. Similarly, `Duncan-Williams` shows significant activity in the early 2020s in the same category. In Shareholdership, `Haas-Tran` and `Blair PLC` display peaks around 2030 and 2025, respectively.
+
+
 ```{r}
 
 outliers_summary <- activity_counts %>%
@@ -851,6 +876,7 @@ outliers_summary <- activity_counts %>%
   arrange(type_new, year, desc(activity_count))
 
 ```
+
 </details>
 
 ```{r}
@@ -869,4 +895,5 @@ ggplot(outliers_summary, aes(x = year, y = id, fill = activity_count)) +
     axis.text.x = element_text(angle = 45, hjust = 1),
     plot.title = element_text(size = 14, face = "bold")
   )
-```
+``` 
+This heatmap visualises outliers in activity counts for BeneficialOwnership and Shareholdership relationships over time. Each cell represents the activity count for a specific entity and year, with colour intensity indicating higher activity levels. Entities like `Wright LLC` and `Stephens-Lopez` show notable outliers in BeneficialOwnership, while `Woods Inc` and `Weaver-Price` display irregular activity in Shareholdership. 
