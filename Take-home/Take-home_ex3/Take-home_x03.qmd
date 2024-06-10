@@ -11,9 +11,7 @@ execute:
   freeze: true
 ---
 
-![](images/fisheye-lens-underwater-photography-2-1024x683.jpg){fig-align="center" width="558"}
-
-Credit: John Blank Photography
+![Credit: John Blank Photography](images/fisheye-lens-underwater-photography-2-1024x683.jpg){fig-align="center" width="421"}
 
 # 1. Introduction
 
@@ -30,12 +28,6 @@ FishEye aims to develop visualization tools for CatchNet to identify influential
 -   Develop an approach using visual analytics to highlight temporal patterns and changes in corporate structures, focusing on identifying the most active individuals and businesses.
 
 -   Utilize visualizations to display typical and atypical business transactions, such as mergers and acquisitions, and infer the underlying motivations behind changes in their activity levels.
-
--   Create a visual approach to examine inferences about how a company's influence evolves over time and whether ownership or influence over a network can be deduced.
-
--   Identify and visualize the network of SouthSeafood Express Corp and competing businesses, and how they changed due to SouthSeafood's illegal fishing behavior.
-
--   Determine which companies benefited from SouthSeafood's legal troubles and if there are other suspicious transactions related to illegal fishing, providing visual evidence to support your conclusions.
 
 Data Source: [VAST Challenge 2024: Mini-Challenge 3](https://vast-challenge.github.io/2024/MC3.html)
 
