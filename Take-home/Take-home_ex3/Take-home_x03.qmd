@@ -514,7 +514,7 @@ b4 <- ggplot(type_new_counts, aes(x = id_wrapped, y = count, fill = type_new)) +
 print(b4)
 ```
 
-This bar chart visualises the top names with multiple types of relationships in the network. The x-axis lists the top entities, while the y-axis represents the count of different relationship types. The chart highlights the entities with the highest number of connections, illustrating how some organisations or individuals are central to multiple types of interactions within the network. For example, Downs Group and Mills, Atkinson and Chavez have the highest number of relationships, indicating their significant roles in various types of network interactions.
+This bar chart visualises the top names with multiple types of relationships in the network. The x-axis lists the top entities, while the y-axis represents the count of different relationship types. The chart highlights the entities with the highest number of connections, illustrating how some organisations or individuals are central to multiple types of interactions within the network. For example, `Downs Group and Mills`, `Atkinson and Chavez` have the highest number of relationships, indicating their significant roles in various types of network interactions.
 
 # Which Companies has the highest Revenue?
 
@@ -556,7 +556,7 @@ plot <- plot %>%
 plot
 ```
 
-This bubble chart visualises the distribution of total revenue for different entities in the network. Each bubble represents an entity, with the size of the bubble corresponding to the total revenue and the colour indicating the magnitude of the revenue. For example, the largest yellow bubble represents Briggs-Wilson, a company with a total revenue of approximately 310.6 million. This visualisation helps in identifying entities with significant financial influence within the network.
+This bubble chart visualises the distribution of total revenue for different entities in the network. Each bubble represents an entity, with the size of the bubble corresponding to the total revenue and the colour indicating the magnitude of the revenue. For example, the largest yellow bubble represents `Briggs-Wilson`, a company with a total revenue of approximately 310.6 million. 
 
 
 # Irregular Patterns by Revenue
@@ -619,7 +619,8 @@ g1 <- ggplot(MC2_node_abnor, aes(Start_Year, id)) +
 ```{r}
 print(g1)
 ```
-This heatmap visualises the irregular patterns in revenue for different entities over time. Each cell represents a specific entity and year, with the numbers indicating the weight or frequency of revenue changes. The colour intensity highlights periods and entities with more significant variations. For instance, Yang PLC shows notable irregularities with higher weights in recent years, indicating fluctuating revenue patterns. This visualisation helps in identifying entities with inconsistent revenue trends over time.
+This heatmap visualises the irregular patterns in revenue for different entities over time. Each cell represents a specific entity and year, with the numbers indicating the weight or frequency of revenue changes. The colour intensity highlights periods and entities with more significant variations. For instance, `Yang PLC` shows notable irregularities with higher weights in recent years, indicating fluctuating revenue patterns. 
+
 
 # Network Visualization with Node and Edge Groups
 
@@ -777,7 +778,7 @@ g <- ggraph(layout) +
 ```{r}
 print(g)
 ```
-This network visualisation showcases the top 30 entities, highlighting their connections and interactions from 2005 to 2034. Larger nodes signify entities with more connections, illustrating their influence within the network. The varied colours and connections provide insights into the temporal dynamics and key players within the network.
+This network visualisation showcases the top 30 entities, highlighting their connections and interactions from 2005 to 2034. Larger nodes signify entities with more connections, illustrating their influence within the network. The separate cluster shows that `workfor` is separated from shareholdership and beneficialownership. 
 
 # Activity Counts per Year with Outliers Highlighted
 
