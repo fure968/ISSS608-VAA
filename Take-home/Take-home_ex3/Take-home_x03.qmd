@@ -384,7 +384,7 @@ print(combined_plot)
 | '**`FamilyRelationship`**' connections are the least represented, suggesting that familial ties are not as prominent as business and ownership relations in the dataset. 
 | 
 
-# Top companies and the Types
+# Companies and Relationship to Types
 
 Network Graph
 
@@ -454,7 +454,7 @@ vis1
 | The graph helps in understanding the complex web of interactions in the dataset, highlighting how entities are interconnected through various types of relationships. Each node represents an entity, such as a company or individual, and the edges depict the relationships between them, including shareholdership, beneficial ownership, and employment links. For example, **`Mosley and Sons`** has connection to shareholdership, worksfor and beneficial ownership while **`Nguyen, Shelton and Hayes`** only has connection to shareholdership and beneficial ownership. 
 | 
 
-# Companies and amount of types
+# Overlapping Business Types? 
 
 <details>
 
@@ -520,7 +520,7 @@ print(b4)
 | This bar chart visualises the top names with multiple types of relationships in the network. The x-axis lists the top entities, while the y-axis represents the count of different relationship types, illustrating how some organisations or individuals are central to multiple types of interactions within the network.
 | **`Downs Group and Mills`**, **`Atkinson and Chavez`** have the highest number of relationships, indicating their significant roles in various types of network interactions.
 
-# Which Companies has the highest Revenue?
+# Which Company has the highest Revenue?
 
 <details>
 
@@ -921,3 +921,12 @@ ggplot(outliers_summary, aes(x = year, y = id, fill = activity_count)) +
 
 | 💡**Observations**: 
 | This heatmap illustrates outliers in activity counts for BeneficialOwnership and Shareholdership relationships. Entities like **`Wright LLC`** and **`Stephens-Lopez`** exhibit significant outliers in BeneficialOwnership, while **`Woods Inc`** and **`Weaver-Price`** show unusual activity in Shareholdership. The activity counts have increased since late 2020, indicating abnormal patterns.
+
+# **Conclusions**
+
+-   The visual analytics approach helps to highlight temporal patterns and changes in the companies however continuous monitoring and in-depth investigations will be needed uncover the underlying motivations.
+
+```{=html}
+<!-- -->
+```
+-   It is challenging to transform complex data into meaningful visualisations and each graph felt like peeing back layers to reveal the intricate web of corporate activities, almost like solving a puzzle with technical skills and creative thinking combined but it provides valuable insights to understand the network.
