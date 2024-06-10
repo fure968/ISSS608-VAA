@@ -922,11 +922,8 @@ ggplot(outliers_summary, aes(x = year, y = id, fill = activity_count)) +
 | 💡**Observations**: 
 | This heatmap illustrates outliers in activity counts for BeneficialOwnership and Shareholdership relationships. Entities like **`Wright LLC`** and **`Stephens-Lopez`** exhibit significant outliers in BeneficialOwnership, while **`Woods Inc`** and **`Weaver-Price`** show unusual activity in Shareholdership. The activity counts have increased since late 2020, indicating abnormal patterns.
 
-# **Conclusions**
+# Conclusions
 
--   The visual analytics approach helps to highlight temporal patterns and changes in the companies however continuous monitoring and in-depth investigations will be needed uncover the underlying motivations.
+-   The visual analytics approach effectively highlights temporal patterns and changes within companies. However, continuous monitoring and in-depth investigations are necessary to uncover the underlying motivations behind these changes.
 
-```{=html}
-<!-- -->
-```
--   It is challenging to transform complex data into meaningful visualisations and each graph felt like peeing back layers to reveal the intricate web of corporate activities, almost like solving a puzzle with technical skills and creative thinking combined but it provides valuable insights to understand the network.
+-   Transforming complex data into meaningful visualisations is challenging. Each graph felt like peeling back layers to reveal the intricate web of corporate activities, much like solving a puzzle. This process requires a blend of technical skills and creative thinking, but it ultimately provides valuable insights to better understand the network.
