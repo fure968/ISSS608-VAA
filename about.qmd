@@ -3,7 +3,7 @@ title: "about"
 about:
   id: hero-heading
   template: jolla
-  image: giphy2.gif
+  image: water.gif
   image-width: 25em
   image-shape: rectangle
   links:
