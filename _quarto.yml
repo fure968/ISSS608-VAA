@@ -27,6 +27,13 @@ website:
           href: "Hands-on_exercise/Hands-on_ex8/Hands-on_ex8_2.html"
         - text: "8-3. Analytical Mapping."
           href: "Hands-on_exercise/Hands-on_ex8/Hands-on_ex8_3.html"
+        - text: "9. Building Ternary Plot & Visual Correlation Analysis"
+          href: "Hands-on_exercise/Hands-on_ex9/Hands-on_ex9.html"  
+        - text: "9-2. Visual Multivariate Analysis with Heatmap & Parallel Coordinates Plot"
+          href: "Hands-on_exercise/Hands-on_ex9/Hands-on_ex9_1.html"
+        - text: "9-3. Treemap Visualisation with R"
+          href: "Hands-on_exercise/Hands-on_ex9/Hands-on_ex9_2.html"
+
                
     - text: "🤖 In Class"
       menu:

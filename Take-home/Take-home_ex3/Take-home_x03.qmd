@@ -2,7 +2,7 @@
 title: "Take Home 3"
 subtitle: " "
 author: "Guan Jhen LIN"
-date: "May 31 2024"
+date: "June 8 2024"
 date-modified: "last-modified"
 execute: 
   eval: true
@@ -372,16 +372,16 @@ combined_plot <- b1 / b2
 print(combined_plot)
 ```
 
-| 💡**Observations**: 
-| Nodes Type: 
+| 💡**Observations**:
+| Nodes Type:
 | '**`Person`**,' has count exceeding 50,000 and is the most common entities in the network. '**`Companies`**' numbering around 5,000
-| '**`CEO`**' are present but much fewer, reflecting a small proportion of individuals with this specific role. 
+| '**`CEO`**' are present but much fewer, reflecting a small proportion of individuals with this specific role.
 | Other organization types, such as '**`FishingCompany`**,' '**`LogisticsCompany`**,' '**`FinancialCompany`**,' '**`NewsCompany`**,' and '**`NGO`**,' are present in minimal numbers.
 
-| Edges Type: 
-| '**`Shareholdership`**,' has over 35,000 instances, indicating ownership stakes in companies as a primary form of interaction. 
-| '**`BeneficialOwnership`**' is the second most common relationship, with around 20,000 instances. 'Worksfor' is slightly lesser than beneficialownership with around 15,000 instances. 
-| '**`FamilyRelationship`**' connections are the least represented, suggesting that familial ties are not as prominent as business and ownership relations in the dataset. 
+| Edges Type:
+| '**`Shareholdership`**,' has over 35,000 instances, indicating ownership stakes in companies as a primary form of interaction.
+| '**`BeneficialOwnership`**' is the second most common relationship, with around 20,000 instances. 'Worksfor' is slightly lesser than beneficialownership with around 15,000 instances.
+| '**`FamilyRelationship`**' connections are the least represented, suggesting that familial ties are not as prominent as business and ownership relations in the dataset.
 | 
 
 # Companies and Relationship to Types
@@ -450,11 +450,11 @@ vis1 <- visNetwork(nodes_vis, edges_vis, width = "100%", height = "800px") %>%
 vis1
 ```
 
-| 💡**Observations**: 
-| The graph helps in understanding the complex web of interactions in the dataset, highlighting how entities are interconnected through various types of relationships. Each node represents an entity, such as a company or individual, and the edges depict the relationships between them, including shareholdership, beneficial ownership, and employment links. For example, **`Mosley and Sons`** has connection to shareholdership, worksfor and beneficial ownership while **`Nguyen, Shelton and Hayes`** only has connection to shareholdership and beneficial ownership. 
+| 💡**Observations**:
+| The graph helps in understanding the complex web of interactions in the dataset, highlighting how entities are interconnected through various types of relationships. Each node represents an entity, such as a company or individual, and the edges depict the relationships between them, including shareholdership, beneficial ownership, and employment links. For example, **`Mosley and Sons`** has connection to shareholdership, worksfor and beneficial ownership while **`Nguyen, Shelton and Hayes`** only has connection to shareholdership and beneficial ownership.
 | 
 
-# Overlapping Business Types? 
+# Overlapping Business Types?
 
 <details>
 
@@ -516,7 +516,7 @@ b4 <- ggplot(type_new_counts, aes(x = id_wrapped, y = count, fill = type_new)) +
 print(b4)
 ```
 
-| 💡**Observations**: 
+| 💡**Observations**:
 | This bar chart visualises the top names with multiple types of relationships in the network. The x-axis lists the top entities, while the y-axis represents the count of different relationship types, illustrating how some organisations or individuals are central to multiple types of interactions within the network.
 | **`Downs Group and Mills`**, **`Atkinson and Chavez`** have the highest number of relationships, indicating their significant roles in various types of network interactions.
 
@@ -560,7 +560,7 @@ plot <- plot %>%
 plot
 ```
 
-| 💡**Observations**: 
+| 💡**Observations**:
 | This bubble chart visualises the distribution of total revenue for different entities in the network. Each bubble represents an entity, with the size of the bubble corresponding to the total revenue and the colour indicating the magnitude of the revenue. The largest yellow bubble represents **`Briggs-Wilson`**, a company with a total revenue of approximately 310.6 million.
 
 # Irregular Patterns by Revenue
@@ -624,17 +624,17 @@ g1 <- ggplot(MC2_node_abnor, aes(Start_Year, id)) +
 print(g1)
 ```
 
-| 💡**Observations**: 
-| This heat map visualises the irregular patterns in revenue for the top 8 revenue companies over time. Each cell represents a specific entity and year, with the numbers indicating the weight or frequency of revenue changes. More details of transaction and relationship examination should be done to check any atypical business activities. 
+| 💡**Observations**:
+| This heat map visualises the irregular patterns in revenue for the top 8 revenue companies over time. Each cell represents a specific entity and year, with the numbers indicating the weight or frequency of revenue changes. More details of transaction and relationship examination should be done to check any atypical business activities.
 | 
-| **- `Williams, Stanley and Butlet`** had a unusually high activity count of 9 in 2025. 
-| **- `Yang PLC`** had peaks in 2012, 2021 and 2022. 
-| - **`Short, Hernandez and Myers`** had irregular activity peaks at 2011 and 2020. 
-| - **`Roth Ltd`** had isolated peaks in 2010 and 2025. 
-| - **`Pearson-Williams`** had high activity during 2015 to 2017 with a drop off after. 
-| - **`Dunlap, Fleming and Brown`** had significant peak in 2025 but low activity overall. 
-| - **`Cooper, Jacobs and Gonzalez`** had high activities from 2018 to 2021. 
-| - **`Briggs-Wilson`** had peaks in 2010 and 2028 but low activity overall. 
+| **- `Williams, Stanley and Butlet`** had a unusually high activity count of 9 in 2025.
+| **- `Yang PLC`** had peaks in 2012, 2021 and 2022.
+| - **`Short, Hernandez and Myers`** had irregular activity peaks at 2011 and 2020.
+| - **`Roth Ltd`** had isolated peaks in 2010 and 2025.
+| - **`Pearson-Williams`** had high activity during 2015 to 2017 with a drop off after.
+| - **`Dunlap, Fleming and Brown`** had significant peak in 2025 but low activity overall.
+| - **`Cooper, Jacobs and Gonzalez`** had high activities from 2018 to 2021.
+| - **`Briggs-Wilson`** had peaks in 2010 and 2028 but low activity overall.
 
 # Network Visualization with Node and Edge Groups
 
@@ -793,10 +793,10 @@ g <- ggraph(layout) +
 print(g)
 ```
 
-| 💡**Observations**: 
+| 💡**Observations**:
 | This network visualisation showcases the top 30 entities, highlighting their connections and interactions from 2005 to 2034. Larger nodes signify entities with more connections, illustrating their influence within the network. The separate cluster shows that `workfor` is separated from shareholdership and beneficialownership.
 
-# Irregular Activities of Business 
+# Irregular Activities of Business
 
 <details>
 
@@ -885,12 +885,12 @@ ggplot(activity_counts, aes(x = year, y = activity_count, color = is_outlier)) +
 
 </details>
 
-| 💡**Observations**: 
-| The scatter plot displays activity counts per year, categorised by BeneficialOwnership, Shareholdership, and WorksFor relationships. The y-axis represents the activity count, while the x-axis shows the year. Outliers (TRUE), highlighted in blue, indicate entities with unusually high activity levels and indicates unusual activities. 
-| **`Stephens-Lopez`** stands out with multiple outliers around 2019 onwards and indicating a substantial increase in activities. 
-| **`Wright LLC`** showed increase activities since 2018 onwards and these activities were flagged as outliers indicating a potential unusual ownership transfer or increase in ownership stakes for. 
-| **`Smith-Ramirez`** showed a sudden rise around 2020 
-| **`Haas-Tran`** and **`Blair PLC`** display outliers around 2030 indicating potential abnormal business activities. 
+| 💡**Observations**:
+| The scatter plot displays activity counts per year, categorised by BeneficialOwnership, Shareholdership, and WorksFor relationships. The y-axis represents the activity count, while the x-axis shows the year. Outliers (TRUE), highlighted in blue, indicate entities with unusually high activity levels and indicates unusual activities.
+| **`Stephens-Lopez`** stands out with multiple outliers around 2019 onwards and indicating a substantial increase in activities.
+| **`Wright LLC`** showed increase activities since 2018 onwards and these activities were flagged as outliers indicating a potential unusual ownership transfer or increase in ownership stakes for.
+| **`Smith-Ramirez`** showed a sudden rise around 2020
+| **`Haas-Tran`** and **`Blair PLC`** display outliers around 2030 indicating potential abnormal business activities.
 
 ```{r}
 
@@ -919,7 +919,7 @@ ggplot(outliers_summary, aes(x = year, y = id, fill = activity_count)) +
   )
 ```
 
-| 💡**Observations**: 
+| 💡**Observations**:
 | This heatmap illustrates outliers in activity counts for BeneficialOwnership and Shareholdership relationships. Entities like **`Wright LLC`** and **`Stephens-Lopez`** exhibit significant outliers in BeneficialOwnership, while **`Woods Inc`** and **`Weaver-Price`** show unusual activity in Shareholdership. The activity counts have increased since late 2020, indicating abnormal patterns.
 
 # Conclusions
