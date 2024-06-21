@@ -33,7 +33,8 @@ website:
           href: "Hands-on_exercise/Hands-on_ex9/Hands-on_ex9_1.html"
         - text: "9-3. Treemap Visualisation with R"
           href: "Hands-on_exercise/Hands-on_ex9/Hands-on_ex9_2.html"
-
+        - text: "10"
+          href: "Hands-on_exercise/Hands-on_ex10/hands-on10.html"
                
     - text: "🤖 In Class"
       menu:
