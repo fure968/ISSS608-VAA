@@ -186,7 +186,6 @@ print(head(mc3_nodes))
 ```
 
 ```{r}
-(mc3_nodes$type_2) %>% unique()
 (mc3_nodes$type_3) %>% unique()
 ```
 
@@ -301,15 +300,38 @@ edges <- mc3_edges %>%
 
 ```{r}
 # Count the unique values in type_2
-type_2_unique_counts <- mc3_nodes %>%
-  group_by(type_2) %>%
+type_3_unique_counts <- mc3_nodes %>%
+  group_by(type_3) %>%
   summarise(count = n()) %>%
   arrange(desc(count))
 
 # Display the summary table
-print(type_2_unique_counts)
+print(type_3_unique_counts)
 
 ```
+
+```{r}
+duplicate_counts <- mc3_edges %>%
+  group_by(target, type_new) %>%
+  summarise(count = n(), .groups = 'drop') %>%
+  filter(count > 1)
+
+# Display the result
+print(duplicate_counts)
+```
+
+```{r}
+duplicate_counts <- mc3_edges %>%
+  group_by(source, target, type_new) %>%
+  summarise(count = n(), .groups = 'drop') %>%
+  filter(count > 1)
+
+# Display the result
+print(duplicate_counts)
+```
+
+
+
 
 Extracting the top 10 `id` to see the different company types in edges and nodes file.
 

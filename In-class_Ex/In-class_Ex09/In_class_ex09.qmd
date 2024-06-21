@@ -1,1 +1,46 @@
+```{r}
+pacman::p_load(scatterPlotMatrix,
+               parallelPlot, cluster, factoextra,
+               tidyverse)
+```
 
+```{r}
+wine <- read_csv("data/wine_quality.csv")
+```
+
+```{r}
+ggplot(data = wine,
+       aes(x = type)) +
+  geom_bar()
+```
+
+```{r}
+whitewine <- wine %>%
+  filter(type == "white") %>%
+  select(c(1:11))
+```
+
+```{r}
+scatterPlotMatrix(whitewine, 
+                  corrPlotType = "Text",
+                  distribType = 1,
+                  width = 500,
+                  height = 500)
+
+```
+
+kclus2 \<- whitewine %\>%
+
+
+fviz_cluster(kmeans4, data = whitewine)
+```
+
+
+wihtewine <- whitewine %>%
+  mutate(Cluster - kmeans4$Cluster)
+```
+
+
+whitewine$Cluster <-
+  as_factor(whitewine$cluster) #so it can only take whole number value
+```
