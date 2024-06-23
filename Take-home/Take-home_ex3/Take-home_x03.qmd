@@ -134,12 +134,6 @@ To effectively perform temporal analysis on such data, it can be beneficial to s
 <summary>Click to show code</summary>
 
 ```{r}
-# Load necessary libraries
-library(dplyr)
-library(tidyr)
-library(stringr)
-
-# Assuming mc3 is already loaded as a list containing nodes dataframe
 mc3_nodes <- as_tibble(mc3$nodes) %>%
   mutate(
     id = as.character(id),
@@ -149,7 +143,7 @@ mc3_nodes <- as_tibble(mc3$nodes) %>%
     revenue_omu = as.numeric(revenue),
     head_of_org = as.character(HeadOfOrg),
     TradeDescription = as.character(TradeDescription),
-    PointOfContact = as.character(PointOfContact),
+    PointOfContact = ifelse(is.na(PointOfContact) | PointOfContact == "", "Unknown", PointOfContact),  # Handle missing PointOfContact
     id = gsub("^[0-9]+\\.\\s*", "", id),  # Clean up IDs
     revenue_omu = ifelse(is.na(revenue_omu), 0, revenue_omu)
   ) %>%
@@ -163,6 +157,7 @@ mc3_nodes <- as_tibble(mc3$nodes) %>%
     raw_source = `_raw_source`,
     algorithm = `_algorithm`
   ) %>%
+  separate(type, into = c("type_1", "type_2", "type_3"), sep = "\\.", fill = "right", extra = "drop") %>%
   select(everything())
 
 # Display the first few rows of the updated dataframe
@@ -172,22 +167,9 @@ print(head(mc3_nodes))
 ```
 
 ```{r}
-(mc3_nodes$type) %>% unique()
-```
-
-```{r}
-# Further processing to separate the 'type' column
-mc3_nodes <- mc3_nodes %>%
-  separate(type, into = c("type_1", "type_2", "type_3"), sep = "\\.", fill = "right", extra = "drop")
-
-# Display the first few rows of the updated dataframe
-print(head(mc3_nodes))
-
-```
-
-```{r}
 (mc3_nodes$type_3) %>% unique()
 ```
+
 
 </details>
 
@@ -201,9 +183,9 @@ print(head(mc3_nodes))
 mc3_edges <- as_tibble(mc3$links) %>%
   mutate(
     type = as.character(type),
-    type_new = stringr::str_extract(type, "[^.]+$"),
+    type_new = str_extract(type, "[^.]+$"),
     source = as.character(source),
-    target = as.character(target),
+    target = gsub("^[0-9]+\\.\\s*", "", as.character(target)),  # Clean up targets
     last_edited_by = as.character(`_last_edited_by`),
     last_edited_date = as.Date(`_last_edited_date`),
     date_added = as.Date(`_date_added`),
@@ -215,9 +197,7 @@ mc3_edges <- as_tibble(mc3$links) %>%
     end_date = if_else(is.na(end_date), as.Date(NA), as.Date(end_date)),
     id = target
   ) %>%
-  # Remove `_last_edited_by`, `_last_edited_date`, `_date_added`, `_raw_source`, `_algorithm` if they exist
   select(-c(`_last_edited_by`, `_last_edited_date`, `_date_added`, `_raw_source`, `_algorithm`)) %>%
-
   rename(
     last_edited_by = last_edited_by,
     last_edited_date = last_edited_date,
@@ -225,8 +205,8 @@ mc3_edges <- as_tibble(mc3$links) %>%
     raw_source = raw_source,
     algorithm = algorithm
   ) %>%
-
   select(everything())
+
 ```
 
 </details>
@@ -238,15 +218,17 @@ mc3_edges <- as_tibble(mc3$links) %>%
 <summary>Click to show code</summary>
 
 ```{r}
-  mc3_edges <- mc3_edges %>%
-    mutate(
-      start_date = as.POSIXct(start_date),
-      last_edited_date = as.POSIXct(last_edited_date),
-      date_added = as.POSIXct(date_added),
-      end_date = if_else(is.na(end_date), as.POSIXct(NA), as.POSIXct(end_date)),
-      id = target
-    )
+# Convert dates in edges
+mc3_edges <- mc3_edges %>%
+  mutate(
+    start_date = as.POSIXct(start_date),
+    last_edited_date = as.POSIXct(last_edited_date),
+    date_added = as.POSIXct(date_added),
+    end_date = if_else(is.na(end_date), as.POSIXct(NA), as.POSIXct(end_date)),
+    id = target
+  )
 
+# Convert dates in nodes
 mc3_nodes <- mc3_nodes %>%
   mutate(
     last_edited_date = as.POSIXct(last_edited_date),
@@ -254,6 +236,7 @@ mc3_nodes <- mc3_nodes %>%
     founding_date = as.POSIXct(founding_date),
     dob = as.POSIXct(dob)
   )
+
 ```
 
 </details>
@@ -265,8 +248,8 @@ mc3_nodes <- mc3_nodes %>%
 <summary>Click to show code</summary>
 
 ```{r}
-mc3_edges [duplicated(mc3_edges ),]
-mc3_nodes [duplicated(mc3_nodes ),]
+mc3_edges <- mc3_edges[!duplicated(mc3_edges),]
+mc3_nodes <- mc3_nodes[!duplicated(mc3_nodes),]
 ```
 
 </details>
@@ -291,6 +274,8 @@ edges <- mc3_edges %>%
     last_edited_by, last_edited_date, date_added, 
     raw_source, algorithm
   )
+print(head(nodes))
+print(head(edges))
 ```
 
 </details>
@@ -311,24 +296,99 @@ print(type_3_unique_counts)
 ```
 
 ```{r}
-duplicate_counts <- mc3_edges %>%
-  group_by(target, type_new) %>%
-  summarise(count = n(), .groups = 'drop') %>%
-  filter(count > 1)
+names(mc3_nodes)
+names(mc3_edges)
 
-# Display the result
-print(duplicate_counts)
 ```
+
 
 ```{r}
-duplicate_counts <- mc3_edges %>%
-  group_by(source, target, type_new) %>%
-  summarise(count = n(), .groups = 'drop') %>%
-  filter(count > 1)
+library(dplyr)
 
-# Display the result
-print(duplicate_counts)
+# Count the number of owners for each company
+owners_count <- mc3_edges %>%
+  filter(type_new == "Shareholdership" | type_new == "BeneficialOwnership") %>%
+  group_by(target) %>%
+  summarise(owners_count = n(), .groups = 'drop') %>%
+  arrange(desc(owners_count))
+
+# Count the number of points of contact for each company
+points_of_contact_count <- mc3_nodes %>%
+  filter(!is.na(PointOfContact)) %>%
+  group_by(id) %>%
+  summarise(points_of_contact_count = n(), .groups = 'drop') %>%
+  arrange(desc(points_of_contact_count))
+
+# Merge the counts
+companies_counts <- owners_count %>%
+  inner_join(points_of_contact_count, by = c("target" = "id"))
+
+# Select the top 20 companies based on owners and points of contact
+top_companies <- companies_counts %>%
+  arrange(desc(owners_count + points_of_contact_count)) %>%
+  head(20)
+
+print(top_companies)
+
 ```
+
+<details>
+
+<summary>Click to show code</summary>
+```{r}
+library(igraph)
+
+# Get the top company IDs
+top_company_ids <- top_companies$target
+
+# Filter edges for these top companies
+subgraph_edges <- mc3_edges %>%
+  filter(target %in% top_company_ids | source %in% top_company_ids)
+
+# Filter nodes for these top companies and their connected nodes
+subgraph_nodes <- mc3_nodes %>%
+  filter(id %in% unique(c(subgraph_edges$source, subgraph_edges$target)))
+
+# Ensure unique IDs by concatenating a unique identifier
+subgraph_nodes <- subgraph_nodes %>%
+  mutate(unique_id = paste0(id, "_", row_number()))
+
+# Update the edges to use the unique identifiers
+subgraph_edges <- subgraph_edges %>%
+  left_join(subgraph_nodes %>% select(id, unique_id), by = c("source" = "id")) %>%
+  rename(source_unique = unique_id) %>%
+  left_join(subgraph_nodes %>% select(id, unique_id), by = c("target" = "id")) %>%
+  rename(target_unique = unique_id)
+
+# Create the subgraph with the unique identifiers
+subgraph <- graph_from_data_frame(d = subgraph_edges %>% select(source = source_unique, target = target_unique), vertices = subgraph_nodes %>% select(name = unique_id, everything()), directed = TRUE)
+
+```
+</details>
+
+```{r}
+library(visNetwork)
+
+nodes_vis <- subgraph_nodes %>%
+  mutate(label = id, group = ifelse(type_3 == "Company", "Company", "Individual")) %>%
+  select(id = unique_id, label, group)
+
+edges_vis <- subgraph_edges %>%
+  select(from = source_unique, to = target_unique)
+
+visNetwork(nodes_vis, edges_vis) %>%
+  visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
+  visEdges(arrows = 'to') %>%
+  visGroups(groupname = "Company", color = "salmon") %>%
+  visGroups(groupname = "Individual", color = "lightblue") %>%
+  visLegend()
+
+```
+
+
+
+
+
 
 
 
