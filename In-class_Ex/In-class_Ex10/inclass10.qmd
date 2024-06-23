@@ -1,0 +1,66 @@
+---
+title: "Quarto Dashboard"
+format: 
+  revealjs:
+    theme: solarized
+    incremental: true
+    transition: none
+    slide-number: true
+editor: visual
+---
+
+```{r}
+pacman::p_load(lubridate, ggthemes, reactablefmtr, 
+               reactablefmr, gt, gtExtras, tidyverse)
+```
+
+```{r}
+coffeechain <- read_rds("data/rds/CoffeeChain.rds")
+```
+
+```{r}
+productSales <- coffeechain %>%
+  group_by(Product) %>%
+  summarise(target_sales = sum(`Budget Sales`),
+            current_sales = sum(Sales)) %>%
+  ungroup()
+
+productProfit <- coffeechain %>%
+  group_by(Product) %>%
+  summarise(target_profit = sum(`Budget Profit`),
+            current_profit = sum(Profit)) %>%
+  ungroup()
+
+```
+
+## Column {width="50%"}
+
+```{r}
+# title: Sales by products 
+ggplot(productSales, aes(x = Product)) + 
+  geom_col(aes(y = max(target_sales) * 1.01), fill = "grey85", width = 0.85) + 
+  geom_col(aes(y = target_sales * 0.75), fill = "grey60", width = 0.85) + 
+  geom_col(aes(y = target_sales * 0.50), fill = "grey50", width = 0.85) + 
+  geom_col(aes(y = current_sales), fill = "black", width = 0.35) + 
+  geom_errorbar(aes(ymin = target_sales, ymax = target_sales), width = 0.4, color = "red") +
+  theme_minimal() +
+  labs(y = "Sales", x = "Product") +
+  coord_flip()
+
+```
+
+## Column {width="50%"}
+
+```{r}
+# title: Profit by products 
+ggplot(productProfit, aes(x = Product)) + 
+  geom_col(aes(y = max(target_profit) * 1.01), fill = "grey85", width = 0.85) + 
+  geom_col(aes(y = target_profit * 0.75), fill = "grey60", width = 0.85) + 
+  geom_col(aes(y = target_profit * 0.50), fill = "grey50", width = 0.85) + 
+  geom_col(aes(y = current_profit), fill = "black", width = 0.35) + 
+  geom_errorbar(aes(ymin = target_profit, ymax = target_profit), width = 0.4, color = "red") +
+  theme_minimal() +
+  labs(y = "Profit", x = "Product") +
+  coord_flip()
+
+```

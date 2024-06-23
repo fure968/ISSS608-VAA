@@ -29,18 +29,44 @@ scatterPlotMatrix(whitewine,
 
 ```
 
-kclus2 \<- whitewine %\>%
+```{r}
+scatterPlotMatrix(whitewine, corrPlotType = "Text", 
+                  distribType = 2, 
+                  width = 500, 
+                  height = 500, 
+                  controlWidgets = TRUE)
+```
 
 
+
+```{r}
+set.seed(123)
+kmeans4 <- kmeans(whitewine, 4, nstart = 25)
+print(kmeans4)
+```
+
+```{r}
 fviz_cluster(kmeans4, data = whitewine)
 ```
 
-
-wihtewine <- whitewine %>%
-  mutate(Cluster - kmeans4$Cluster)
+```{r}
+whitewine <- whitewine %>%
+  mutate(Cluster = kmeans4$cluster)
 ```
 
 
-whitewine$Cluster <-
-  as_factor(whitewine$cluster) #so it can only take whole number value
+```{r}
+whitewine$Cluster <- 
+  as_factor(whitewine$Cluster)
 ```
+
+```{r}
+whitewine %>%
+  parallelPlot(refColumnDim = "Cluster",
+               width = 300,
+               height = 250,
+               rotateTitle = TRUE)
+```
+
+
+
